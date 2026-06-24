@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVO Malinograd | Вход</title>
+    <title>NOVO Malinograd RP | Вход</title>
     <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1"> 
     <style>
         body { background-color: #0d0d0d; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         
-        /* СТИЛИ ОКНА ВХОДА РОБЛОКС */
+        /* СТИЛИ ОКНА ВХОДА NOVO MALINOGRAD */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0c0d0e; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.5s; }
-        .login-box { background: #232527; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box;}
-        .login-box h2 { margin-top: 0; margin-bottom: 25px; font-size: 2.2em; font-weight: bold; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; }
-        .login-input { background: #393b3d; border: 1px solid #555; color: white; padding: 15px; width: 100%; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1em; }
-        .login-input:focus { border-color: #ff5500; outline: none; }
-        .login-btn { padding: 15px; background: transparent; border: 2px solid #fff; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; transition: 0.2s; }
-        .login-btn:hover { background: #fff; color: #232527; }
+        .login-box { background: #232527; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box; border: 1px solid #333; }
+        .login-box h2 { margin-top: 0; margin-bottom: 25px; font-size: 1.8em; font-weight: bold; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        .login-box h2 span { color: #ff5500; }
+        .login-input { background: #393b3d; border: 1px solid #555; color: white; padding: 15px; width: 100%; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1em; transition: 0.3s; }
+        .login-input:focus { border-color: #ff5500; outline: none; background: #444648; }
+        .login-btn { padding: 15px; background: #ff5500; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .login-btn:hover { background: #e04a00; transform: translateY(-1px); }
 
         /* ОСНОВНОЙ КОНТЕНТ САЙТА (СКРЫТ ДО ВХОДА) */
         .main-content { display: none; }
@@ -45,10 +46,10 @@
 
 <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
-        <h2>Login to Roblox</h2>
-        <input type="text" id="loginUser" class="login-input" placeholder="Username/Email/Phone" required>
-        <input type="password" id="loginPass" class="login-input" placeholder="Password" required>
-        <button class="login-btn" onclick="startLogin()">Log In</button>
+        <h2>NOVO <span>Malinograd RP</span></h2>
+        <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм (Roblox)" required>
+        <input type="password" id="loginPass" class="login-input" placeholder="Пароль от аккаунта" required>
+        <button class="login-btn" onclick="startLogin()">Войти в кабинет</button>
     </div>
 </div>
 
@@ -65,8 +66,8 @@
                     <h4 id="playerName">Никнейм</h4>
                     <div class="profile-data">
                         <div class="data-item">Статус: <span style="color: #00ff00;">В игре</span></div>
-                        <div class="data-item">Уровень: <span>12 LVL</span></div>
-                        <div class="data-item">Баланс: <span>25,400 рублей</span></div>
+                        <div class="data-item">Уровень: <span>0 LVL</span></div>
+                        <div class="data-item">Баланс: <span>0 рублей</span></div>
                         <div class="data-item">Фракция: <span>Гражданский</span></div>
                     </div>
                 </div>
@@ -109,11 +110,11 @@ function startLogin() {
     const username = document.getElementById('loginUser').value.trim();
     
     if (username === "") {
-        alert("Please enter your username!");
+        alert("Пожалуйста, введите ваш никнейм!");
         return;
     }
 
-    // Генерируем реальную аватарку по нику, который ввел игрок
+    // Генерируем реальную аватарку по нику из Роблокса
     const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?username=${encodeURIComponent(username)}&width=150&height=150&format=png`;
     
     document.getElementById('playerAvatar').src = avatarUrl;

@@ -118,32 +118,9 @@ function startLogin() {
 
     document.getElementById('playerName').innerText = username;
 
-    // Используем открытый CORS-прокси (cors-anywhere альтернатива) для безопасного запроса к серверам Roblox
-    const proxyUrl = 'https://corsproxy.io/?';
-    const searchUrl = `${proxyUrl}${encodeURIComponent('https://users.roblox.com/v1/users/search?keyword=' + username + '&limit=1')}`;
-
-    fetch(searchUrl)
-        .then(res => {
-            if(!res.ok) throw new Error('Network error');
-            return res.json();
-        })
-        .then(resData => {
-            if (resData.data && resData.data.length > 0) {
-                const uid = resData.data[0].id;
-                const thumbUrl = `${proxyUrl}${encodeURIComponent('https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + uid + '&size=150x150&format=Png&isCircular=true')}`;
-                return fetch(thumbUrl);
-            }
-            return null;
-        })
-        .then(thumbRes => thumbRes ? thumbRes.json() : null)
-        .then(thumbData => {
-            if (thumbData && thumbData.data && thumbData.data.length > 0) {
-                document.getElementById('playerAvatar').src = thumbData.data[0].imageUrl;
-            }
-        })
-        .catch(e => {
-            console.log("Не удалось загрузить кастомный аватар, оставляем дефолтный");
-        });
+    // Прямой стабильный эндпоинт картинок Roblox (работает без CORS ошибок напрямую в теге img)
+    const secureAvatarUrl = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(username)}&width=150&height=150&format=png`;
+    document.getElementById('playerAvatar').src = secureAvatarUrl;
 
     // Анимация входа
     document.getElementById('loginOverlay').style.opacity = '0';

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVO Malinograd | Главная</title>
+    <style>
+        body { background-color: #0d0d0d; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        header { background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%); padding: 50px 20px; text-align: center; border-bottom: 2px solid #ff5500; }
+        h1 { margin: 0; font-size: 3em; letter-spacing: 3px; text-transform: uppercase; color: #fff; }
+        .nav-tag { color: #ff5500; font-size: 1em; margin-top: 10px; }
+        .container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        .stat-card { background: #161616; padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
+        .status-bar { color: #00ff00; font-weight: bold; margin-bottom: 15px; font-size: 0.9em; }
+        input, textarea { background: #222; border: 1px solid #444; color: white; padding: 12px; width: 95%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
+        button { padding: 12px 25px; background: #ff5500; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        button:hover { background: #e04a00; }
+        h3 { margin-top: 0; color: #fff; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>NOVO MALINOGRAD</h1>
+    <p class="nav-tag">ROLEPLAY TEST PROJECT // 2026</p>
+</header>
+
+<div class="container">
+    
+    <div class="stat-card">
+        <div class="status-bar">● СЕРВЕР ЗАПУЩЕН</div>
+        <h3>Статистика игрока</h3>
+        <input type="text" placeholder="Введите ваш никнейм для поиска...">
+        <button>ПРОВЕРИТЬ ДАННЫЕ</button>
+    </div>
+
+    <div class="stat-card">
+        <h3>📢 Баги и идеи для проекта</h3>
+        <p style="font-size: 0.9em; color: #aaa;">Найден баг? Есть предложение по улучшению? Пиши сюда:</p>
+        
+        <form action="https://formspree.io/f/xbdvdjjy" method="POST">
+            <input type="text" name="nickname" placeholder="Твой никнейм" required>
+            <textarea name="message" rows="4" required placeholder="Опиши суть бага или идеи..."></textarea>
+            <button type="submit">ОТПРАВИТЬ РАЗРАБОТЧИКАМ</button>
+        </form>
+    </div>
+
+    <div class="stat-card">
+        <h3>О NOVO Malinograd</h3>
+        <p>Добро пожаловать в Малиноград. Новый стандарт РП. Уютные ЖК, проработанные дороги, автопарк с легендарными Грантами и полная свобода действий.</p>
+        <button style="background: #333; margin-top: 10px;">ПЕРЕЙТИ В ДИСКОРД</button>
+    </div>
+
+</div>
+
+</body>
+</html>

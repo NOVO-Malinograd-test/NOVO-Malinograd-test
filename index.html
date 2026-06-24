@@ -2,115 +2,99 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NOVO RP | Dashboard</title>
-    <link id="dynamicFavicon" rel="icon" type="image/png" href="favicon.png">
+    <title>NOVO RP | Вход</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { background: #191b1d; color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; }
-        .sidebar { width: 200px; background: #232527; padding: 20px; border-right: 1px solid #333; }
-        .tab-btn { display: block; width: 100%; padding: 10px; margin-bottom: 5px; background: #2d2f31; border: none; color: white; cursor: pointer; text-align: left; border-radius: 4px; }
-        .tab-btn.active { background: #0084ff; }
-        .tab-pane { display: none; padding: 20px; flex: 1; overflow-y: auto; }
-        .tab-pane.active { display: block; }
-        .login-overlay { position: fixed; inset: 0; background: #191b1d; display: flex; justify-content: center; align-items: center; z-index: 999; }
-        .card { background: #232527; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
+        body { 
+            margin: 0; 
+            background: #0f1011; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            color: white;
+        }
+        .auth-card { 
+            background: #191b1d; 
+            padding: 40px; 
+            border-radius: 16px; 
+            width: 340px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #2d2f31;
+            text-align: center;
+        }
+        h2 { margin-bottom: 25px; font-weight: 600; color: #fff; }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            background: #232527; 
+            border: 1px solid #333; 
+            border-radius: 8px; 
+            color: white; 
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.3s;
+        }
+        input:focus { border-color: #0084ff; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { 
+            flex: 1; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background 0.3s;
+        }
+        .btn-login { background: #0084ff; color: white; }
+        .btn-login:hover { background: #0066cc; }
+        .btn-reg { background: #2d2f31; color: #ccc; }
+        .btn-reg:hover { background: #393b3d; }
     </style>
 </head>
 <body>
 
-<div id="loginOverlay" class="login-overlay">
-    <div class="card">
-        <h2>Вход / Регистрация</h2>
-        <input id="uName" placeholder="Никнейм"><br><br>
-        <input id="uPass" type="password" placeholder="Пароль"><br><br>
-        <button onclick="auth('login')">Войти</button>
-        <button onclick="auth('reg')">Регистрация</button>
+<div class="auth-card">
+    <h2>Добро пожаловать</h2>
+    <input id="uName" placeholder="Никнейм">
+    <input id="uPass" type="password" placeholder="Пароль">
+    <div class="btn-group">
+        <button class="btn-login" onclick="auth('login')">Войти</button>
+        <button class="btn-reg" onclick="auth('reg')">Регистрация</button>
     </div>
-</div>
-
-<div class="sidebar">
-    <h3>NOVO RP</h3>
-    <button class="tab-btn active" onclick="showTab('profile')">👤 Профиль</button>
-    <button class="tab-btn" onclick="showTab('chat')">💬 Чат</button>
-    <button class="tab-btn" onclick="showTab('friends')">👥 Друзья</button>
-    <button class="tab-btn" onclick="showTab('forum')">🌐 Форум</button>
-    <button class="tab-btn" onclick="location.reload()">Выход</button>
-</div>
-
-<div id="tab-profile" class="tab-pane active">
-    <div class="card"><h2 id="pName">...</h2><img id="pAvatar" style="width:100px; border-radius:50%"></div>
-</div>
-
-<div id="tab-chat" class="tab-pane">
-    <div id="chatBox" style="height:300px; background:#111; overflow-y:auto; margin-bottom:10px;"></div>
-    <input id="chatInput" placeholder="Сообщение...">
-    <button onclick="sendMsg()">Отправить</button>
-</div>
-
-<div id="tab-friends" class="tab-pane">
-    <input id="fInput" placeholder="Ник друга">
-    <button onclick="addFriend()">Добавить</button>
-    <div id="fList"></div>
-</div>
-
-<div id="tab-forum" class="tab-pane">
-    <h2>Форум</h2>
-    <div class="card">Общий форум</div>
-    <div class="card" style="border-left: 4px solid red">Баги</div>
-    <div class="card" style="border-left: 4px solid orange">Идеи</div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const db = getFirestore(initializeApp({
+        // Вставь сюда свой конфиг
         apiKey: "ТВОЙ_API_KEY",
         projectId: "test-novo-malinogrda-rrp",
         appId: "1:70609134352:web:8b42473392454a35388645"
     }));
 
     window.auth = async (type) => {
-        const name = document.getElementById('uName').value.toLowerCase();
+        const name = document.getElementById('uName').value.trim().toLowerCase();
         const pass = document.getElementById('uPass').value;
+        if(!name || !pass) return alert("Заполни все поля!");
+        
         const ref = doc(db, "users", name);
         const snap = await getDoc(ref);
 
         if (type === 'reg') {
-            if (snap.exists()) return alert("Ник занят!");
-            await setDoc(ref, { password: pass });
-            alert("Регистрация успешна!");
+            if (snap.exists()) return alert("Этот ник уже занят.");
+            await setDoc(ref, { password: pass, regDate: new Date().toLocaleDateString() });
+            alert("Аккаунт создан!");
         } else {
-            if (!snap.exists() || snap.data().password !== pass) return alert("Ошибка входа!");
+            if (!snap.exists() || snap.data().password !== pass) return alert("Неверный ник или пароль.");
             localStorage.setItem('user', name);
-            location.reload();
+            window.location.href = "dashboard.html"; // Перенаправляем на основной сайт
         }
     };
-
-    window.showTab = (tab) => {
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.add('active');
-        event.target.classList.add('active');
-    };
-
-    // Проверка входа
-    const user = localStorage.getItem('user');
-    if (user) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('pName').innerText = user;
-        document.getElementById('pAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${user}&width=150&height=150&format=png`;
-    }
-
-    // Логика чата и друзей остается как в прошлых версиях...
-    window.sendMsg = async () => {
-        await addDoc(collection(db, "chat"), { author: user, text: document.getElementById('chatInput').value, time: new Date() });
-    };
-
-    onSnapshot(query(collection(db, "chat"), orderBy("time", "asc")), snap => {
-        const box = document.getElementById('chatBox');
-        box.innerHTML = "";
-        snap.forEach(d => box.innerHTML += `<div><b>${d.data().author}:</b> ${d.data().text}</div>`);
-    });
 </script>
 </body>
 </html>

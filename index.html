@@ -1,100 +1,85 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>NOVO RP | Вход</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVO Malinograd | RP Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { 
-            margin: 0; 
-            background: #0f1011; 
-            font-family: 'Inter', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            color: white;
-        }
-        .auth-card { 
-            background: #191b1d; 
-            padding: 40px; 
-            border-radius: 16px; 
-            width: 340px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #2d2f31;
-            text-align: center;
-        }
-        h2 { margin-bottom: 25px; font-weight: 600; color: #fff; }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            background: #232527; 
-            border: 1px solid #333; 
-            border-radius: 8px; 
-            color: white; 
-            box-sizing: border-box;
-            outline: none;
-            transition: border 0.3s;
-        }
-        input:focus { border-color: #0084ff; }
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        button { 
-            flex: 1; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: background 0.3s;
-        }
-        .btn-login { background: #0084ff; color: white; }
-        .btn-login:hover { background: #0066cc; }
-        .btn-reg { background: #2d2f31; color: #ccc; }
-        .btn-reg:hover { background: #393b3d; }
+        body { background-color: #121212; color: #E0E0E0; }
+        .neon-glow { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+        .glass { background: rgba(31, 31, 31, 0.7); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body>
+<body class="font-sans antialiased">
 
-<div class="auth-card">
-    <h2>Добро пожаловать</h2>
-    <input id="uName" placeholder="Никнейм">
-    <input id="uPass" type="password" placeholder="Пароль">
-    <div class="btn-group">
-        <button class="btn-login" onclick="auth('login')">Войти</button>
-        <button class="btn-reg" onclick="auth('reg')">Регистрация</button>
-    </div>
-</div>
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass border-b border-gray-800">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tighter text-white">NOVO <span class="text-blue-400">Malinograd</span></div>
+            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-400">
+                <a href="#" class="hover:text-white transition">Главная</a>
+                <a href="#" class="hover:text-white transition">Проекты</a>
+                <a href="#" class="hover:text-white transition">Чаты</a>
+                <a href="#" class="hover:text-white transition">Форум</a>
+            </div>
+            <button class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-full text-sm transition">Профиль</button>
+        </div>
+    </nav>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- Hero Section -->
+    <header class="h-screen flex flex-col justify-center items-center text-center px-6 bg-[url('https://images.unsplash.com/photo-1515630278757-ed2111077755?q=80&w=2070')] bg-cover bg-center">
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="relative z-10">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 neon-glow">NOVO Malinograd</h1>
+            <p class="text-lg text-gray-300 mb-10 max-w-lg">Добро пожаловать в город будущего. Создавай свою историю, управляй судьбой, живи в NOVO.</p>
+            <button class="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-blue-400 hover:text-white transition duration-300">
+                Присоединиться к проекту
+            </button>
+        </div>
+    </header>
 
-    const db = getFirestore(initializeApp({
-        // Вставь сюда свой конфиг
-        apiKey: "ТВОЙ_API_KEY",
-        projectId: "test-novo-malinogrda-rrp",
-        appId: "1:70609134352:web:8b42473392454a35388645"
-    }));
+    <!-- Projects Section -->
+    <section class="max-w-6xl mx-auto py-20 px-6">
+        <h2 class="text-3xl font-bold mb-12 text-center">Наши Проекты</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Card -->
+            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-blue-500 transition group">
+                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
+                <h3 class="text-xl font-semibold mb-2">Malinograd City</h3>
+                <p class="text-gray-400 text-sm">Основной сервер с классическим RP отыгрышем.</p>
+            </div>
+            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-purple-500 transition">
+                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
+                <h3 class="text-xl font-semibold mb-2">Future Tech</h3>
+                <p class="text-gray-400 text-sm">Сервер в сеттинге киберпанк-индустрии.</p>
+            </div>
+            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-blue-500 transition">
+                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
+                <h3 class="text-xl font-semibold mb-2">Development</h3>
+                <p class="text-gray-400 text-sm">Песочница для тестирования новых механик.</p>
+            </div>
+        </div>
+    </section>
 
-    window.auth = async (type) => {
-        const name = document.getElementById('uName').value.trim().toLowerCase();
-        const pass = document.getElementById('uPass').value;
-        if(!name || !pass) return alert("Заполни все поля!");
-        
-        const ref = doc(db, "users", name);
-        const snap = await getDoc(ref);
+    <!-- Chat Simulation -->
+    <section class="bg-[#1a1a1a] py-20 px-6">
+        <div class="max-w-4xl mx-auto border border-gray-800 rounded-lg overflow-hidden">
+            <div class="bg-[#252525] p-4 border-b border-gray-800 flex items-center space-x-4">
+                <span class="text-blue-400 font-bold">#</span> <span>general-chat</span>
+            </div>
+            <div class="h-64 p-6 space-y-4 overflow-y-auto text-sm text-gray-300">
+                <p><span class="text-blue-400 font-bold">Admin:</span> Добро пожаловать на сервер, жители Малинограда!</p>
+                <p><span class="text-white font-bold">Player_01:</span> Кто идет сегодня на патруль?</p>
+            </div>
+        </div>
+    </section>
 
-        if (type === 'reg') {
-            if (snap.exists()) return alert("Этот ник уже занят.");
-            await setDoc(ref, { password: pass, regDate: new Date().toLocaleDateString() });
-            alert("Аккаунт создан!");
-        } else {
-            if (!snap.exists() || snap.data().password !== pass) return alert("Неверный ник или пароль.");
-            localStorage.setItem('user', name);
-            window.location.href = "dashboard.html"; // Перенаправляем на основной сайт
-        }
-    };
-</script>
+    <!-- Footer -->
+    <footer class="text-center py-10 text-gray-600 text-sm">
+        &copy; 2026 NOVO Malinograd. Все права защищены.
+    </footer>
+
 </body>
 </html>

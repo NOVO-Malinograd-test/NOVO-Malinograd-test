@@ -6,37 +6,33 @@
 
     <meta charset="UTF-8">
 
-    <title id="siteTitle">NOVO RP | Loading...</title>
+    <title>NOVO RP | Dashboard</title>
 
-    <link id="dynamicFavicon" rel="shortcut icon" href="https://www.roblox.com/favicon.ico">
+    <link id="dynamicFavicon" rel="icon" type="image/png" href="favicon.png">
 
     <style>
 
         body { background: #191b1d; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        .sidebar { width: 220px; background: #232527; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #333; }
+        .sidebar { width: 220px; background: #232527; padding: 20px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid #333; }
 
-        .tab-btn { padding: 12px; background: #2d2f31; border: none; color: #ccc; cursor: pointer; border-radius: 6px; text-align: left; font-weight: bold; transition: 0.2s; }
+        .tab-btn { padding: 10px; background: #2d2f31; border: none; color: #ccc; cursor: pointer; border-radius: 6px; text-align: left; font-weight: bold; }
 
         .tab-btn.active { background: #0084ff; color: white; }
 
-        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
 
         .tab-pane { display: none; }
 
         .tab-pane.active { display: block; }
 
-        .card { background: #232527; padding: 25px; border-radius: 12px; border: 1px solid #333; max-width: 600px; }
+        .card { background: #232527; padding: 20px; border-radius: 10px; border: 1px solid #333; margin-bottom: 20px; max-width: 600px; }
 
-        .avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0084ff; object-fit: cover; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
 
-        .friend-item { padding: 12px; background: #2d2f31; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .forum-link { display: block; padding: 15px; background: #2d2f31; margin-bottom: 10px; border-radius: 6px; text-decoration: none; color: white; border-left: 4px solid #0084ff; transition: 0.2s; }
 
-        .btn-mini { padding: 5px 10px; background: #0084ff; border: none; color: white; cursor: pointer; border-radius: 4px; font-size: 12px; }
-
-        #chatBox { height: 300px; background: #111; overflow-y: auto; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-
-        .rbx-header { background-color: #232527; height: 45px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #111; }
+        .forum-link:hover { background: #393b3d; }
 
     </style>
 
@@ -46,103 +42,101 @@
 
 
 
-<div class="rbx-header">
+<div class="sidebar">
 
-    <div style="display:flex; align-items:center; gap:10px;">
+    <h3 style="color:#0084ff">NOVO RP</h3>
 
-        <div style="width:25px; height:25px; background:url('https://images.rbxcdn.com/9fb92cbf3934bc29030a1de3979e93b2.svg') no-repeat center; background-size:contain;"></div>
+    <button class="tab-btn active" onclick="showTab('profile')">👤 Профиль</button>
 
-        <div id="headerTitle">NOVO RP</div>
+    <button class="tab-btn" onclick="showTab('chat')">💬 Чат</button>
 
-    </div>
+    <button class="tab-btn" onclick="showTab('friends')">👥 Друзья</button>
 
-    <div style="display:flex; align-items:center; gap:10px;">
+    <button class="tab-btn" onclick="showTab('forum')">🌐 Форум</button>
 
-        <img id="headerAvatar" src="" style="width:24px; height:24px; border-radius:50%; display:none;">
-
-        <span id="headerUser">Вход...</span>
-
-    </div>
+    <button class="tab-btn" onclick="showTab('about')">ℹ️ О проекте</button>
 
 </div>
 
 
 
-<div style="display:flex; flex:1;">
+<div class="content">
 
-    <div class="sidebar">
+    <div id="tab-profile" class="tab-pane active">
 
-        <button class="tab-btn active" onclick="showTab('profile')">👤 Профиль</button>
+        <div class="card">
 
-        <button class="tab-btn" onclick="showTab('chat')">💬 Чат</button>
+            <img id="pAvatar" style="width:100px; border-radius:50%; border:2px solid #0084ff">
 
-        <button class="tab-btn" onclick="showTab('friends')">👥 Друзья</button>
+            <h2 id="pName">Загрузка...</h2>
 
-        <button class="tab-btn" onclick="showTab('about')">ℹ️ О проекте</button>
+            <div class="stat-grid">
 
-        <button class="tab-btn" onclick="localStorage.clear(); location.reload()" style="margin-top:auto; color:#ff4444">Выход</button>
+                <p>Уровень: <b>15</b></p>
+
+                <p>Баланс: <b>5,000$</b></p>
+
+                <p>Фракция: <b>Полиция</b></p>
+
+            </div>
+
+        </div>
 
     </div>
 
 
 
-    <div class="content">
+    <div id="tab-chat" class="tab-pane">
 
-        <div id="tab-profile" class="tab-pane active">
+        <div id="chatBox" style="height:300px; background:#111; overflow-y:auto; padding:10px; margin-bottom:10px; border-radius:6px;"></div>
 
-            <div class="card">
+        <input id="chatInput" style="padding:10px; width:70%; background:#222; color:white; border:1px solid #444;" placeholder="Сообщение...">
 
-                <img id="pAvatar" class="avatar">
+        <button onclick="sendMessage()" style="padding:10px; background:#0084ff; border:none; color:white; cursor:pointer">Отправить</button>
 
-                <h2 id="pName">Загрузка...</h2>
-
-                <p>Дата регистрации: 24.06.2026</p>
-
-            </div>
-
-        </div>
+    </div>
 
 
 
-        <div id="tab-chat" class="tab-pane">
+    <div id="tab-forum" class="tab-pane">
 
-            <div id="chatBox"></div>
+        <a href="#" class="forum-link">📖 Общий форум проекта</a>
 
-            <input id="chatInput" style="width:70%; padding:10px; background:#222; color:white; border:none" placeholder="Сообщение...">
+        <a href="#" class="forum-link" style="border-left-color: #ff4444;">⚠️ Баги и ошибки</a>
 
-            <button onclick="sendMessage()" style="padding:10px; background:#0084ff; border:none; color:white">Отправить</button>
+        <a href="#" class="forum-link" style="border-left-color: #ffaa00;">💡 Идеи и улучшения</a>
 
-        </div>
+    </div>
 
 
 
-        <div id="tab-friends" class="tab-pane">
+    <div id="tab-friends" class="tab-pane">
 
-            <input id="fInput" placeholder="Никнейм игрока..." style="padding:10px">
+        <div class="card">
 
-            <button onclick="addFriend()" style="padding:10px">Добавить</button>
+            <input id="fInput" placeholder="Ник игрока" style="padding:8px">
 
-            <div id="fList" style="margin-top:20px"></div>
+            <button onclick="addFriend()">Добавить</button>
+
+            <div id="fList" style="margin-top:15px"></div>
 
         </div>
 
+    </div>
 
+    
 
-        <div id="tab-about" class="tab-pane">
+    <div id="tab-about" class="tab-pane">
 
-            <div class="card">
+        <div class="card">
 
-                <h2>О проекте NOVO Malinograd RP</h2>
+            <h2>О проекте NOVO RP</h2>
 
-                <p><strong>Создатель:</strong> gcdgkd</p>
+            <p>Создатель: <b>gcdgkd</b> (ID: 1049747616663080970)</p>
 
-                <p><strong>Discord ID:</strong> <code>1049747616663080970</code></p>
+            <iframe src="https://discord.com/widget?id=1255866750059372554&theme=dark" width="100%" height="300" frameborder="0"></iframe>
 
-                <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" width="100%" height="300" frameborder="0"></iframe>
-
-                <a href="https://discord.gg/awynwRwQab" target="_blank" style="display:block; margin-top:15px; color:#5865F2;">Перейти в Дискорд</a>
-
-            </div>
+            <a href="https://discord.gg/awynwRwQab" target="_blank" style="display:block; margin-top:15px; color:#5865F2;">Вступить в Discord</a>
 
         </div>
 
@@ -162,11 +156,11 @@
 
     const firebaseConfig = {
 
-      apiKey: "AIzaSyCj-GoD1eBbTWjnHeKNN-p2ymvC-zL2B0",
+        apiKey: "AIzaSyCj-GoD1eBbTWjnHeKNN-p2ymvC-zL2B0",
 
-      projectId: "test-novo-malinogrda-rrp",
+        projectId: "test-novo-malinogrda-rrp",
 
-      appId: "1:70609134352:web:8b42473392454a35388645"
+        appId: "1:70609134352:web:8b42473392454a35388645"
 
     };
 
@@ -174,9 +168,9 @@
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
-    let currentUser = localStorage.getItem('novo_username') || prompt("Ваш ник в NOVO Malinograd RP:");
+    let currentUser = localStorage.getItem('novo_username') || prompt("Введите ник для входа:");
 
-    if(currentUser) localStorage.setItem('novo_username', currentUser);
+    localStorage.setItem('novo_username', currentUser);
 
 
 
@@ -194,57 +188,27 @@
 
 
 
-    if(currentUser) {
+    // Обновление профиля и иконки
 
-        const avatarUrl = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser)}&width=150&height=150&format=png`;
+    const avatarUrl = `https://www.roblox.com/avatar-thumbnail/image?username=${currentUser}&width=150&height=150&format=png`;
 
-        document.getElementById('siteTitle').innerText = currentUser + " | NOVO RP";
+    document.getElementById('pName').innerText = currentUser;
 
-        document.getElementById('headerTitle').innerText = currentUser + " | Dashboard";
+    document.getElementById('pAvatar').src = avatarUrl;
 
-        document.getElementById('headerUser').innerText = currentUser;
-
-        document.getElementById('headerAvatar').src = avatarUrl;
-
-        document.getElementById('headerAvatar').style.display = 'block';
-
-        document.getElementById('dynamicFavicon').href = avatarUrl;
-
-        document.getElementById('pName').innerText = currentUser;
-
-        document.getElementById('pAvatar').src = avatarUrl;
-
-    }
+    document.getElementById('dynamicFavicon').href = avatarUrl;
 
 
 
-    window.addFriend = async () => {
-
-        const name = document.getElementById('fInput').value.trim();
-
-        if(name) await setDoc(doc(db, "friends", currentUser + "_" + name), { owner: currentUser, friendName: name });
-
-    };
-
-
-
-    onSnapshot(query(collection(db, "friends"), where("owner", "==", currentUser || "")), snap => {
-
-        const list = document.getElementById('fList');
-
-        list.innerHTML = "";
-
-        snap.forEach(d => list.innerHTML += `<div class="friend-item">${d.data().friendName}</div>`);
-
-    });
-
-
+    // Чат
 
     window.sendMessage = async () => {
 
         const text = document.getElementById('chatInput').value;
 
-        if(text) await addDoc(collection(db, "chat"), { author: currentUser, text: text, createdAt: new Date() });
+        if(!text) return;
+
+        await addDoc(collection(db, "chat"), { author: currentUser, text: text, createdAt: new Date() });
 
         document.getElementById('chatInput').value = "";
 
@@ -259,6 +223,30 @@
         box.innerHTML = "";
 
         snap.forEach(d => box.innerHTML += `<div><b>${d.data().author}:</b> ${d.data().text}</div>`);
+
+    });
+
+
+
+    // Друзья
+
+    window.addFriend = async () => {
+
+        const name = document.getElementById('fInput').value;
+
+        await setDoc(doc(db, "friends", currentUser + "_" + name), { owner: currentUser, friendName: name });
+
+    };
+
+
+
+    onSnapshot(query(collection(db, "friends"), where("owner", "==", currentUser)), snap => {
+
+        const list = document.getElementById('fList');
+
+        list.innerHTML = "";
+
+        snap.forEach(d => list.innerHTML += `<div style="padding:5px">${d.data().friendName}</div>`);
 
     });
 

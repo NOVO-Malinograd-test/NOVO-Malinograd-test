@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVO Malinograd RP | Вход</title>
+    <title>NOVO Malinograd RP | Кабинет</title>
     <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1"> 
     <style>
         body { background-color: #0d0d0d; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         
-        /* СТИЛИ ОКНА ВХОДА NOVO MALINOGRAD */
+        /* СТИЛИ ОКНА ВХОДА И РЕГИСТРАЦИИ */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0c0d0e; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.5s; }
         .login-box { background: #232527; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box; border: 1px solid #333; }
         .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 1.8em; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
@@ -16,40 +16,70 @@
         .login-subtitle { color: #888; font-size: 0.9em; margin-bottom: 20px; }
         .login-input { background: #393b3d; border: 1px solid #555; color: white; padding: 15px; width: 100%; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1em; transition: 0.3s; }
         .login-input:focus { border-color: #ff5500; outline: none; background: #444648; }
-        .login-btn { padding: 15px; background: #ff5500; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        .login-btn { padding: 15px; background: #ff5500; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 1em; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .login-btn.secondary { background: #444; }
         .login-btn:hover { background: #e04a00; transform: translateY(-1px); }
+        .login-btn.secondary:hover { background: #555; }
         .login-btn:disabled { background: #555; cursor: not-allowed; }
 
-        /* ОСНОВНОЙ КОНТЕНТ САЙТА (СКРЫТ ДО ВХОДА) */
+        /* ОСНОВНОЙ КОНТЕНТ */
         .main-content { display: none; }
-        .container { max-width: 800px; margin: 30px auto; padding: 20px; }
-        .stat-card { background: #161616; padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media(min-width: 768px) {
+            .container { grid-template-columns: 350px 1fr; }
+            .full-width { grid-column: 1 / -1; }
+        }
+        
+        .stat-card { background: #161616; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); height: fit-content; }
         .status-bar { color: #00ff00; font-weight: bold; margin-bottom: 15px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;}
         
-        textarea { background: #222; border: 1px solid #444; color: white; padding: 12px; width: 100%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; transition: 0.3s; resize: vertical; }
-        textarea:focus { border-color: #ff5500; outline: none; background: #2a2a2a; }
-        .action-btn { padding: 12px 25px; background: #ff5500; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; text-transform: uppercase; }
+        input[type="text"], textarea { background: #222; border: 1px solid #444; color: white; padding: 12px; width: 100%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; transition: 0.3s; font-family: inherit; }
+        input[type="text"]:focus, textarea:focus { border-color: #ff5500; outline: none; background: #2a2a2a; }
+        
+        .action-btn { padding: 12px 25px; background: #ff5500; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; }
         .action-btn:hover { background: #e04a00; }
+        .logout-btn { background: #444; margin-top: 15px; padding: 8px; font-size: 0.9em; }
+        .logout-btn:hover { background: #cc3333; }
+        
         h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;}
-        p { line-height: 1.6; color: #bbb; }
+        p { line-height: 1.6; color: #bbb; margin-top: 0; }
         
-        /* Стили профиля */
-        .profile-box { display: flex; background: #1c1c1c; border: 1px solid #ff5500; border-radius: 10px; padding: 20px; align-items: center; gap: 20px; flex-wrap: wrap; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: #2a2a2a; border: 2px solid #ff5500; object-fit: cover; }
-        .profile-info { flex: 1; min-width: 200px; }
-        .profile-info h4 { margin: 0 0 15px 0; color: #fff; font-size: 1.5em; letter-spacing: 0.5px; }
-        .profile-data { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em; }
-        .data-item { background: #252525; padding: 8px 12px; border-radius: 5px; border-left: 3px solid #ff5500; }
-        .data-item span { color: #ff5500; font-weight: bold; }
+        /* Профиль */
+        .profile-box { text-align: center; }
+        .profile-avatar { width: 110px; height: 110px; border-radius: 50%; background: #2a2a2a; border: 2px solid #ff5500; object-fit: cover; margin-bottom: 15px; }
+        .profile-info h4 { margin: 0 0 15px 0; color: #fff; font-size: 1.4em; }
+        .profile-data { display: flex; flex-direction: column; gap: 8px; text-align: left; font-size: 0.95em; }
+        .data-item { background: #202020; padding: 10px 12px; border-radius: 6px; border-left: 3px solid #ff5500; }
+        .data-item span { color: #ff5500; font-weight: bold; float: right; }
         
-        .discord-widget-container { width: 100%; height: 500px; border: none; border-radius: 8px; margin-top: 15px; }
+        /* СТИЛИ СИСТЕМЫ ЧАТОВ */
+        .chat-container { display: flex; flex-direction: column; height: 400px; background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 10px; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+        .msg { background: #222; padding: 10px 14px; border-radius: 8px; max-width: 85%; width: fit-content; line-height: 1.4; word-break: break-word; }
+        .msg-meta { font-size: 0.75em; color: #888; margin-bottom: 4px; display: flex; gap: 8px; }
+        .msg-author { color: #ff5500; font-weight: bold; }
+        .msg.my-msg { background: #2b2d30; align-self: flex-end; border-right: 3px solid #ff5500; }
+        .msg.my-msg .msg-author { color: #ff7733; }
+        .msg.pm-msg { background: #2c1a3a; border-left: 3px solid #a349a4; }
+        .msg.pm-msg .msg-author { color: #c87fd4; }
+        
+        .chat-input-block { display: flex; gap: 8px; }
+        .chat-input-block input { margin-bottom: 0; flex: 1; }
+        .chat-input-block .send-btn { width: auto; padding: 0 20px; }
+        
+        .pm-header { display: flex; gap: 8px; margin-bottom: 8px; }
+        .pm-header input { margin-bottom: 0; font-size: 0.9em; padding: 8px; }
+        
+        .discord-widget-container { width: 100%; height: 400px; border: none; border-radius: 8px; }
     </style>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Твоя конфигурация из консоли Firebase
+        // Твой конфиг из консоли Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
             authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
@@ -59,13 +89,280 @@
             appId: "1:70609134352:web:8b42473392454a35388645"
         };
 
-        // Инициализация базы данных
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        let currentUser = null;
 
-        window.startLogin = async function() {
+        // ПРОВЕРКА: Если игрок уже входил ранее (авто-вход)
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('novo_username');
+            const savedPass = localStorage.getItem('novo_password');
+            if(savedUser && savedPass) {
+                document.getElementById('loginUser').value = savedUser;
+                document.getElementById('loginPass').value = savedPass;
+                handleAuth(savedUser, savedPass, 'login', true);
+            }
+        });
+
+        // КНОПКА ВОЙТИ
+        window.pressLogin = function() {
             const username = document.getElementById('loginUser').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
-            const btn = document.querySelector('.login-btn');
+            handleAuth(username, pass, 'login', false);
+        };
+
+        // КНОПКА ЗАРЕГИСТРИРОВАТЬСЯ
+        window.pressRegister = function() {
+            const username = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            handleAuth(username, pass, 'register', false);
+        };
+
+        // ЕДИНАЯ ФУНКЦИЯ АВТОРИЗАЦИИ И ПРОВЕРКИ
+        async function handleAuth(username, pass, type, isAuto) {
+            if (username === "" || pass === "") {
+                if(!isAuto) alert("Введите никнейм и пароль!");
+                return;
+            }
+            if (pass.length < 6 && type === 'register') {
+                alert("Пароль должен быть не менее 6 символов!");
+                return;
+            }
+
+            const btnLogin = document.getElementById('bLogin');
+            const btnReg = document.getElementById('bReg');
+            btnLogin.disabled = true; btnReg.disabled = true;
+
+            try {
+                const userDocId = username.toLowerCase();
+                const userRef = doc(db, "users", userDocId);
+                const userSnap = await getDoc(userRef);
+
+                if (type === 'login') {
+                    // Логика Входа
+                    if (!userSnap.exists()) {
+                        alert("Аккаунт с таким никнеймом не зарегистрирован!");
+                        resetAuthButtons();
+                        return;
+                    }
+                    const dbData = userSnap.data();
+                    if (dbData.password !== pass) {
+                        alert("Неверный пароль от аккаунта!");
+                        resetAuthButtons();
+                        // Если авто-вход сломался из-за смены пароля, чистим память
+                        if(isAuto) window.pressLogout();
+                        return;
+                    }
+                    currentUser = dbData;
+                } else {
+                    // Логика Регистрации
+                    if (userSnap.exists()) {
+                        alert("Этот никнейм уже занят другим игроком!");
+                        resetAuthButtons();
+                        return;
+                    }
+                    currentUser = {
+                        username: username,
+                        password: pass,
+                        level: 1,
+                        balance: 5000,
+                        fraction: "Гражданский"
+                    };
+                    await setDoc(userRef, currentUser);
+                    alert("Регистрация успешна!");
+                }
+
+                // Запоминаем сессию в браузере
+                localStorage.setItem('novo_username', currentUser.username);
+                localStorage.setItem('novo_password', currentUser.password);
+
+                // Отрисовка кабинета персонажа
+                document.getElementById('playerName').innerText = currentUser.username;
+                document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
+                document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
+                document.getElementById('playerFraction').innerText = currentUser.fraction;
+                document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
+
+                // Включаем интерфейс
+                document.getElementById('loginOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainSiteContent').style.display = 'grid';
+                    // Запуск прослушивания чата
+                    initGlobalChat();
+                }, 500);
+
+            } catch (e) {
+                console.error(e);
+                alert("Ошибка соединения с БД!");
+                resetAuthButtons();
+            }
+        }
+
+        function resetAuthButtons() {
+            const btnLogin = document.getElementById('bLogin');
+            const btnReg = document.getElementById('bReg');
+            btnLogin.disabled = false; btnReg.disabled = false;
+        }
+
+        // ВЫХОД ИЗ АККАУНТА
+        window.pressLogout = function() {
+            localStorage.clear();
+            location.reload();
+        };
+
+        // РАБОТА С ЧАТОМ (СОХРАНЕНИЕ И ОБНОВЛЕНИЕ ОНЛАЙН)
+        function initGlobalChat() {
+            const chatBox = document.getElementById('chatMessages');
+            const q = query(collection(db, "chat"), orderBy("createdAt", "asc"), limit(50));
             
-            if (username === "" || pass
+            // onSnapshot автоматически обновляет сообщения на экране при их добавлении в БД
+            onSnapshot(q, (snapshot) => {
+                chatBox.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if(!data.createdAt) return; // Пропуск системных задержек времени
+                    
+                    const time = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+                    const isMe = data.author.toLowerCase() === currentUser.username.toLowerCase();
+                    
+                    let msgClass = "msg";
+                    let prefix = "";
+                    
+                    if (data.type === "pm") {
+                        // Показываем ЛС только отправителю или получателю
+                        const isTarget = data.target && data.target.toLowerCase() === currentUser.username.toLowerCase();
+                        if (!isMe && !isTarget) return; 
+                        
+                        msgClass += " pm-msg";
+                        prefix = isMe ? `[ЛС для ${data.target}] ` : `[ЛС от ${data.author}] `;
+                    } else {
+                        if(isMe) msgClass += " my-msg";
+                    }
+
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = msgClass;
+                    msgDiv.innerHTML = `
+                        <div class="msg-meta">
+                            <span class="msg-author">${prefix}${escapeHTML(data.author)}</span>
+                            <span>${time}</span>
+                        </div>
+                        <div class="msg-text">${escapeHTML(data.text)}</div>
+                    `;
+                    chatBox.appendChild(msgDiv);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        // ОТПРАВКА СООБЩЕНИЯ (ОБЩЕЕ ИЛИ ЛС)
+        window.sendMessage = async function() {
+            const input = document.getElementById('chatInput');
+            const targetInput = document.getElementById('pmTarget');
+            const text = input.value.trim();
+            const target = targetInput.value.trim();
+
+            if(text === "") return;
+
+            const msgData = {
+                author: currentUser.username,
+                text: text,
+                createdAt: serverTimestamp(),
+                type: target !== "" ? "pm" : "global"
+            };
+
+            if(target !== "") {
+                msgData.target = target;
+            }
+
+            input.value = "";
+            try {
+                await addDoc(collection(db, "chat"), msgData);
+            } catch(e) {
+                console.error("Ошибка отправки сообщения:", e);
+            }
+        };
+
+        // Защита от XSS уязвимостей в чате
+        function escapeHTML(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        // Отправка по нажатию Enter
+        window.checkEnter = function(e) {
+            if(e.key === 'Enter') sendMessage();
+        }
+    </script>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <h2>NOVO <span>Malinograd RP</span></h2>
+        <div class="login-subtitle">Введите свои данные для входа в игровой аккаунт</div>
+        <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм (Roblox)" required>
+        <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 6 символов)" required>
+        
+        <div class="btn-group">
+            <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
+            <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать акк</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-content" id="mainSiteContent">
+    <div class="container">
+        
+        <div class="stat-card">
+            <div class="status-bar">● ИГРОК АВТОРИЗОВАН</div>
+            <div class="profile-box">
+                <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар">
+                <div class="profile-info">
+                    <h4 id="playerName">-</h4>
+                    <div class="profile-data">
+                        <div class="data-item">Статус: <span style="color: #00ff00;">В сети</span></div>
+                        <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
+                        <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
+                        <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+                    </div>
+                </div>
+                <button class="action-btn logout-btn" onclick="pressLogout()">Выйти из профиля</button>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>💬 Игровой чат проекта</h3>
+            <div class="pm-header">
+                <input type="text" id="pmTarget" placeholder="Кому (укажите ник для ЛС, или оставьте пустым для общего чата)">
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    </div>
+            </div>
+            
+            <div class="chat-input-block">
+                <input type="text" id="chatInput" placeholder="Введите ваше сообщение..." onkeydown="checkEnter(event)">
+                <button class="action-btn send-btn" onclick="sendMessage()">→</button>
+            </div>
+        </div>
+
+        <div class="stat-card full-width">
+            <h3>📢 Мы в Discord</h3>
+            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
+
+        <div class="stat-card full-width">
+            <h3>🛠️ Сообщить о баге или предложить идею</h3>
+            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
+                <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг, найденный в NOVO Malinograd..."></textarea>
+                <button type="submit" class="action-btn">ОТПРАВИТЬ НА РАССМОТРЕНИЕ</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -16,16 +16,18 @@
         button:hover { background: #e04a00; transform: translateY(-2px); }
         h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;}
         p { line-height: 1.6; color: #bbb; }
-        .btn-link { display: inline-block; width: auto; text-decoration: none; }
         
-        /* Стили для красивого отображения виджета */
-        .discord-widget-container {
-            width: 100%;
-            height: 500px;
-            border: none;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
+        /* Стили виджета Дискорда */
+        .discord-widget-container { width: 100%; height: 500px; border: none; border-radius: 8px; margin-top: 15px; }
+
+        /* Новые стили для профиля игрока */
+        .profile-box { display: none; background: #1c1c1c; border: 1px solid #ff5500; border-radius: 10px; padding: 20px; margin-top: 20px; align-items: center; gap: 20px; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: #2a2a2a; border: 2px solid #ff5500; box-shadow: 0 0 10px rgba(255,85,0,0.3); }
+        .profile-info { flex: 1; }
+        .profile-info h4 { margin: 0 0 10px 0; color: #fff; font-size: 1.4em; }
+        .profile-data { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em; }
+        .data-item { background: #252525; padding: 8px 12px; border-radius: 5px; border-left: 3px solid #ff5500; }
+        .data-item span { color: #ff5500; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -34,10 +36,24 @@
     
     <div class="stat-card">
         <div class="status-bar">● СЕРВЕР ЗАПУЩЕН И СТАБИЛЕН</div>
-        <h3>Статистика игрока</h3>
-        <p>Для просмотра данных введите ваш точный никнейм.</p>
-        <input type="text" placeholder="Пример: Ivan_Ivanov">
-        <button>ПРОВЕРИТЬ ДАННЫЕ</button>
+        <h3>Профиль игрока NOVO Malino</h3>
+        <p>Введите ваш точный никнейм из Roblox, чтобы посмотреть карточку персонажа.</p>
+        
+        <input type="text" id="roblox-nick" placeholder="Пример: Builderman">
+        <button onclick="loadRobloxProfile()">ПОСМОТРЕТЬ ПРОФИЛЬ</button>
+
+        <div class="profile-box" id="profileCard">
+            <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар">
+            <div class="profile-info">
+                <h4 id="playerName">Никнейм</h4>
+                <div class="profile-data">
+                    <div class="data-item">Статус: <span style="color: #00ff00;">В игре</span></div>
+                    <div class="data-item">Уровень: <span>12 LVL</span></div>
+                    <div class="data-item">Баланс: <span>25,400 рублей</span></div>
+                    <div class="data-item">Фракция: <span>Гражданский</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="stat-card">
@@ -72,6 +88,27 @@
     </div>
 
 </div>
+
+<script>
+function loadRobloxProfile() {
+    const nick = document.getElementById('roblox-nick').value.trim();
+    if(nick === "") {
+        alert("Пожалуйста, введите никнейм!");
+        return;
+    }
+
+    // Официальное открытое API Roblox для генерации картинок по нику
+    const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?username=${encodeURIComponent(nick)}&width=150&height=150&format=png`;
+
+    // Подставляем данные в карточку
+    document.getElementById('playerAvatar').src = avatarUrl;
+    document.getElementById('playerName').innerText = nick;
+    
+    // Плавно показываем карточку профиля
+    const card = document.getElementById('profileCard');
+    card.style.display = 'flex';
+}
+</script>
 
 </body>
 </html>

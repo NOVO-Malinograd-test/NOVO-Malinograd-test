@@ -1,108 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVO Malinograd | RP Project</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #121212; color: #E0E0E0; }
-        .neon-glow { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
-        .glass { background: rgba(31, 31, 31, 0.7); backdrop-filter: blur(10px); }
-    </style>
+    <title>NOVO Malinograd</title>
 </head>
-<body class="font-sans antialiased">
+<body style="background: #121212; color: #fff; font-family: sans-serif; padding: 20px;">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 glass border-b border-gray-800">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tighter text-white">NOVO <span class="text-blue-400">Malinograd</span></div>
-            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-400">
-                <a href="#" class="hover:text-white transition">Главная</a>
-                <a href="#" class="hover:text-white transition">Проекты</a>
-                <a href="#" class="hover:text-white transition">Чаты</a>
-                <a href="#" class="hover:text-white transition">Форум</a>
-            </div>
-            <button class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-full text-sm transition">Профиль</button>
-        </div>
-    </nav>
+    <h1>NOVO Malinograd</h1>
+    <button onclick="login()">Войти через Google</button>
+    
+    <div id="chatBox" style="height: 300px; border: 1px solid #444; margin: 20px 0; overflow-y: scroll; padding: 10px;"></div>
+    
+    <input id="messageInput" type="text" placeholder="Сообщение..." style="padding: 10px; width: 300px;">
+    <button onclick="sendMessage()">Отправить</button>
 
-    <!-- Hero Section -->
-    <header class="h-screen flex flex-col justify-center items-center text-center px-6 bg-[url('https://images.unsplash.com/photo-1515630278757-ed2111077755?q=80&w=2070')] bg-cover bg-center">
-        <div class="absolute inset-0 bg-black/60"></div>
-        <div class="relative z-10">
-            <h1 class="text-6xl md:text-8xl font-bold mb-6 neon-glow">NOVO Malinograd</h1>
-            <p class="text-lg text-gray-300 mb-10 max-w-lg">Добро пожаловать в город будущего. Создавай свою историю, управляй судьбой, живи в NOVO.</p>
-            <button class="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-blue-400 hover:text-white transition duration-300">
-                Присоединиться к проекту
-            </button>
-        </div>
-    </header>
-
-    <!-- Projects Section -->
-    <section class="max-w-6xl mx-auto py-20 px-6">
-        <h2 class="text-3xl font-bold mb-12 text-center">Наши Проекты</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Card -->
-            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-blue-500 transition group">
-                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
-                <h3 class="text-xl font-semibold mb-2">Malinograd City</h3>
-                <p class="text-gray-400 text-sm">Основной сервер с классическим RP отыгрышем.</p>
-            </div>
-            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-purple-500 transition">
-                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
-                <h3 class="text-xl font-semibold mb-2">Future Tech</h3>
-                <p class="text-gray-400 text-sm">Сервер в сеттинге киберпанк-индустрии.</p>
-            </div>
-            <div class="p-6 bg-[#1F1F1F] border border-gray-800 hover:border-blue-500 transition">
-                <div class="h-40 bg-gray-900 mb-4 flex items-center justify-center text-gray-700">Image Placeholder</div>
-                <h3 class="text-xl font-semibold mb-2">Development</h3>
-                <p class="text-gray-400 text-sm">Песочница для тестирования новых механик.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Chat Simulation -->
-    <section class="bg-[#1a1a1a] py-20 px-6">
-        <div class="max-w-4xl mx-auto border border-gray-800 rounded-lg overflow-hidden">
-            <div class="bg-[#252525] p-4 border-b border-gray-800 flex items-center space-x-4">
-                <span class="text-blue-400 font-bold">#</span> <span>general-chat</span>
-            </div>
-            <div class="h-64 p-6 space-y-4 overflow-y-auto text-sm text-gray-300">
-                <p><span class="text-blue-400 font-bold">Admin:</span> Добро пожаловать на сервер, жители Малинограда!</p>
-                <p><span class="text-white font-bold">Player_01:</span> Кто идет сегодня на патруль?</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center py-10 text-gray-600 text-sm">
-        &copy; 2026 NOVO Malinograd. Все права защищены.
-    </footer>
-
-    import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// Добавляем импорты для Auth и Firestore
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCj-GoD1eBbTWjnHeKNN-p2ymcVC-zL2B0",
-  authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
-  projectId: "test-novo-malinogrda-rrp",
-  storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
-  messagingSenderId: "706091384352",
-  appId: "1:706091384352:web:8b42473392454a35388645",
-  measurementId: "G-14LMLMYLK6"
-};
-
-// Инициализация
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-// Экспортируем auth и db, чтобы использовать их в других частях сайта
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+    <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -24,6 +24,10 @@
         .login-btn.secondary:hover { background: #555; }
         .login-btn:disabled { background: #555; cursor: not-allowed; }
 
+        /* Кнопка сброса кэша на случай зависания */
+        .clear-cache-link { display: inline-block; margin-top: 15px; color: #666; font-size: 0.8em; text-decoration: underline; cursor: pointer; }
+        .clear-cache-link:hover { color: #ff5500; }
+
         /* ОСНОВНОЙ КОНТЕНТ */
         .main-content { display: none; }
         .container { max-width: 900px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
@@ -74,167 +78,244 @@
         
         .discord-widget-container { width: 100%; height: 400px; border: none; border-radius: 8px; }
     </style>
+</head>
+<body>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Твой конфиг из консоли Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
-            authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
-            projectId: "test-novo-malinogrda-rrp",
-            storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
-            messagingSenderId: "70609134352",
-            appId: "1:70609134352:web:8b42473392454a35388645"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <h2>NOVO <span>Malinograd RP</span></h2>
+        <div class="login-subtitle">Введите свои данные для входа в игровой аккаунт</div>
+        <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм (Roblox)" required>
+        <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 6 символов)" required>
         
-        let currentUser = null;
+        <div class="btn-group">
+            <button class="login-btn" id="bLogin">Войти</button>
+            <button class="login-btn secondary" id="bReg">Создать акк</button>
+        </div>
+        <div class="clear-cache-link" id="bResetCache">Не заходит / Сбросить сессию</div>
+    </div>
+</div>
 
-        // ПРОВЕРКА: Если игрок уже входил ранее (авто-вход)
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('novo_username');
-            const savedPass = localStorage.getItem('novo_password');
-            if(savedUser && savedPass) {
-                document.getElementById('loginUser').value = savedUser;
-                document.getElementById('loginPass').value = savedPass;
-                handleAuth(savedUser, savedPass, 'login', true);
-            }
-        });
+<div class="main-content" id="mainSiteContent">
+    <div class="container">
+        
+        <div class="stat-card">
+            <div class="status-bar">● ИГРОК АВТОРИЗОВАН</div>
+            <div class="profile-box">
+                <img class="profile-avatar" id="playerAvatar" src="https://tr.rbxcdn.com/30day-avatar-headshot/150/150/AvatarHeadshot/Png/isCircular" alt="Аватар">
+                <div class="profile-info">
+                    <h4 id="playerName">-</h4>
+                    <div class="profile-data">
+                        <div class="data-item">Статус: <span style="color: #00ff00;">В сети</span></div>
+                        <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
+                        <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
+                        <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+                    </div>
+                </div>
+                <button class="action-btn logout-btn" id="bLogout">Выйти из профиля</button>
+            </div>
+        </div>
 
-        // КНОПКА ВОЙТИ
-        window.pressLogin = function() {
-            const username = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value.trim();
-            handleAuth(username, pass, 'login', false);
-        };
+        <div class="stat-card">
+            <h3>💬 Игровой чат проекта</h3>
+            <div class="pm-header">
+                <input type="text" id="pmTarget" placeholder="Кому (укажите ник для ЛС, или оставьте пустым)">
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages"></div>
+            </div>
+            
+            <div class="chat-input-block">
+                <input type="text" id="chatInput" placeholder="Введите ваше сообщение...">
+                <button class="action-btn send-btn" id="bSend">→</button>
+            </div>
+        </div>
 
-        // КНОПКА ЗАРЕГИСТРИРОВАТЬСЯ
-        window.pressRegister = function() {
-            const username = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value.trim();
-            handleAuth(username, pass, 'register', false);
-        };
+        <div class="stat-card full-width">
+            <h3>📢 Мы в Discord</h3>
+            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
 
-        // ЕДИНАЯ ФУНКЦИЯ АВТОРИЗАЦИИ И ПРОВЕРКИ
-        async function handleAuth(username, pass, type, isAuto) {
-            if (username === "" || pass === "") {
-                if(!isAuto) alert("Введите никнейм и пароль!");
-                return;
-            }
-            if (pass.length < 6 && type === 'register') {
-                alert("Пароль должен быть не менее 6 символов!");
-                return;
-            }
+        <div class="stat-card full-width">
+            <h3>🛠️ Сообщить о баге или предложить идею</h3>
+            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
+                <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг..."></textarea>
+                <button type="submit" class="action-btn">ОТПРАВИТЬ НА РАССМОТРЕНИЕ</button>
+            </form>
+        </div>
 
-            const btnLogin = document.getElementById('bLogin');
-            const btnReg = document.getElementById('bReg');
-            btnLogin.disabled = true; btnReg.disabled = true;
+    </div>
+</div>
 
-            try {
-                const userDocId = username.toLowerCase();
-                const userRef = doc(db, "users", userDocId);
-                const userSnap = await getDoc(userRef);
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-                if (type === 'login') {
-                    // Логика Входа
-                    if (!userSnap.exists()) {
-                        alert("Аккаунт с таким никнеймом не зарегистрирован!");
-                        resetAuthButtons();
-                        return;
-                    }
-                    const dbData = userSnap.data();
-                    if (dbData.password !== pass) {
-                        alert("Неверный пароль от аккаунта!");
-                        resetAuthButtons();
-                        // Если авто-вход сломался из-за смены пароля, чистим память
-                        if(isAuto) window.pressLogout();
-                        return;
-                    }
-                    currentUser = dbData;
-                } else {
-                    // Логика Регистрации
-                    if (userSnap.exists()) {
-                        alert("Этот никнейм уже занят другим игроком!");
-                        resetAuthButtons();
-                        return;
-                    }
-                    currentUser = {
-                        username: username,
-                        password: pass,
-                        level: 1,
-                        balance: 5000,
-                        fraction: "Гражданский"
-                    };
-                    await setDoc(userRef, currentUser);
-                    alert("Регистрация успешна!");
+    // Твоя конфигурация Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
+        authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
+        projectId: "test-novo-malinogrda-rrp",
+        storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
+        messagingSenderId: "70609134352",
+        appId: "1:70609134352:web:8b42473392454a35388645"
+    };
+
+    let db;
+    try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+    } catch (e) {
+        console.error("Ошибка инициализации Firebase:", e);
+    }
+    
+    let currentUser = null;
+
+    // Кнопки управления на экране
+    document.getElementById('bLogin').addEventListener('click', () => {
+        const username = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        handleAuth(username, pass, 'login', false);
+    });
+
+    document.getElementById('bReg').addEventListener('click', () => {
+        const username = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        handleAuth(username, pass, 'register', false);
+    });
+
+    document.getElementById('bLogout').addEventListener('click', forceLogout);
+    document.getElementById('bResetCache').addEventListener('click', forceLogout);
+
+    document.getElementById('bSend').addEventListener('click', sendMessage);
+    document.getElementById('chatInput').addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') sendMessage();
+    });
+
+    function forceLogout() {
+        localStorage.clear();
+        location.reload();
+    }
+
+    // Попытка автоматического входа с защитой от сбоев правил
+    try {
+        const savedUser = localStorage.getItem('novo_username');
+        const savedPass = localStorage.getItem('novo_password');
+        if(savedUser && savedPass) {
+            document.getElementById('loginUser').value = savedUser;
+            document.getElementById('loginPass').value = savedPass;
+            handleAuth(savedUser, savedPass, 'login', true);
+        }
+    } catch(err) {
+        console.error("Ошибка авто-входа:", err);
+        forceLogout();
+    }
+
+    async function handleAuth(username, pass, type, isAuto) {
+        if (username === "" || pass === "") {
+            if(!isAuto) alert("Введите никнейм и пароль!");
+            return;
+        }
+        if (pass.length < 6 && type === 'register') {
+            alert("Пароль должен быть не менее 6 символов!");
+            return;
+        }
+
+        document.getElementById('bLogin').disabled = true;
+        document.getElementById('bReg').disabled = true;
+
+        try {
+            const userDocId = username.toLowerCase();
+            const userRef = doc(db, "users", userDocId);
+            const userSnap = await getDoc(userRef);
+
+            if (type === 'login') {
+                if (!userSnap.exists()) {
+                    if(isAuto) { forceLogout(); return; }
+                    alert("Аккаунт с таким никнеймом не зарегистрирован!");
+                    resetAuthButtons();
+                    return;
                 }
+                const dbData = userSnap.data();
+                if (dbData.password !== pass) {
+                    if(isAuto) { forceLogout(); return; }
+                    alert("Неверный пароль!");
+                    resetAuthButtons();
+                    return;
+                }
+                currentUser = dbData;
+            } else {
+                if (userSnap.exists()) {
+                    alert("Этот никнейм уже занят другим игроком!");
+                    resetAuthButtons();
+                    return;
+                }
+                currentUser = {
+                    username: username,
+                    password: pass,
+                    level: 1,
+                    balance: 5000,
+                    fraction: "Гражданский"
+                };
+                await setDoc(userRef, currentUser);
+                alert("Регистрация успешна!");
+            }
 
-                // Запоминаем сессию в браузере
-                localStorage.setItem('novo_username', currentUser.username);
-                localStorage.setItem('novo_password', currentUser.password);
+            localStorage.setItem('novo_username', currentUser.username);
+            localStorage.setItem('novo_password', currentUser.password);
 
-                // Отрисовка кабинета персонажа
-                document.getElementById('playerName').innerText = currentUser.username;
-                document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
-                document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
-                document.getElementById('playerFraction').innerText = currentUser.fraction;
-                document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
+            // Отрисовываем данные профиля
+            document.getElementById('playerName').innerText = currentUser.username;
+            document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
+            document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
+            document.getElementById('playerFraction').innerText = currentUser.fraction;
+            document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
 
-                // Включаем интерфейс
-                document.getElementById('loginOverlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loginOverlay').style.display = 'none';
-                    document.getElementById('mainSiteContent').style.display = 'grid';
-                    // Запуск прослушивания чата
-                    initGlobalChat();
-                }, 500);
+            // Убираем окно входа
+            document.getElementById('loginOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainSiteContent').style.display = 'grid';
+                initGlobalChat();
+            }, 500);
 
-            } catch (e) {
-                console.error(e);
-                alert("Ошибка соединения с БД!");
+        } catch (e) {
+            console.error("Ошибка авторизации Firestore:", e);
+            if(isAuto) {
+                forceLogout();
+            } else {
+                alert("Ошибка доступа к базе данных! Проверьте никнейм или правила Firebase.");
                 resetAuthButtons();
             }
         }
+    }
 
-        function resetAuthButtons() {
-            const btnLogin = document.getElementById('bLogin');
-            const btnReg = document.getElementById('bReg');
-            btnLogin.disabled = false; btnReg.disabled = false;
-        }
+    function resetAuthButtons() {
+        document.getElementById('bLogin').disabled = false;
+        document.getElementById('bReg').disabled = false;
+    }
 
-        // ВЫХОД ИЗ АККАУНТА
-        window.pressLogout = function() {
-            localStorage.clear();
-            location.reload();
-        };
-
-        // РАБОТА С ЧАТОМ (СОХРАНЕНИЕ И ОБНОВЛЕНИЕ ОНЛАЙН)
-        function initGlobalChat() {
-            const chatBox = document.getElementById('chatMessages');
+    function initGlobalChat() {
+        const chatBox = document.getElementById('chatMessages');
+        try {
             const q = query(collection(db, "chat"), orderBy("createdAt", "asc"), limit(50));
             
-            // onSnapshot автоматически обновляет сообщения на экране при их добавлении в БД
             onSnapshot(q, (snapshot) => {
                 chatBox.innerHTML = "";
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    if(!data.createdAt) return; // Пропуск системных задержек времени
+                    if(!data.createdAt) return;
                     
-                    const time = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+                    const time = new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const isMe = data.author.toLowerCase() === currentUser.username.toLowerCase();
                     
                     let msgClass = "msg";
                     let prefix = "";
                     
                     if (data.type === "pm") {
-                        // Показываем ЛС только отправителю или получателю
                         const isTarget = data.target && data.target.toLowerCase() === currentUser.username.toLowerCase();
                         if (!isMe && !isTarget) return; 
-                        
                         msgClass += " pm-msg";
                         prefix = isMe ? `[ЛС для ${data.target}] ` : `[ЛС от ${data.author}] `;
                     } else {
@@ -253,116 +334,43 @@
                     chatBox.appendChild(msgDiv);
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
+            }, (error) => {
+                console.error("Ошибка подписки на чат:", error);
             });
+        } catch(chatErr) {
+            console.error("Не удалось запустить чат:", chatErr);
         }
+    }
 
-        // ОТПРАВКА СООБЩЕНИЯ (ОБЩЕЕ ИЛИ ЛС)
-        window.sendMessage = async function() {
-            const input = document.getElementById('chatInput');
-            const targetInput = document.getElementById('pmTarget');
-            const text = input.value.trim();
-            const target = targetInput.value.trim();
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const targetInput = document.getElementById('pmTarget');
+        const text = input.value.trim();
+        const target = targetInput.value.trim();
 
-            if(text === "") return;
+        if(text === "") return;
 
-            const msgData = {
-                author: currentUser.username,
-                text: text,
-                createdAt: serverTimestamp(),
-                type: target !== "" ? "pm" : "global"
-            };
-
-            if(target !== "") {
-                msgData.target = target;
-            }
-
-            input.value = "";
-            try {
-                await addDoc(collection(db, "chat"), msgData);
-            } catch(e) {
-                console.error("Ошибка отправки сообщения:", e);
-            }
+        const msgData = {
+            author: currentUser.username,
+            text: text,
+            createdAt: serverTimestamp(),
+            type: target !== "" ? "pm" : "global"
         };
 
-        // Защита от XSS уязвимостей в чате
-        function escapeHTML(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        if(target !== "") msgData.target = target;
+
+        input.value = "";
+        try {
+            await addDoc(collection(db, "chat"), msgData);
+        } catch(e) {
+            console.error("Ошибка отправки в Firestore:", e);
+            alert("Не удалось отправить сообщение. Проверьте правила чата!");
         }
+    }
 
-        // Отправка по нажатию Enter
-        window.checkEnter = function(e) {
-            if(e.key === 'Enter') sendMessage();
-        }
-    </script>
-</head>
-<body>
-
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <h2>NOVO <span>Malinograd RP</span></h2>
-        <div class="login-subtitle">Введите свои данные для входа в игровой аккаунт</div>
-        <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм (Roblox)" required>
-        <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 6 символов)" required>
-        
-        <div class="btn-group">
-            <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
-            <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать акк</button>
-        </div>
-    </div>
-</div>
-
-<div class="main-content" id="mainSiteContent">
-    <div class="container">
-        
-        <div class="stat-card">
-            <div class="status-bar">● ИГРОК АВТОРИЗОВАН</div>
-            <div class="profile-box">
-                <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар">
-                <div class="profile-info">
-                    <h4 id="playerName">-</h4>
-                    <div class="profile-data">
-                        <div class="data-item">Статус: <span style="color: #00ff00;">В сети</span></div>
-                        <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
-                        <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
-                        <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
-                    </div>
-                </div>
-                <button class="action-btn logout-btn" onclick="pressLogout()">Выйти из профиля</button>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>💬 Игровой чат проекта</h3>
-            <div class="pm-header">
-                <input type="text" id="pmTarget" placeholder="Кому (укажите ник для ЛС, или оставьте пустым для общего чата)">
-            </div>
-            
-            <div class="chat-container">
-                <div class="chat-messages" id="chatMessages">
-                    </div>
-            </div>
-            
-            <div class="chat-input-block">
-                <input type="text" id="chatInput" placeholder="Введите ваше сообщение..." onkeydown="checkEnter(event)">
-                <button class="action-btn send-btn" onclick="sendMessage()">→</button>
-            </div>
-        </div>
-
-        <div class="stat-card full-width">
-            <h3>📢 Мы в Discord</h3>
-            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-        </div>
-
-        <div class="stat-card full-width">
-            <h3>🛠️ Сообщить о баге или предложить идею</h3>
-            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
-                <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг, найденный в NOVO Malinograd..."></textarea>
-                <button type="submit" class="action-btn">ОТПРАВИТЬ НА РАССМОТРЕНИЕ</button>
-            </form>
-        </div>
-
-    </div>
-</div>
-
+    function escapeHTML(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+</script>
 </body>
 </html>

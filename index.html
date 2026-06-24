@@ -11,12 +11,14 @@
         /* СТИЛИ ОКНА ВХОДА NOVO MALINOGRAD */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0c0d0e; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.5s; }
         .login-box { background: #232527; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box; border: 1px solid #333; }
-        .login-box h2 { margin-top: 0; margin-bottom: 25px; font-size: 1.8em; font-weight: bold; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 1.8em; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .login-box h2 span { color: #ff5500; }
+        .login-subtitle { color: #888; font-size: 0.9em; margin-bottom: 20px; }
         .login-input { background: #393b3d; border: 1px solid #555; color: white; padding: 15px; width: 100%; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1em; transition: 0.3s; }
         .login-input:focus { border-color: #ff5500; outline: none; background: #444648; }
         .login-btn { padding: 15px; background: #ff5500; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
         .login-btn:hover { background: #e04a00; transform: translateY(-1px); }
+        .login-btn:disabled { background: #555; cursor: not-allowed; }
 
         /* ОСНОВНОЙ КОНТЕНТ САЙТА (СКРЫТ ДО ВХОДА) */
         .main-content { display: none; }
@@ -24,7 +26,7 @@
         .stat-card { background: #161616; padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .status-bar { color: #00ff00; font-weight: bold; margin-bottom: 15px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;}
         
-        textarea { background: #222; border: 1px solid #444; color: white; padding: 12px; width: 95%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; transition: 0.3s; }
+        textarea { background: #222; border: 1px solid #444; color: white; padding: 12px; width: 100%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; transition: 0.3s; resize: vertical; }
         textarea:focus { border-color: #ff5500; outline: none; background: #2a2a2a; }
         .action-btn { padding: 12px 25px; background: #ff5500; border: none; color: white; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; text-transform: uppercase; }
         .action-btn:hover { background: #e04a00; }
@@ -33,7 +35,7 @@
         
         /* Стили профиля */
         .profile-box { display: flex; background: #1c1c1c; border: 1px solid #ff5500; border-radius: 10px; padding: 20px; align-items: center; gap: 20px; flex-wrap: wrap; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: #2a2a2a; border: 2px solid #ff5500; object-fit: cover; box-shadow: 0 0 10px rgba(255,85,0,0.2); }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: #2a2a2a; border: 2px solid #ff5500; object-fit: cover; }
         .profile-info { flex: 1; min-width: 200px; }
         .profile-info h4 { margin: 0 0 15px 0; color: #fff; font-size: 1.5em; letter-spacing: 0.5px; }
         .profile-data { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em; }
@@ -42,94 +44,28 @@
         
         .discord-widget-container { width: 100%; height: 500px; border: none; border-radius: 8px; margin-top: 15px; }
     </style>
-</head>
-<body>
 
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <h2>NOVO <span>Malinograd RP</span></h2>
-        <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм (Roblox)" required>
-        <input type="password" id="loginPass" class="login-input" placeholder="Пароль от аккаунта" required>
-        <button class="login-btn" onclick="startLogin()">Войти в кабинет</button>
-    </div>
-</div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<div class="main-content" id="mainSiteContent">
-    <div class="container">
-        
-        <div class="stat-card">
-            <div class="status-bar">● СЕРВЕР ЗАПУЩЕН И СТАБИЛЕН</div>
-            <h3>Личный кабинет персонажа</h3>
+        // Твоя конфигурация из консоли Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
+            authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
+            projectId: "test-novo-malinogrda-rrp",
+            storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
+            messagingSenderId: "70609134352",
+            appId: "1:70609134352:web:8b42473392454a35388645"
+        };
+
+        // Инициализация базы данных
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.startLogin = async function() {
+            const username = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const btn = document.querySelector('.login-btn');
             
-            <div class="profile-box">
-                <img class="profile-avatar" id="playerAvatar" src="https://tr.rbxcdn.com/30day-avatar-headshot/150/150/AvatarHeadshot/Png/isCircular" alt="Аватар">
-                <div class="profile-info">
-                    <h4 id="playerName">Никнейм</h4>
-                    <div class="profile-data">
-                        <div class="data-item">Статус: <span style="color: #00ff00;">В игре</span></div>
-                        <div class="data-item">Уровень: <span>0 LVL</span></div>
-                        <div class="data-item">Баланс: <span>0 рублей</span></div>
-                        <div class="data-item">Фракция: <span>Гражданский</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <h3>💬 Мы в Discord</h3>
-            <p>Смотри, кто сейчас в сети, общайся с игроками и читай новости проекта в реальном времени!</p>
-            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-        </div>
-
-        <div class="stat-card">
-            <h3>📢 Баги и идеи для проекта</h3>
-            <p>Ваше мнение важно! Все сообщения попадают напрямую разработчикам.</p>
-            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
-                <input type="text" name="nickname" placeholder="Твой никнейм в игре" required style="background: #222; border: 1px solid #444; color: white; padding: 12px; width: 100%; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box;">
-                <textarea name="message" rows="5" required placeholder="Опиши суть бага или идеи..."></textarea>
-                <button type="submit" class="action-btn">ОТПРАВИТЬ РАЗРАБОТЧИКАМ</button>
-            </form>
-        </div>
-
-        <div class="stat-card">
-            <h3>О NOVO Malinograd RP</h3>
-            <p>Добро пожаловать в Малиноград. Новый стандарт RolePlay выживания в современном городском сеттинге. Присоединяйтесь к нашему комьюнити!</p>
-            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <a href="https://discord.gg/awynwRwQab" target="_blank" style="flex: 1; text-decoration: none;">
-                    <button class="action-btn" style="background: #5865F2;">ДИСКОРД ИГРЫ</button>
-                </a>
-                <a href="https://discord.com/users/1049747616663080970" target="_blank" style="flex: 1; text-decoration: none;">
-                    <button class="action-btn" style="background: #333;">АВТОР ПРОЕКТА</button>
-                </a>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-function startLogin() {
-    const username = document.getElementById('loginUser').value.trim();
-    
-    if (username === "") {
-        alert("Пожалуйста, введите ваш никнейм!");
-        return;
-    }
-
-    document.getElementById('playerName').innerText = username;
-
-    // Прямой стабильный эндпоинт картинок Roblox (работает без CORS ошибок напрямую в теге img)
-    const secureAvatarUrl = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(username)}&width=150&height=150&format=png`;
-    document.getElementById('playerAvatar').src = secureAvatarUrl;
-
-    // Анимация входа
-    document.getElementById('loginOverlay').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainSiteContent').style.display = 'block';
-    }, 500);
-}
-</script>
-
-</body>
-</html>
+            if (username === "" || pass

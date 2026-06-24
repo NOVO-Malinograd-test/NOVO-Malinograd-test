@@ -118,22 +118,22 @@ function startLogin() {
 
     document.getElementById('playerName').innerText = username;
 
-    // Скрипт обхода CORS блокировок для получения аватара Роблокс
-    // Шаг 1: Ищем ID пользователя по его текстовому никнейму
-    fetch(`https://images-api.roblox.com/v1/users/avatar-headshot?userIds=1&size=150x150&format=Png`) // Просто проверка доступности API
-    
-    // Используем самый стабильный и проверенный метод генерации картинки
-    const webAvatarUrl = `https://www.roblox.com/headshot-thumbnail/image?username=${encodeURIComponent(username)}&width=150&height=150&format=png`;
-    document.getElementById('playerAvatar').src = webAvatarUrl;
+    // Используем открытый CORS-прокси (cors-anywhere альтернатива) для безопасного запроса к серверам Roblox
+    const proxyUrl = 'https://corsproxy.io/?';
+    const searchUrl = `${proxyUrl}${encodeURIComponent('https://users.roblox.com/v1/users/search?keyword=' + username + '&limit=1')}`;
 
-    // Дополнительный умный запрос (на случай если браузер блокирует стандартный адрес)
-    fetch(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(username)}&limit=1`)
-        .then(res => res.json())
+    fetch(searchUrl)
+        .then(res => {
+            if(!res.ok) throw new Error('Network error');
+            return res.json();
+        })
         .then(resData => {
             if (resData.data && resData.data.length > 0) {
                 const uid = resData.data[0].id;
-                return fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${uid}&size=150x150&format=Png&isCircular=true`);
+                const thumbUrl = `${proxyUrl}${encodeURIComponent('https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + uid + '&size=150x150&format=Png&isCircular=true')}`;
+                return fetch(thumbUrl);
             }
+            return null;
         })
         .then(thumbRes => thumbRes ? thumbRes.json() : null)
         .then(thumbData => {
@@ -142,7 +142,7 @@ function startLogin() {
             }
         })
         .catch(e => {
-            console.log("Использован стандартный метод загрузки аватара");
+            console.log("Не удалось загрузить кастомный аватар, оставляем дефолтный");
         });
 
     // Анимация входа

@@ -2,421 +2,114 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox | Home</title>
-    <link rel="shortcut icon" type="image/png" href="https://www.roblox.com/favicon.ico"> 
+    <title>NOVO RP | Dashboard</title>
     <style>
-        /* ОСНОВНЫЕ СТИЛИ ROBLOX (DARK THEME) */
-        body { 
-            background-color: #191b1d; 
-            color: #ffffff; 
-            font-family: "HCo Gotham SSm", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* ШАПКА (HEADER) */
-        .rbx-header {
-            background-color: #232527;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            border-bottom: 1px solid #111;
-            z-index: 100;
-        }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .rbx-logo {
-            width: 30px;
-            height: 30px;
-            background: url('https://images.rbxcdn.com/9fb92cbf3934bc29030a1de3979e93b2.svg') no-repeat center;
-            background-size: contain;
-            cursor: pointer;
-        }
-        .header-title { font-size: 16px; font-weight: 500; letter-spacing: 0.5px; }
-        
-        .header-right { display: flex; align-items: center; gap: 20px; font-size: 14px; }
-        .user-balance { display: flex; align-items: center; gap: 5px; color: #cbd5e1; font-weight: bold; }
-        .robux-icon {
-            width: 16px;
-            height: 16px;
-            background: url('https://images.rbxcdn.com/e79f6fb878b66e34346898d9e2621cb3.svg') no-repeat center;
-            background-size: contain;
-            display: inline-block;
-        }
-
-        /* ОСНОВНОЙ КОНТЕНТ С СЕНДВИЧЕМ */
-        .rbx-body { display: flex; flex: 1; height: calc(100vh - 45px); }
-
-        /* БОКОВОЕ МЕНЮ (SIDEBAR) */
-        .rbx-sidebar {
-            width: 160px;
-            background-color: #232527;
-            padding-top: 10px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #111;
-        }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 18px;
-            font-size: 14px;
-            color: #bdc3c7;
-            text-decoration: none;
-            cursor: pointer;
-            gap: 12px;
-            font-weight: 500;
-        }
-        .sidebar-item:hover, .sidebar-item.active {
-            background-color: #393b3d;
-            color: #fff;
-        }
-        .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
-
-        /* ЦЕНТРАЛЬНАЯ СТРАНИЦА ГЛАВНОЙ */
-        .main-content { 
-            flex: 1; 
-            padding: 25px 40px; 
-            overflow-y: auto; 
-            background-color: #191b1d;
-            display: none; /* Включается после логина */
-        }
-
-        /* ОКНО АВТОРИЗАЦИИ (В СТИЛЕ ВХОДА ROBLOX) */
-        .login-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #191b1d; display: flex; justify-content: center; align-items: center; z-index: 9999; 
-        }
-        .login-box { 
-            background: #232527; padding: 35px; border-radius: 4px; width: 100%; max-width: 380px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center; border: 1px solid #333;
-        }
-        .login-box h2 { margin-top: 0; font-size: 22px; font-weight: 600; margin-bottom: 25px; }
-        .login-input { 
-            background: #191b1d; border: 1px solid #555; color: white; padding: 12px; 
-            width: 100%; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; font-size: 14px; 
-        }
-        .login-input:focus { border-color: #3b82f6; outline: none; }
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .login-btn { 
-            padding: 12px; background: #0084ff; border: none; color: white; border-radius: 4px; 
-            cursor: pointer; font-weight: 600; font-size: 14px; width: 100%; transition: 0.2s;
-        }
-        .login-btn:hover { background: #0070d6; }
-        .login-btn.secondary { background: #393b3d; border: 1px solid #555; }
-        .login-btn.secondary:hover { background: #4e5154; }
-        .clear-cache { font-size: 12px; color: #888; margin-top: 15px; cursor: pointer; text-decoration: underline; }
-
-        /* ИНТЕРФЕЙС РОБЛОКС ХОУМ */
-        .welcome-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-        .welcome-avatar { width: 60px; height: 60px; border-radius: 50%; background: #393b3d; object-fit: cover; border: 1px solid #555; }
-        .welcome-text { font-size: 24px; font-weight: 600; }
-
-        /* Блок друзей (Friends) */
-        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;}
-        .see-all { font-size: 12px; color: #0084ff; cursor: pointer; text-decoration: none;}
-        
-        .friends-scroller { 
-            display: flex; gap: 15px; background: #232527; padding: 15px; 
-            border-radius: 6px; border: 1px solid #333; margin-bottom: 25px; overflow-x: auto;
-        }
-        .friend-card { display: flex; flex-direction: column; align-items: center; text-align: center; width: 75px; flex-shrink: 0; }
-        .friend-img-box { position: relative; width: 55px; height: 55px; }
-        .friend-avatar { width: 55px; height: 55px; border-radius: 50%; background: #191b1d; object-fit: cover; border: 1px solid #444;}
-        .online-dot { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #18833c; border-radius: 50%; border: 2px solid #232527; }
-        .friend-name { font-size: 11px; margin-top: 6px; color: #e8e8e8; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        /* ДВЕ КОЛОНКИ: ХАРАКТЕРИСТИКИ И ЧАТ */
-        .home-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media(min-width: 768px) { .home-grid { grid-template-columns: 320px 1fr; } }
-
-        .rbx-card { background: #232527; border: 1px solid #333; border-radius: 6px; padding: 20px; }
-        .rbx-card h3 { margin-top: 0; font-size: 16px; border-bottom: 1px solid #393b3d; padding-bottom: 10px; margin-bottom: 15px; }
-
-        /* Игровые данные */
-        .info-row { display: flex; justify-content: space-between; background: #191b1d; padding: 10px 14px; border-radius: 4px; margin-bottom: 8px; font-size: 13px;}
-        .info-row span { font-weight: bold; color: #0084ff; }
-
-        /* СТИЛИЗАЦИЯ ЧАТА ПОД ROBLOX */
-        .chat-panel { display: flex; flex-direction: column; height: 350px; }
-        .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; margin-bottom: 10px;}
-        
-        .msg { font-size: 13px; line-height: 1.4; background: #191b1d; padding: 8px 12px; border-radius: 4px; border-left: 3px solid #555; width: fit-content; max-width: 85%; }
-        .msg.my-msg { border-left-color: #0084ff; background: #202b36; align-self: flex-end; }
-        .msg.pm-msg { border-left-color: #a349a4; background: #291e30; }
-        .msg-author { font-weight: bold; color: #0084ff; margin-right: 5px; cursor: pointer; }
-        .msg.my-msg .msg-author { color: #3b82f6; }
-        .msg.pm-msg .msg-author { color: #c87fd4; }
-        .msg-time { font-size: 10px; color: #666; margin-left: 8px; }
-
-        .chat-controls { display: flex; gap: 8px; }
-        .chat-input { flex: 1; background: #191b1d; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 4px; font-size: 13px; }
-        .chat-input:focus { border-color: #0084ff; outline: none; }
-        .send-btn { background: #0084ff; border: none; color: white; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        
-        .pm-target-box { margin-bottom: 8px; }
-        .pm-target-box input { width: 100%; background: #191b1d; border: 1px solid #444; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; box-sizing: border-box;}
+        body { background: #191b1d; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 220px; background: #232527; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #333; }
+        .tab-btn { padding: 12px; background: #2d2f31; border: none; color: #ccc; cursor: pointer; border-radius: 6px; text-align: left; font-weight: bold; }
+        .tab-btn.active { background: #0084ff; color: white; }
+        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .card { background: #232527; padding: 25px; border-radius: 12px; border: 1px solid #333; max-width: 600px; }
+        .avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0084ff; object-fit: cover; }
+        .friend-item { padding: 12px; background: #2d2f31; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-mini { padding: 5px 10px; background: #0084ff; border: none; color: white; cursor: pointer; border-radius: 4px; font-size: 12px; }
+        #chatBox { height: 300px; background: #111; overflow-y: auto; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<div class="rbx-header">
-    <div class="header-left">
-        <div class="rbx-logo"></div>
-        <div class="header-title">Home</div>
-    </div>
-    <div class="header-right">
-        <div id="headerUser" style="font-weight: 500;">-</div>
-        <div class="user-balance">
-            <span id="headerBalance">0</span>
-            <div class="robux-icon"></div>
-        </div>
-    </div>
+<div class="sidebar">
+    <h3 style="color:#0084ff">NOVO RP</h3>
+    <button class="tab-btn active" onclick="showTab('profile')">👤 Профиль</button>
+    <button class="tab-btn" onclick="showTab('chat')">💬 Чат</button>
+    <button class="tab-btn" onclick="showTab('friends')">👥 Друзья</button>
+    <button class="tab-btn" onclick="localStorage.clear(); location.reload()" style="margin-top:auto; color:#ff4444">Выход</button>
 </div>
 
-<div class="rbx-body">
-    <div class="rbx-sidebar">
-        <div class="sidebar-item active"><span class="icon">🏠</span>Home</div>
-        <div class="sidebar-item"><span class="icon">👤</span>Profile</div>
-        <div class="sidebar-item"><span class="icon">💬</span>Chat</div>
-        <div class="sidebar-item" id="sidebarLogout" style="margin-top: auto; color: #ff5555;"><span class="icon">🚪</span>Logout</div>
-    </div>
-
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-box">
-            <h2>Вход в аккаунт Roblox</h2>
-            <input type="text" id="loginUser" class="login-input" placeholder="Игровой никнейм" required>
-            <input type="password" id="loginPass" class="login-input" placeholder="Пароль" required>
-            
-            <div class="btn-group">
-                <button class="login-btn" id="bLogin">Войти</button>
-                <button class="login-btn secondary" id="bReg">Регистрация</button>
-            </div>
-            <div class="clear-cache" id="bResetCache">Сбросить зависшую сессию</div>
+<div class="content">
+    <div id="tab-profile" class="tab-pane active">
+        <div class="card">
+            <img id="pAvatar" class="avatar">
+            <h2 id="pName">Загрузка...</h2>
+            <p>Статус: <span style="color:#00ff00">В сети</span></p>
+            <p>Дата регистрации: <span id="pDate">...</span></p>
         </div>
     </div>
 
-    <div class="main-content" id="mainSiteContent">
-        
-        <div class="welcome-header">
-            <img class="welcome-avatar" id="playerAvatar" src="https://tr.rbxcdn.com/30day-avatar-headshot/150/150/AvatarHeadshot/Png/isCircular" alt="Avatar">
-            <div class="welcome-text">Привет, <span id="playerName">User</span>!</div>
-        </div>
+    <div id="tab-chat" class="tab-pane">
+        <div id="chatBox"></div>
+        <input id="chatInput" style="width:70%; padding:10px; background:#222; color:white; border:none" placeholder="Сообщение...">
+        <button onclick="sendMessage()" style="padding:10px; background:#0084ff; border:none; color:white">Отправить</button>
+    </div>
 
-        <div class="section-title">
-            <span>Друзья проекта</span>
-            <span class="see-all">See All</span>
-        </div>
-        <div class="friends-scroller">
-            <div class="friend-card">
-                <div class="friend-img-box"><img class="friend-avatar" src="https://www.roblox.com/avatar-thumbnail/image?username=YouDream&width=150&height=150&format=png"><div class="online-dot"></div></div>
-                <div class="friend-name">YouDream</div>
-            </div>
-            <div class="friend-card">
-                <div class="friend-img-box"><img class="friend-avatar" src="https://www.roblox.com/avatar-thumbnail/image?username=black_vovit&width=150&height=150&format=png"><div class="online-dot"></div></div>
-                <div class="friend-name">black_vovit</div>
-            </div>
-            <div class="friend-card">
-                <div class="friend-img-box"><img class="friend-avatar" src="https://www.roblox.com/avatar-thumbnail/image?username=Alina96655&width=150&height=150&format=png"><div class="online-dot"></div></div>
-                <div class="friend-name">Alina96655</div>
-            </div>
-            <div class="friend-card">
-                <div class="friend-img-box"><img class="friend-avatar" src="https://www.roblox.com/avatar-thumbnail/image?username=Satan&width=150&height=150&format=png"><div class="online-dot"></div></div>
-                <div class="friend-name">Satan</div>
-            </div>
-        </div>
-
-        <div class="home-grid">
-            
-            <div class="rbx-card">
-                <h3>Статистика персонажа</h3>
-                <div class="info-row">Статус: <span style="color: #18833c;">В игре</span></div>
-                <div class="info-row">Уровень: <span id="playerLevel">1 LVL</span></div>
-                <div class="info-row">Баланс: <span id="playerBalance">5,000 R$</span></div>
-                <div class="info-row">Фракция: <span id="playerFraction">Гражданский</span></div>
-            </div>
-
-            <div class="rbx-card">
-                <h3>Игровой Чат проекта</h3>
-                <div class="chat-panel">
-                    <div class="pm-target-box">
-                        <input type="text" id="pmTarget" placeholder="Кому (Оставьте пустым для общего чата...)">
-                    </div>
-                    <div class="chat-messages" id="chatMessages"></div>
-                    <div class="chat-controls">
-                        <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
-                        <button class="send-btn" id="bSend">Отправить</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    <div id="tab-friends" class="tab-pane">
+        <input id="fInput" placeholder="Никнейм игрока" style="padding:10px">
+        <button onclick="addFriend()" style="padding:10px">Добавить друга</button>
+        <div id="fList" style="margin-top:20px"></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
-        authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
         projectId: "test-novo-malinogrda-rrp",
-        storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
-        messagingSenderId: "70609134352",
         appId: "1:70609134352:web:8b42473392454a35388645"
     };
-
-    let db;
-    try {
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-    } catch (e) {
-        console.error("Firebase error:", e);
-    }
     
-    let currentUser = null;
+    const db = getFirestore(initializeApp(firebaseConfig));
+    let currentUser = localStorage.getItem('novo_username');
 
-    document.getElementById('bLogin').addEventListener('click', () => {
-        const username = document.getElementById('loginUser').value.trim();
-        const pass = document.getElementById('loginPass').value.trim();
-        handleAuth(username, pass, 'login', false);
-    });
+    window.showTab = (tab) => {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        event.target.classList.add('active');
+    };
 
-    document.getElementById('bReg').addEventListener('click', () => {
-        const username = document.getElementById('loginUser').value.trim();
-        const pass = document.getElementById('loginPass').value.trim();
-        handleAuth(username, pass, 'register', false);
-    });
-
-    document.getElementById('sidebarLogout').addEventListener('click', forceLogout);
-    document.getElementById('bResetCache').addEventListener('click', forceLogout);
-    document.getElementById('bSend').addEventListener('click', sendMessage);
-    document.getElementById('chatInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') sendMessage(); });
-
-    function forceLogout() {
-        localStorage.clear();
-        location.reload();
-    }
-
-    try {
-        const savedUser = localStorage.getItem('novo_username');
-        const savedPass = localStorage.getItem('novo_password');
-        if(savedUser && savedPass) {
-            handleAuth(savedUser, savedPass, 'login', true);
-        }
-    } catch(err) {
-        forceLogout();
-    }
-
-    async function handleAuth(username, pass, type, isAuto) {
-        if (username === "" || pass === "") return;
-        
-        try {
-            const userDocId = username.toLowerCase();
-            const userRef = doc(db, "users", userDocId);
-            const userSnap = await getDoc(userRef);
-
-            if (type === 'login') {
-                if (!userSnap.exists()) { if(isAuto) forceLogout(); else alert("Аккаунт не найден!"); return; }
-                const dbData = userSnap.data();
-                if (dbData.password !== pass) { if(isAuto) forceLogout(); else alert("Неверный пароль!"); return; }
-                currentUser = dbData;
-            } else {
-                if (userSnap.exists()) { alert("Никнейм занят!"); return; }
-                currentUser = { username: username, password: pass, level: 1, balance: 5000, fraction: "Гражданский" };
-                await setDoc(userRef, currentUser);
+    // Загрузка профиля
+    if(currentUser) {
+        getDoc(doc(db, "users", currentUser.toLowerCase())).then(snap => {
+            if(snap.exists()) {
+                const data = snap.data();
+                document.getElementById('pName').innerText = data.username;
+                document.getElementById('pAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${data.username}&width=150&height=150&format=png`;
+                document.getElementById('pDate').innerText = "24.06.2026";
             }
-
-            localStorage.setItem('novo_username', currentUser.username);
-            localStorage.setItem('novo_password', currentUser.password);
-
-            // Синхронизация данных с шапкой и контентом в стиле Roblox
-            document.getElementById('headerUser').innerText = currentUser.username;
-            document.getElementById('headerBalance').innerText = currentUser.balance.toLocaleString();
-            
-            document.getElementById('playerName').innerText = currentUser.username;
-            document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
-            document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
-            document.getElementById('playerFraction').innerText = currentUser.fraction;
-            document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
-
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainSiteContent').style.display = 'block';
-            initGlobalChat();
-
-        } catch (e) {
-            if(isAuto) forceLogout();
-        }
-    }
-
-    function initGlobalChat() {
-        const chatBox = document.getElementById('chatMessages');
-        const q = query(collection(db, "chat"), orderBy("createdAt", "asc"), limit(50));
-        
-        onSnapshot(q, (snapshot) => {
-            chatBox.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                if(!data.createdAt) return;
-                
-                const time = new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const isMe = data.author.toLowerCase() === currentUser.username.toLowerCase();
-                
-                let msgClass = "msg";
-                let prefix = "";
-                
-                if (data.type === "pm") {
-                    const isTarget = data.target && data.target.toLowerCase() === currentUser.username.toLowerCase();
-                    if (!isMe && !isTarget) return; 
-                    msgClass += " pm-msg";
-                    prefix = isMe ? `[ЛС для ${data.target}] ` : `[ЛС от ${data.author}] `;
-                } else {
-                    if(isMe) msgClass += " my-msg";
-                }
-
-                const msgDiv = document.createElement('div');
-                msgDiv.className = msgClass;
-                msgDiv.innerHTML = `
-                    <span class="msg-author" onclick="document.getElementById('pmTarget').value='${data.author}'">${prefix}${escapeHTML(data.author)}:</span>
-                    <span class="msg-text">${escapeHTML(data.text)}</span>
-                    <span class="msg-time">${time}</span>
-                `;
-                chatBox.appendChild(msgDiv);
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
 
-    async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const targetInput = document.getElementById('pmTarget');
-        const text = input.value.trim();
-        const target = targetInput.value.trim();
+    // Логика друзей
+    window.addFriend = async () => {
+        const name = document.getElementById('fInput').value.trim();
+        await setDoc(doc(db, "friends", currentUser + "_" + name), { owner: currentUser, friendName: name });
+    };
 
-        if(text === "") return;
+    onSnapshot(query(collection(db, "friends"), where("owner", "==", currentUser)), snap => {
+        const list = document.getElementById('fList');
+        list.innerHTML = "";
+        snap.forEach(d => {
+            const name = d.data().friendName;
+            list.innerHTML += `<div class="friend-item">${name} <button class="btn-mini" onclick="alert('Профиль: ${name}')">Профиль</button></div>`;
+        });
+    });
 
-        const msgData = {
-            author: currentUser.username,
-            text: text,
-            createdAt: serverTimestamp(),
-            type: target !== "" ? "pm" : "global"
-        };
-        if(target !== "") msgData.target = target;
+    // Чат
+    window.sendMessage = async () => {
+        const text = document.getElementById('chatInput').value;
+        await addDoc(collection(db, "chat"), { author: currentUser, text: text, createdAt: new Date() });
+        document.getElementById('chatInput').value = "";
+    };
 
-        input.value = "";
-        try { await addDoc(collection(db, "chat"), msgData); } catch(e) {}
-    }
-
-    function escapeHTML(str) {
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+    onSnapshot(query(collection(db, "chat"), orderBy("createdAt", "asc")), snap => {
+        const box = document.getElementById('chatBox');
+        box.innerHTML = "";
+        snap.forEach(d => box.innerHTML += `<div><b>${d.data().author}:</b> ${d.data().text}</div>`);
+    });
 </script>
 </body>
 </html>

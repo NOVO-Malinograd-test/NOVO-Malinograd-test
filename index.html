@@ -2,143 +2,698 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NOVO Malinograd RP - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVO Malinograd RP | Неоновый кабинет</title>
+    <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1">
     <style>
-        :root { --neon-blue: #00f2ff; --neon-purple: #bd00ff; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        
-        .overlay { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .login-card { border: 1px solid var(--neon-blue); padding: 30px; width: 350px; background: #111; box-shadow: 0 0 20px rgba(0,242,255,0.2); text-align: center; }
-        
-        #mainSiteContent { display: none; grid-template-columns: 300px 1fr; gap: 20px; padding: 20px; height: 90vh; }
-        .panel { border: 1px solid #333; padding: 20px; background: #111; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .panel h3 { color: var(--neon-blue); border-bottom: 1px solid #333; padding-bottom: 10px; }
-        
-        input, button { background: #000; border: 1px solid #444; color: #fff; padding: 12px; width: 100%; margin: 8px 0; box-sizing: border-box; }
-        button { border-color: var(--neon-blue); cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; }
-        button:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
-        
-        #chatMessages { height: 450px; overflow-y: auto; border: 1px solid #222; background: #0a0a0a; margin-bottom: 10px; padding: 10px; }
-        .msg { padding: 6px; border-bottom: 1px solid #222; font-size: 14px; }
-        .msg b { color: var(--neon-purple); }
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * { box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ===== ОКНО ВХОДА (НЕОНОВОЕ) ===== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+        .login-box {
+            background: #141414;
+            padding: 45px 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 0 30px rgba(180, 180, 180, 0.15), 0 0 60px rgba(150, 150, 150, 0.05);
+            border: 1px solid #3a3a3a;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            transition: box-shadow 0.3s;
+        }
+        .login-box:hover {
+            box-shadow: 0 0 40px rgba(200, 200, 200, 0.25), 0 0 80px rgba(160, 160, 160, 0.1);
+        }
+        .login-box h2 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 2em;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.15);
+        }
+        .login-box h2 span {
+            color: #b0b0b0;
+            text-shadow: 0 0 30px rgba(180,180,180,0.4);
+        }
+        .login-subtitle {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+        .login-input {
+            background: #1e1e1e;
+            border: 1px solid #3a3a3a;
+            color: #f0f0f0;
+            padding: 16px 20px;
+            width: 100%;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            transition: 0.3s;
+            outline: none;
+        }
+        .login-input:focus {
+            border-color: #b0b0b0;
+            box-shadow: 0 0 20px rgba(180, 180, 180, 0.2), inset 0 0 10px rgba(180,180,180,0.05);
+            background: #222;
+        }
+        .login-hint {
+            font-size: 0.75em;
+            color: #777;
+            margin-top: -6px;
+            margin-bottom: 14px;
+            text-align: left;
+            display: block;
+            padding-left: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .login-btn {
+            padding: 16px;
+            background: #2a2a2a;
+            border: 1px solid #555;
+            color: #eee;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+            font-size: 1em;
+            transition: 0.25s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(150,150,150,0.0);
+        }
+        .login-btn:hover {
+            background: #3a3a3a;
+            border-color: #aaa;
+            box-shadow: 0 0 25px rgba(180,180,180,0.3);
+            transform: translateY(-2px);
+        }
+        .login-btn.secondary {
+            background: #1a1a1a;
+            border-color: #444;
+        }
+        .login-btn.secondary:hover {
+            background: #2a2a2a;
+            border-color: #888;
+        }
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ (НЕОНОВЫЙ) ===== */
+        .main-content {
+            display: none;
+            width: 100%;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        @media(min-width: 768px) {
+            .container {
+                grid-template-columns: 340px 1fr;
+            }
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        .stat-card {
+            background: #121212;
+            padding: 30px;
+            border-radius: 30px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 0 30px rgba(160,160,160,0.06), inset 0 0 30px rgba(160,160,160,0.02);
+            transition: box-shadow 0.3s, border-color 0.3s;
+            height: fit-content;
+            backdrop-filter: blur(2px);
+        }
+        .stat-card:hover {
+            box-shadow: 0 0 50px rgba(180,180,180,0.12), inset 0 0 30px rgba(180,180,180,0.02);
+            border-color: #444;
+        }
+
+        .status-bar {
+            color: #8f8;
+            font-weight: 600;
+            margin-bottom: 18px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(100,255,100,0.2);
+        }
+
+        input[type="text"], textarea {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #eee;
+            padding: 14px 18px;
+            width: 100%;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            transition: 0.3s;
+            font-family: inherit;
+            outline: none;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: #aaa;
+            box-shadow: 0 0 25px rgba(180,180,180,0.15);
+            background: #222;
+        }
+        textarea {
+            border-radius: 20px;
+            resize: vertical;
+        }
+
+        .action-btn {
+            padding: 14px 25px;
+            background: #2a2a2a;
+            border: 1px solid #555;
+            color: #eee;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: 0.25s;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 0 0 15px rgba(150,150,150,0.0);
+        }
+        .action-btn:hover {
+            background: #3a3a3a;
+            border-color: #aaa;
+            box-shadow: 0 0 30px rgba(180,180,180,0.25);
+            transform: translateY(-2px);
+        }
+        .logout-btn {
+            background: #1a1a1a;
+            border-color: #3a3a3a;
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 0.85em;
+        }
+        .logout-btn:hover {
+            background: #2a1a1a;
+            border-color: #a55;
+            box-shadow: 0 0 30px rgba(200,80,80,0.2);
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #ddd;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(200,200,200,0.08);
+        }
+        p {
+            line-height: 1.6;
+            color: #aaa;
+            margin-top: 0;
+        }
+
+        /* ===== ПРОФИЛЬ ===== */
+        .profile-box { text-align: center; }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            background: #1a1a1a;
+            border: 2px solid #555;
+            object-fit: cover;
+            margin-bottom: 18px;
+            box-shadow: 0 0 40px rgba(180,180,180,0.15);
+        }
+        .profile-info h4 {
+            margin: 0 0 18px 0;
+            color: #fff;
+            font-size: 1.6em;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.1);
+        }
+        .profile-data {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        .data-item {
+            background: #1a1a1a;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border-left: 4px solid #888;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+        .data-item span {
+            color: #ccc;
+            font-weight: 600;
+            float: right;
+            text-shadow: 0 0 15px rgba(200,200,200,0.1);
+        }
+
+        /* ===== ЧАТ ===== */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+            background: #0d0d0d;
+            border: 1px solid #2a2a2a;
+            border-radius: 30px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 10px;
+        }
+
+        .msg {
+            background: #1c1c1c;
+            padding: 12px 18px;
+            border-radius: 25px;
+            max-width: 85%;
+            width: fit-content;
+            line-height: 1.4;
+            word-break: break-word;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 0 20px rgba(160,160,160,0.04);
+        }
+        .msg-meta {
+            font-size: 0.7em;
+            color: #888;
+            margin-bottom: 5px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .msg-author {
+            color: #ccc;
+            font-weight: 600;
+            text-shadow: 0 0 15px rgba(200,200,200,0.1);
+        }
+        .msg.my-msg {
+            background: #252525;
+            align-self: flex-end;
+            border-right: 3px solid #aaa;
+            box-shadow: 0 0 30px rgba(180,180,180,0.08);
+        }
+        .msg.my-msg .msg-author {
+            color: #ddd;
+        }
+        .msg.pm-msg {
+            background: #1a1a2a;
+            border-left: 3px solid #888;
+        }
+        .msg.pm-msg .msg-author {
+            color: #b0b0d0;
+        }
+
+        .chat-input-block {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input-block input {
+            margin-bottom: 0;
+            flex: 1;
+            border-radius: 50px;
+        }
+        .chat-input-block .send-btn {
+            width: auto;
+            padding: 0 25px;
+            border-radius: 50px;
+        }
+
+        .pm-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .pm-header input {
+            margin-bottom: 0;
+            font-size: 0.9em;
+            padding: 10px 18px;
+            border-radius: 50px;
+        }
+
+        /* ===== DISCORD ===== */
+        .discord-widget-container {
+            width: 100%;
+            height: 420px;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(160,160,160,0.05);
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media(max-width: 600px) {
+            .login-box { padding: 30px 20px; }
+            .btn-group { flex-direction: column; }
+            .stat-card { padding: 20px; }
+        }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
+            authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
+            projectId: "test-novo-malinogrda-rrp",
+            storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
+            messagingSenderId: "70609134352",
+            appId: "1:70609134352:web:8b42473392454a35388645"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // ===== ВАЛИДАЦИЯ =====
+        function isValidUsername(username) {
+            return /^[a-zA-Z0-9_]{2,20}$/.test(username);
+        }
+        function isValidPassword(password) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~]{8,}$/.test(password);
+        }
+
+        // ===== АВТО-ВХОД =====
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('novo_username');
+            const savedPass = localStorage.getItem('novo_password');
+            if (savedUser && savedPass) {
+                document.getElementById('loginUser').value = savedUser;
+                document.getElementById('loginPass').value = savedPass;
+                handleAuth(savedUser, savedPass, 'login', true);
+            }
+        });
+
+        // ===== КНОПКИ =====
+        window.pressLogin = function() {
+            const username = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            handleAuth(username, pass, 'login', false);
+        };
+        window.pressRegister = function() {
+            const username = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            handleAuth(username, pass, 'register', false);
+        };
+
+        // ===== ОБЩАЯ АВТОРИЗАЦИЯ =====
+        async function handleAuth(username, pass, type, isAuto) {
+            if (username === "" || pass === "") {
+                if (!isAuto) alert("Введите никнейм и пароль!");
+                return;
+            }
+
+            if (type === 'register') {
+                if (!isValidUsername(username)) {
+                    alert("Никнейм должен содержать только латиницу, цифры или _ (2–20 символов)!");
+                    return;
+                }
+                if (!isValidPassword(pass)) {
+                    alert("Пароль слишком простой! Требования:\n• минимум 8 символов\n• заглавная, строчная, цифра, спецсимвол (!@#$%^&*()_+-=)");
+                    return;
+                }
+            }
+
+            const btnLogin = document.getElementById('bLogin');
+            const btnReg = document.getElementById('bReg');
+            btnLogin.disabled = true; btnReg.disabled = true;
+
+            try {
+                const userDocId = username.toLowerCase();
+                const userRef = doc(db, "users", userDocId);
+                const userSnap = await getDoc(userRef);
+
+                if (type === 'login') {
+                    if (!userSnap.exists()) {
+                        alert("Аккаунт не найден!");
+                        resetAuthButtons();
+                        return;
+                    }
+                    const dbData = userSnap.data();
+                    if (dbData.password !== pass) {
+                        alert("Неверный пароль!");
+                        resetAuthButtons();
+                        if (isAuto) window.pressLogout();
+                        return;
+                    }
+                    currentUser = dbData;
+                } else {
+                    if (userSnap.exists()) {
+                        alert("Никнейм уже занят!");
+                        resetAuthButtons();
+                        return;
+                    }
+                    currentUser = {
+                        username: username,
+                        password: pass,
+                        level: 1,
+                        balance: 5000,
+                        fraction: "Гражданский"
+                    };
+                    await setDoc(userRef, currentUser);
+                    alert("Регистрация успешна!");
+                }
+
+                localStorage.setItem('novo_username', currentUser.username);
+                localStorage.setItem('novo_password', currentUser.password);
+
+                document.getElementById('playerName').innerText = currentUser.username;
+                document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
+                document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
+                document.getElementById('playerFraction').innerText = currentUser.fraction;
+                document.getElementById('playerAvatar').src =
+                    `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
+
+                document.getElementById('loginOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainSiteContent').style.display = 'block';
+                    initGlobalChat();
+                }, 600);
+
+            } catch (e) {
+                console.error(e);
+                alert("Ошибка соединения с БД!");
+                resetAuthButtons();
+            }
+        }
+
+        function resetAuthButtons() {
+            document.getElementById('bLogin').disabled = false;
+            document.getElementById('bReg').disabled = false;
+        }
+
+        window.pressLogout = function() {
+            localStorage.clear();
+            location.reload();
+        };
+
+        // ===== ЧАТ =====
+        function initGlobalChat() {
+            const chatBox = document.getElementById('chatMessages');
+            const q = query(collection(db, "chat"), orderBy("createdAt", "asc"), limit(50));
+
+            onSnapshot(q, (snapshot) => {
+                chatBox.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (!data.createdAt) return;
+                    const time = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+                    const isMe = data.author.toLowerCase() === currentUser.username.toLowerCase();
+
+                    let msgClass = "msg";
+                    let prefix = "";
+
+                    if (data.type === "pm") {
+                        const isTarget = data.target && data.target.toLowerCase() === currentUser.username.toLowerCase();
+                        if (!isMe && !isTarget) return;
+                        msgClass += " pm-msg";
+                        prefix = isMe ? `[ЛС для ${data.target}] ` : `[ЛС от ${data.author}] `;
+                    } else {
+                        if (isMe) msgClass += " my-msg";
+                    }
+
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = msgClass;
+                    msgDiv.innerHTML = `
+                        <div class="msg-meta">
+                            <span class="msg-author">${prefix}${escapeHTML(data.author)}</span>
+                            <span>${time}</span>
+                        </div>
+                        <div class="msg-text">${escapeHTML(data.text)}</div>
+                    `;
+                    chatBox.appendChild(msgDiv);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        window.sendMessage = async function() {
+            const input = document.getElementById('chatInput');
+            const targetInput = document.getElementById('pmTarget');
+            const text = input.value.trim();
+            const target = targetInput.value.trim();
+            if (text === "") return;
+
+            const msgData = {
+                author: currentUser.username,
+                text: text,
+                createdAt: serverTimestamp(),
+                type: target !== "" ? "pm" : "global"
+            };
+            if (target !== "") msgData.target = target;
+
+            input.value = "";
+            try {
+                await addDoc(collection(db, "chat"), msgData);
+            } catch(e) {
+                console.error(e);
+            }
+        };
+
+        function escapeHTML(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        window.checkEnter = function(e) {
+            if (e.key === 'Enter') sendMessage();
+        };
+    </script>
 </head>
 <body>
 
-<div class="overlay" id="loginOverlay">
-    <div class="login-card">
-        <h2 style="text-shadow: 0 0 10px var(--neon-blue)">NOVO MALINOGRAD</h2>
-        <input type="text" id="loginUser" placeholder="Никнейм (латиница)">
-        <input type="password" id="loginPass" placeholder="Пароль (8+ симв, 1 цифра, 1 заглавная)">
-        <button onclick="pressLogin()" id="bLogin">Войти</button>
-        <button onclick="pressRegister()" id="bReg">Регистрация</button>
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <h2>NOVO <span>Malinograd RP</span></h2>
+        <div class="login-subtitle">Вход в игровой аккаунт</div>
+        <input type="text" id="loginUser" class="login-input" placeholder="Ник (только латиница, цифры, _)">
+        <span class="login-hint">Допустимы A–Z, 0–9 и _ (2–20 символов)</span>
+        <input type="password" id="loginPass" class="login-input" placeholder="Пароль (минимум 8 символов, сложный)">
+        <span class="login-hint">Заглавная, строчная, цифра, спецсимвол (!@#$%^&*()_+-=)</span>
+
+        <div class="btn-group">
+            <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
+            <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать</button>
+        </div>
     </div>
 </div>
 
-<div id="mainSiteContent">
-    <div class="panel">
-        <img id="playerAvatar" style="width:100%; border:1px solid var(--neon-blue); border-radius: 4px;">
-        <h3>Профиль: <span id="playerName"></span></h3>
-        <p>LVL: <span id="playerLevel"></span></p>
-        <p>Баланс: <span id="playerBalance"></span></p>
-        <p>Фракция: <span id="playerFraction"></span></p>
-        <hr style="border: 0; border-top: 1px solid #333;">
-        <button onclick="pressLogout()">Выйти из аккаунта</button>
-    </div>
-    <div class="panel">
-        <h3>Глобальный RP Чат</h3>
-        <div id="chatMessages"></div>
-        <input type="text" id="pmTarget" placeholder="Кому (пусто для всех)">
-        <input type="text" id="chatInput" placeholder="Ваше сообщение...">
-        <button onclick="sendMessage()">Отправить</button>
+<div class="main-content" id="mainSiteContent">
+    <div class="container">
+
+        <div class="stat-card">
+            <div class="status-bar">● АВТОРИЗОВАН</div>
+            <div class="profile-box">
+                <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар">
+                <div class="profile-info">
+                    <h4 id="playerName">-</h4>
+                    <div class="profile-data">
+                        <div class="data-item">Статус: <span style="color: #8f8;">В сети</span></div>
+                        <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
+                        <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
+                        <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+                    </div>
+                </div>
+                <button class="action-btn logout-btn" onclick="pressLogout()">Выйти</button>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>💬 Игровой чат</h3>
+            <div class="pm-header">
+                <input type="text" id="pmTarget" placeholder="Кому (ник для ЛС) или оставьте пустым">
+            </div>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages"></div>
+            </div>
+            <div class="chat-input-block">
+                <input type="text" id="chatInput" placeholder="Сообщение..." onkeydown="checkEnter(event)">
+                <button class="action-btn send-btn" onclick="sendMessage()">→</button>
+            </div>
+        </div>
+
+        <div class="stat-card full-width">
+            <h3>📢 Мы в Discord</h3>
+            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
+
+        <div class="stat-card full-width">
+            <h3>🛠️ Сообщить о баге / идея</h3>
+            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
+                <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг..."></textarea>
+                <button type="submit" class="action-btn">Отправить</button>
+            </form>
+        </div>
+
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const db = getFirestore(initializeApp({
-        apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
-        authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
-        projectId: "test-novo-malinogrda-rrp",
-        storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
-        messagingSenderId: "70609134352",
-        appId: "1:70609134352:web:8b42473392454a35388645"
-    }));
-
-    let currentUser = null;
-
-    // Инициализация при загрузке
-    window.addEventListener('DOMContentLoaded', () => {
-        const u = localStorage.getItem('novo_username');
-        const p = localStorage.getItem('novo_password');
-        if(u && p) handleAuth(u, p, 'login', true);
-    });
-
-    window.pressLogin = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'login', false);
-    window.pressRegister = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'register', false);
-    window.pressLogout = () => { localStorage.clear(); location.reload(); };
-
-    async function handleAuth(username, pass, type, isAuto) {
-        if (!/^[a-zA-Z0-9]+$/.test(username)) return alert("Ник: только латиница!");
-        if (type === 'register' && !/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass)) return alert("Пароль: 8+ символов, 1 цифра, 1 заглавная!");
-
-        try {
-            const ref = doc(db, "users", username.toLowerCase());
-            const snap = await getDoc(ref);
-
-            if (type === 'login') {
-                if (!snap.exists() || snap.data().password !== pass) return alert("Ошибка входа!");
-                currentUser = snap.data();
-            } else {
-                if (snap.exists()) return alert("Ник занят!");
-                currentUser = { username, password: pass, level: 1, balance: 5000, fraction: "Гражданский" };
-                await setDoc(ref, currentUser);
-            }
-
-            localStorage.setItem('novo_username', currentUser.username);
-            localStorage.setItem('novo_password', currentUser.password);
-
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainSiteContent').style.display = 'grid';
-            
-            document.getElementById('playerName').innerText = currentUser.username;
-            document.getElementById('playerLevel').innerText = currentUser.level;
-            document.getElementById('playerBalance').innerText = currentUser.balance;
-            document.getElementById('playerFraction').innerText = currentUser.fraction;
-            document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
-
-            initChat();
-        } catch (e) { alert("Ошибка соединения!"); }
-    }
-
-    function initChat() {
-        onSnapshot(query(collection(db, "chat"), orderBy("createdAt", "asc")), snap => {
-            const box = document.getElementById('chatMessages');
-            box.innerHTML = "";
-            snap.forEach(d => {
-                const data = d.data();
-                if(data.type === "pm" && data.author !== currentUser.username && data.target !== currentUser.username) return;
-                box.innerHTML += `<div class="msg"><b>${data.author}:</b> ${data.text}</div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        });
-    }
-
-    window.sendMessage = async () => {
-        const input = document.getElementById('chatInput');
-        const target = document.getElementById('pmTarget');
-        if(!input.value) return;
-        await addDoc(collection(db, "chat"), { 
-            author: currentUser.username, 
-            text: input.value, 
-            type: target.value ? "pm" : "global",
-            target: target.value,
-            createdAt: serverTimestamp() 
-        });
-        input.value = "";
-    };
-</script>
 </body>
 </html>

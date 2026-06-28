@@ -1,3 +1,49 @@
+<style>
+    /* Неоновый стиль */
+    :root {
+        --neon-blue: #00f2ff;
+        --neon-purple: #bd00ff;
+        --bg-dark: #121212;
+    }
+
+    body { background-color: var(--bg-dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
+    
+    .login-box, .chat-container {
+        background: #161616;
+        border: 1px solid #333;
+        padding: 20px;
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+    }
+
+    input {
+        background: #000; color: #fff; border: 1px solid #444;
+        padding: 10px; width: 100%; box-sizing: border-box;
+    }
+
+    input:focus { border-color: var(--neon-purple); box-shadow: 0 0 10px rgba(189, 0, 255, 0.4); outline: none; }
+
+    .action-btn {
+        background: transparent; border: 1px solid var(--neon-blue);
+        color: var(--neon-blue); padding: 10px 20px; cursor: pointer;
+        text-shadow: 0 0 5px var(--neon-blue); transition: 0.3s;
+    }
+
+    .action-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+
+    h2 { text-shadow: 0 0 10px var(--neon-blue); }
+    .msg-author { color: var(--neon-blue); }
+</style>
+
+<div id="loginOverlay">
+    <div class="login-box">
+        <h2>NOVO Malinograd</h2>
+        <input type="text" id="loginUser" placeholder="Никнейм (латиница)">
+        <input type="password" id="loginPass" placeholder="Пароль (мин. 8, с цифрами)">
+        <button class="action-btn" onclick="pressLogin()" id="bLogin">Войти</button>
+        <button class="action-btn" onclick="pressRegister()" id="bReg">Регистрация</button>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -11,91 +57,31 @@
         appId: "1:70609134352:web:8b42473392454a35388645"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = getFirestore(initializeApp(firebaseConfig));
     let currentUser = null;
 
-    // Авто-вход при загрузке
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedUser = localStorage.getItem('novo_username');
-        const savedPass = localStorage.getItem('novo_password');
-        if(savedUser && savedPass) {
-            handleAuth(savedUser, savedPass, 'login', true);
-        }
-    });
+    window.pressLogin = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'login');
+    window.pressRegister = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'register');
 
-    window.pressLogin = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'login', false);
-    window.pressRegister = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'register', false);
-
-    async function handleAuth(username, pass, type, isAuto) {
-        if (!username || !pass) { if(!isAuto) alert("Введите данные!"); return; }
-
-        // Проверки: Латиница и сложность пароля
-        if (!/^[a-zA-Z0-9]+$/.test(username)) { alert("Ник: только английские буквы и цифры!"); resetAuthButtons(); return; }
-        if (type === 'register' && !/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass)) { 
-            alert("Пароль: мин 8 символов, 1 заглавная, 1 цифра!"); resetAuthButtons(); return; 
-        }
+    async function handleAuth(username, pass, type) {
+        if (!/^[a-zA-Z0-9]+$/.test(username)) return alert("Ник: только латиница!");
+        if (type === 'register' && !/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass)) return alert("Пароль: 8+ символов, 1 заглавная, 1 цифра!");
 
         try {
             const userRef = doc(db, "users", username.toLowerCase());
             const userSnap = await getDoc(userRef);
 
             if (type === 'login') {
-                if (!userSnap.exists() || userSnap.data().password !== pass) { alert("Ошибка входа!"); resetAuthButtons(); return; }
+                if (!userSnap.exists() || userSnap.data().password !== pass) return alert("Ошибка входа!");
                 currentUser = userSnap.data();
             } else {
-                if (userSnap.exists()) { alert("Ник занят!"); resetAuthButtons(); return; }
+                if (userSnap.exists()) return alert("Ник занят!");
                 currentUser = { username, password: pass, level: 1, balance: 5000, fraction: "Гражданский" };
                 await setDoc(userRef, currentUser);
             }
-
-            localStorage.setItem('novo_username', currentUser.username);
-            localStorage.setItem('novo_password', currentUser.password);
-
-            updateUI();
-        } catch (e) { alert("Ошибка соединения!"); resetAuthButtons(); }
+            
+            document.getElementById('loginOverlay').style.display = 'none';
+            alert("Успешно!");
+        } catch (e) { alert("Ошибка сервера!"); }
     }
-
-    function updateUI() {
-        document.getElementById('playerName').innerText = currentUser.username;
-        document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
-        document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " руб.";
-        document.getElementById('playerFraction').innerText = currentUser.fraction;
-        document.getElementById('playerAvatar').src = `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
-
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainSiteContent').style.display = 'grid';
-        initGlobalChat();
-    }
-
-    function resetAuthButtons() { document.getElementById('bLogin').disabled = false; document.getElementById('bReg').disabled = false; }
-    window.pressLogout = () => { localStorage.clear(); location.reload(); };
-
-    function initGlobalChat() {
-        const chatBox = document.getElementById('chatMessages');
-        onSnapshot(query(collection(db, "chat"), orderBy("createdAt", "asc"), limit(50)), (snapshot) => {
-            chatBox.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const d = doc.data();
-                if(d.type === "pm" && d.author !== currentUser.username && d.target !== currentUser.username) return;
-                chatBox.innerHTML += `<div class="msg"><b>${d.author}:</b> ${d.text}</div>`;
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    }
-
-    window.sendMessage = async () => {
-        const input = document.getElementById('chatInput');
-        if(!input.value.trim()) return;
-        await addDoc(collection(db, "chat"), {
-            author: currentUser.username,
-            text: input.value,
-            createdAt: serverTimestamp(),
-            type: document.getElementById('pmTarget').value ? "pm" : "global",
-            target: document.getElementById('pmTarget').value
-        });
-        input.value = "";
-    };
-
-    window.checkEnter = (e) => { if(e.key === 'Enter') window.sendMessage(); }
 </script>

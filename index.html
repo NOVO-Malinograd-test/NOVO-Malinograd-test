@@ -1,87 +1,117 @@
-<style>
-    /* Неоновый стиль */
-    :root {
-        --neon-blue: #00f2ff;
-        --neon-purple: #bd00ff;
-        --bg-dark: #121212;
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NOVO Malinograd | Advanced System</title>
+    <style>
+        /* НЕОНОВЫЙ КИБЕРПАНК СТИЛЬ */
+        :root { --neon-blue: #00f2ff; --neon-purple: #bd00ff; --bg: #050505; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .card { border: 1px solid var(--neon-blue); padding: 40px; box-shadow: 0 0 30px rgba(0,242,255,0.15); width: 350px; text-align: center; }
+        
+        .main-layout { display: none; grid-template-columns: 300px 1fr; height: 100vh; }
+        .sidebar { background: #0c0c0c; border-right: 1px solid #222; padding: 20px; }
+        .chat-area { display: flex; flex-direction: column; padding: 20px; }
+        
+        input, button { background: #111; border: 1px solid #444; color: #fff; padding: 12px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        button { cursor: pointer; border-color: var(--neon-blue); color: var(--neon-blue); text-transform: uppercase; }
+        button:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+        
+        .msg { margin: 8px 0; padding: 8px; border-left: 2px solid var(--neon-purple); background: #111; }
+    </style>
+</head>
+<body>
 
-    body { background-color: var(--bg-dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
-    
-    .login-box, .chat-container {
-        background: #161616;
-        border: 1px solid #333;
-        padding: 20px;
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
-    }
+<div class="overlay" id="authScreen">
+    <div class="card">
+        <h2 style="color:var(--neon-blue)">NOVO MALINOGRAD</h2>
+        <input type="text" id="uName" placeholder="Никнейм (eng)">
+        <input type="password" id="uPass" placeholder="Пароль (8+ симв, A-Z, 0-9)">
+        <button onclick="auth('login')">Войти</button>
+        <button onclick="auth('reg')">Регистрация</button>
+    </div>
+</div>
 
-    input {
-        background: #000; color: #fff; border: 1px solid #444;
-        padding: 10px; width: 100%; box-sizing: border-box;
-    }
-
-    input:focus { border-color: var(--neon-purple); box-shadow: 0 0 10px rgba(189, 0, 255, 0.4); outline: none; }
-
-    .action-btn {
-        background: transparent; border: 1px solid var(--neon-blue);
-        color: var(--neon-blue); padding: 10px 20px; cursor: pointer;
-        text-shadow: 0 0 5px var(--neon-blue); transition: 0.3s;
-    }
-
-    .action-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
-
-    h2 { text-shadow: 0 0 10px var(--neon-blue); }
-    .msg-author { color: var(--neon-blue); }
-</style>
-
-<div id="loginOverlay">
-    <div class="login-box">
-        <h2>NOVO Malinograd</h2>
-        <input type="text" id="loginUser" placeholder="Никнейм (латиница)">
-        <input type="password" id="loginPass" placeholder="Пароль (мин. 8, с цифрами)">
-        <button class="action-btn" onclick="pressLogin()" id="bLogin">Войти</button>
-        <button class="action-btn" onclick="pressRegister()" id="bReg">Регистрация</button>
+<div class="main-layout" id="mainUI">
+    <div class="sidebar">
+        <h3>Профиль</h3>
+        <p>Игрок: <span id="dispName"></span></p>
+        <p>Уровень: <span id="dispLvl"></span></p>
+        <button onclick="logout()">ВЫХОД</button>
+    </div>
+    <div class="chat-area">
+        <div id="chatFeed" style="flex:1; overflow-y:auto; border:1px solid #333; padding:10px;"></div>
+        <input type="text" id="msgInput" placeholder="Сообщение...">
+        <button onclick="sendMsg()">ОТПРАВИТЬ</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const db = getFirestore(initializeApp({
         apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
         authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
         projectId: "test-novo-malinogrda-rrp",
         storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
         messagingSenderId: "70609134352",
         appId: "1:70609134352:web:8b42473392454a35388645"
+    }));
+
+    let user = null;
+
+    window.auth = async (type) => {
+        const u = document.getElementById('uName').value.trim();
+        const p = document.getElementById('uPass').value.trim();
+        
+        // Валидация
+        if(!/^[a-zA-Z0-9]+$/.test(u)) return alert("Ник: только латиница");
+        if(!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(p)) return alert("Сложный пароль (8+, 1 цифра, 1 A-Z)");
+
+        const ref = doc(db, "users", u.toLowerCase());
+        const snap = await getDoc(ref);
+
+        if(type === 'reg') {
+            if(snap.exists()) return alert("Ник занят");
+            user = { username: u, password: p, level: 1, balance: 5000 };
+            await setDoc(ref, user);
+        } else {
+            if(!snap.exists() || snap.data().password !== p) return alert("Неверный логин/пароль");
+            user = snap.data();
+        }
+        
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainUI').style.display = 'grid';
+        document.getElementById('dispName').innerText = user.username;
+        document.getElementById('dispLvl').innerText = user.level;
+        initChat();
     };
 
-    const db = getFirestore(initializeApp(firebaseConfig));
-    let currentUser = null;
+    window.sendMsg = async () => {
+        const i = document.getElementById('msgInput');
+        if(!i.value) return;
+        await addDoc(collection(db, "chat"), { 
+            author: user.username, text: i.value, createdAt: serverTimestamp() 
+        });
+        i.value = "";
+    };
 
-    window.pressLogin = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'login');
-    window.pressRegister = () => handleAuth(document.getElementById('loginUser').value.trim(), document.getElementById('loginPass').value.trim(), 'register');
-
-    async function handleAuth(username, pass, type) {
-        if (!/^[a-zA-Z0-9]+$/.test(username)) return alert("Ник: только латиница!");
-        if (type === 'register' && !/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass)) return alert("Пароль: 8+ символов, 1 заглавная, 1 цифра!");
-
-        try {
-            const userRef = doc(db, "users", username.toLowerCase());
-            const userSnap = await getDoc(userRef);
-
-            if (type === 'login') {
-                if (!userSnap.exists() || userSnap.data().password !== pass) return alert("Ошибка входа!");
-                currentUser = userSnap.data();
-            } else {
-                if (userSnap.exists()) return alert("Ник занят!");
-                currentUser = { username, password: pass, level: 1, balance: 5000, fraction: "Гражданский" };
-                await setDoc(userRef, currentUser);
-            }
-            
-            document.getElementById('loginOverlay').style.display = 'none';
-            alert("Успешно!");
-        } catch (e) { alert("Ошибка сервера!"); }
+    function initChat() {
+        onSnapshot(query(collection(db, "chat"), orderBy("createdAt")), snap => {
+            const f = document.getElementById('chatFeed');
+            f.innerHTML = "";
+            snap.forEach(d => {
+                const data = d.data();
+                f.innerHTML += `<div class="msg"><b>${data.author}:</b> ${data.text}</div>`;
+            });
+            f.scrollTop = f.scrollHeight;
+        });
     }
+
+    window.logout = () => location.reload();
 </script>
+</body>
+</html>

@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NOVO Malinograd RP | Неоновый кабинет</title>
-    <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1">
+    <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1" />
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
-        * { box-sizing: border-box; }
+        /* ===== ПЕРЕМЕННЫЕ (акцентный цвет) ===== */
+        :root {
+            --accent-color: #aaaaaa;
+            --accent-border: #555555;
+            --accent-glow: rgba(180, 180, 180, 0.3);
+            --accent-glow-strong: rgba(200, 200, 200, 0.5);
+            --accent-text: #dddddd;
+            --accent-shadow: 0 0 30px rgba(180, 180, 180, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
         body {
             background: #0a0a0a;
             color: #e0e0e0;
@@ -40,14 +51,14 @@
             border-radius: 30px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 0 30px rgba(180, 180, 180, 0.15), 0 0 60px rgba(150, 150, 150, 0.05);
-            border: 1px solid #3a3a3a;
+            box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(150, 150, 150, 0.05);
+            border: 1px solid var(--accent-border);
             text-align: center;
             backdrop-filter: blur(4px);
             transition: box-shadow 0.3s;
         }
         .login-box:hover {
-            box-shadow: 0 0 40px rgba(200, 200, 200, 0.25), 0 0 80px rgba(160, 160, 160, 0.1);
+            box-shadow: 0 0 40px var(--accent-glow-strong), 0 0 80px rgba(160, 160, 160, 0.1);
         }
         .login-box h2 {
             margin-top: 0;
@@ -57,11 +68,11 @@
             color: #fff;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.15);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         .login-box h2 span {
-            color: #b0b0b0;
-            text-shadow: 0 0 30px rgba(180,180,180,0.4);
+            color: var(--accent-color);
+            text-shadow: 0 0 30px var(--accent-glow);
         }
         .login-subtitle {
             color: #999;
@@ -71,7 +82,7 @@
         }
         .login-input {
             background: #1e1e1e;
-            border: 1px solid #3a3a3a;
+            border: 1px solid var(--accent-border);
             color: #f0f0f0;
             padding: 16px 20px;
             width: 100%;
@@ -83,8 +94,8 @@
             outline: none;
         }
         .login-input:focus {
-            border-color: #b0b0b0;
-            box-shadow: 0 0 20px rgba(180, 180, 180, 0.2), inset 0 0 10px rgba(180,180,180,0.05);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-glow), inset 0 0 10px var(--accent-glow);
             background: #222;
         }
         .login-hint {
@@ -105,7 +116,7 @@
         .login-btn {
             padding: 16px;
             background: #2a2a2a;
-            border: 1px solid #555;
+            border: 1px solid var(--accent-border);
             color: #eee;
             border-radius: 50px;
             cursor: pointer;
@@ -115,12 +126,12 @@
             transition: 0.25s;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(150,150,150,0.0);
+            box-shadow: 0 0 15px rgba(150, 150, 150, 0);
         }
         .login-btn:hover {
             background: #3a3a3a;
-            border-color: #aaa;
-            box-shadow: 0 0 25px rgba(180,180,180,0.3);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-glow);
             transform: translateY(-2px);
         }
         .login-btn.secondary {
@@ -129,7 +140,7 @@
         }
         .login-btn.secondary:hover {
             background: #2a2a2a;
-            border-color: #888;
+            border-color: var(--accent-color);
         }
         .login-btn:disabled {
             opacity: 0.5;
@@ -137,7 +148,7 @@
             transform: none !important;
         }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ (НЕОНОВЫЙ) ===== */
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .main-content {
             display: none;
             width: 100%;
@@ -150,7 +161,7 @@
             grid-template-columns: 1fr;
             gap: 25px;
         }
-        @media(min-width: 768px) {
+        @media (min-width: 768px) {
             .container {
                 grid-template-columns: 340px 1fr;
             }
@@ -163,15 +174,15 @@
             background: #121212;
             padding: 30px;
             border-radius: 30px;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 0 30px rgba(160,160,160,0.06), inset 0 0 30px rgba(160,160,160,0.02);
+            border: 1px solid var(--accent-border);
+            box-shadow: 0 0 30px rgba(160, 160, 160, 0.06), inset 0 0 30px rgba(160, 160, 160, 0.02);
             transition: box-shadow 0.3s, border-color 0.3s;
             height: fit-content;
             backdrop-filter: blur(2px);
         }
         .stat-card:hover {
-            box-shadow: 0 0 50px rgba(180,180,180,0.12), inset 0 0 30px rgba(180,180,180,0.02);
-            border-color: #444;
+            box-shadow: 0 0 50px var(--accent-glow), inset 0 0 30px rgba(180, 180, 180, 0.02);
+            border-color: var(--accent-color);
         }
 
         .status-bar {
@@ -181,12 +192,13 @@
             font-size: 0.8em;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(100,255,100,0.2);
+            text-shadow: 0 0 15px rgba(100, 255, 100, 0.2);
         }
 
-        input[type="text"], textarea {
+        input[type="text"],
+        textarea {
             background: #1a1a1a;
-            border: 1px solid #333;
+            border: 1px solid var(--accent-border);
             color: #eee;
             padding: 14px 18px;
             width: 100%;
@@ -197,9 +209,10 @@
             font-family: inherit;
             outline: none;
         }
-        input[type="text"]:focus, textarea:focus {
-            border-color: #aaa;
-            box-shadow: 0 0 25px rgba(180,180,180,0.15);
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-glow);
             background: #222;
         }
         textarea {
@@ -210,7 +223,7 @@
         .action-btn {
             padding: 14px 25px;
             background: #2a2a2a;
-            border: 1px solid #555;
+            border: 1px solid var(--accent-border);
             color: #eee;
             border-radius: 50px;
             cursor: pointer;
@@ -219,12 +232,12 @@
             transition: 0.25s;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            box-shadow: 0 0 15px rgba(150,150,150,0.0);
+            box-shadow: 0 0 15px rgba(150, 150, 150, 0);
         }
         .action-btn:hover {
             background: #3a3a3a;
-            border-color: #aaa;
-            box-shadow: 0 0 30px rgba(180,180,180,0.25);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px var(--accent-glow);
             transform: translateY(-2px);
         }
         .logout-btn {
@@ -237,18 +250,18 @@
         .logout-btn:hover {
             background: #2a1a1a;
             border-color: #a55;
-            box-shadow: 0 0 30px rgba(200,80,80,0.2);
+            box-shadow: 0 0 30px rgba(200, 80, 80, 0.2);
         }
 
         h3 {
             margin-top: 0;
             color: #ddd;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid var(--accent-border);
             padding-bottom: 12px;
             margin-bottom: 18px;
             font-weight: 400;
             letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(200,200,200,0.08);
+            text-shadow: 0 0 20px rgba(200, 200, 200, 0.08);
         }
         p {
             line-height: 1.6;
@@ -257,16 +270,18 @@
         }
 
         /* ===== ПРОФИЛЬ ===== */
-        .profile-box { text-align: center; }
+        .profile-box {
+            text-align: center;
+        }
         .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 60px;
             background: #1a1a1a;
-            border: 2px solid #555;
+            border: 2px solid var(--accent-color);
             object-fit: cover;
             margin-bottom: 18px;
-            box-shadow: 0 0 40px rgba(180,180,180,0.15);
+            box-shadow: 0 0 40px var(--accent-glow);
         }
         .profile-info h4 {
             margin: 0 0 18px 0;
@@ -274,7 +289,7 @@
             font-size: 1.6em;
             font-weight: 300;
             letter-spacing: 1px;
-            text-shadow: 0 0 30px rgba(255,255,255,0.1);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
         }
         .profile-data {
             display: flex;
@@ -287,14 +302,14 @@
             background: #1a1a1a;
             padding: 12px 16px;
             border-radius: 20px;
-            border-left: 4px solid #888;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+            border-left: 4px solid var(--accent-color);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
         }
         .data-item span {
-            color: #ccc;
+            color: var(--accent-text);
             font-weight: 600;
             float: right;
-            text-shadow: 0 0 15px rgba(200,200,200,0.1);
+            text-shadow: 0 0 15px var(--accent-glow);
         }
 
         /* ===== ЧАТ ===== */
@@ -303,11 +318,11 @@
             flex-direction: column;
             height: 420px;
             background: #0d0d0d;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--accent-border);
             border-radius: 30px;
             margin-bottom: 12px;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
         .chat-messages {
             flex: 1;
@@ -325,7 +340,7 @@
             background: #1a1a1a;
         }
         .chat-messages::-webkit-scrollbar-thumb {
-            background: #555;
+            background: var(--accent-color);
             border-radius: 10px;
         }
 
@@ -337,8 +352,8 @@
             width: fit-content;
             line-height: 1.4;
             word-break: break-word;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 0 20px rgba(160,160,160,0.04);
+            border: 1px solid var(--accent-border);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
         .msg-meta {
             font-size: 0.7em;
@@ -349,22 +364,22 @@
             align-items: center;
         }
         .msg-author {
-            color: #ccc;
+            color: var(--accent-text);
             font-weight: 600;
-            text-shadow: 0 0 15px rgba(200,200,200,0.1);
+            text-shadow: 0 0 15px var(--accent-glow);
         }
         .msg.my-msg {
             background: #252525;
             align-self: flex-end;
-            border-right: 3px solid #aaa;
-            box-shadow: 0 0 30px rgba(180,180,180,0.08);
+            border-right: 3px solid var(--accent-color);
+            box-shadow: 0 0 30px var(--accent-glow);
         }
         .msg.my-msg .msg-author {
-            color: #ddd;
+            color: var(--accent-color);
         }
         .msg.pm-msg {
             background: #1a1a2a;
-            border-left: 3px solid #888;
+            border-left: 3px solid var(--accent-color);
         }
         .msg.pm-msg .msg-author {
             color: #b0b0d0;
@@ -403,14 +418,250 @@
             height: 420px;
             border: none;
             border-radius: 30px;
-            box-shadow: 0 0 30px rgba(160,160,160,0.05);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        /* ===== КНОПКА НАСТРОЕК (ШЕСТЕРЁНКА) ===== */
+        .settings-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 999;
+            background: #1a1a1a;
+            border: 1px solid var(--accent-border);
+            color: var(--accent-color);
+            font-size: 28px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--accent-glow);
+            backdrop-filter: blur(4px);
+            background: rgba(20, 20, 20, 0.8);
+        }
+        .settings-toggle:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 40px var(--accent-glow-strong);
+            transform: rotate(60deg) scale(1.05);
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО НАСТРОЕК ===== */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-modal.active {
+            display: flex;
+        }
+        .settings-panel {
+            background: #181818;
+            padding: 35px 40px;
+            border-radius: 40px;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid var(--accent-border);
+            box-shadow: 0 0 60px var(--accent-glow-strong);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .settings-panel h3 {
+            margin-top: 0;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--accent-border);
+            padding-bottom: 15px;
+            color: #fff;
+        }
+        .settings-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .settings-close:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .color-row label {
+            min-width: 20px;
+            font-weight: 600;
+            color: #ccc;
+        }
+        .color-row input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        .color-row input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
+        }
+        .color-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 15px var(--accent-glow);
+            border: 1px solid var(--accent-border);
+        }
+        .color-row input[type="range"]::-moz-range-track {
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
+        }
+        .color-row input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            border: 1px solid var(--accent-border);
+        }
+        .color-row .value-display {
+            min-width: 40px;
+            text-align: center;
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .hex-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .hex-input label {
+            color: #ccc;
+            font-weight: 600;
+        }
+        .hex-input input {
+            flex: 1;
+            background: #222;
+            border: 1px solid var(--accent-border);
+            color: #eee;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-family: monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            outline: none;
+            transition: 0.3s;
+        }
+        .hex-input input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .preset-colors {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0 10px;
+        }
+        .preset-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #444;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .preset-btn:hover {
+            transform: scale(1.15);
+            border-color: #fff;
+        }
+        .preset-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 25px var(--accent-glow-strong);
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .settings-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 50px;
+            border: 1px solid var(--accent-border);
+            background: #2a2a2a;
+            color: #eee;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .settings-actions button:hover {
+            background: #3a3a3a;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-glow);
         }
 
         /* ===== АДАПТИВ ===== */
-        @media(max-width: 600px) {
-            .login-box { padding: 30px 20px; }
-            .btn-group { flex-direction: column; }
-            .stat-card { padding: 20px; }
+        @media (max-width: 600px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .stat-card {
+                padding: 20px;
+            }
+            .settings-panel {
+                padding: 25px 20px;
+            }
+            .settings-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+                top: 15px;
+                right: 15px;
+            }
         }
     </style>
 
@@ -432,6 +683,131 @@
 
         let currentUser = null;
 
+        // ===== УПРАВЛЕНИЕ ЦВЕТОМ =====
+        function applyColor(hex) {
+            // Принимает hex строку вида #aabbcc
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            const accent = `#${hex.slice(1)}`;
+            const glow = `rgba(${r},${g},${b},0.3)`;
+            const glowStrong = `rgba(${r},${g},${b},0.5)`;
+            const border = `#${Math.floor(r*0.6).toString(16).padStart(2,'0')}${Math.floor(g*0.6).toString(16).padStart(2,'0')}${Math.floor(b*0.6).toString(16).padStart(2,'0')}`;
+            const text = `#${Math.min(r+80,255).toString(16).padStart(2,'0')}${Math.min(g+80,255).toString(16).padStart(2,'0')}${Math.min(b+80,255).toString(16).padStart(2,'0')}`;
+
+            document.documentElement.style.setProperty('--accent-color', accent);
+            document.documentElement.style.setProperty('--accent-border', border);
+            document.documentElement.style.setProperty('--accent-glow', glow);
+            document.documentElement.style.setProperty('--accent-glow-strong', glowStrong);
+            document.documentElement.style.setProperty('--accent-text', text);
+
+            // Сохраняем в localStorage
+            localStorage.setItem('novo_accent_color', hex);
+        }
+
+        function loadColor() {
+            const saved = localStorage.getItem('novo_accent_color');
+            if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
+                applyColor(saved);
+                // обновим ползунки и поле HEX, если модалка открыта
+                const hexInput = document.getElementById('hexInput');
+                if (hexInput) hexInput.value = saved.toUpperCase();
+                updateSlidersFromHex(saved);
+            } else {
+                // дефолтный серый #aaaaaa
+                applyColor('#aaaaaa');
+                const hexInput = document.getElementById('hexInput');
+                if (hexInput) hexInput.value = '#AAAAAA';
+                updateSlidersFromHex('#aaaaaa');
+            }
+        }
+
+        function updateSlidersFromHex(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            document.getElementById('redSlider').value = r;
+            document.getElementById('greenSlider').value = g;
+            document.getElementById('blueSlider').value = b;
+            document.getElementById('redVal').textContent = r;
+            document.getElementById('greenVal').textContent = g;
+            document.getElementById('blueVal').textContent = b;
+            document.getElementById('hexInput').value = hex.toUpperCase();
+        }
+
+        function hexFromSliders() {
+            const r = parseInt(document.getElementById('redSlider').value);
+            const g = parseInt(document.getElementById('greenSlider').value);
+            const b = parseInt(document.getElementById('blueSlider').value);
+            return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+        }
+
+        // События слайдеров
+        window.onSliderChange = function() {
+            const hex = hexFromSliders();
+            document.getElementById('hexInput').value = hex.toUpperCase();
+            applyColor(hex);
+            // подсветим активную пресет-кнопку, если совпадает
+            highlightPreset(hex);
+        };
+
+        window.onHexChange = function() {
+            let val = document.getElementById('hexInput').value.trim();
+            if (!/^#[0-9a-f]{6}$/i.test(val)) {
+                // если невалидный, не применяем
+                return;
+            }
+            applyColor(val.toLowerCase());
+            updateSlidersFromHex(val);
+            highlightPreset(val);
+        };
+
+        // Пресеты
+        const presets = {
+            'Серый': '#aaaaaa',
+            'Синий': '#4488ff',
+            'Красный': '#ff4455',
+            'Зелёный': '#44ff88',
+            'Фиолетовый': '#aa66ff'
+        };
+
+        window.applyPreset = function(color) {
+            applyColor(color);
+            updateSlidersFromHex(color);
+            document.getElementById('hexInput').value = color.toUpperCase();
+            highlightPreset(color);
+        };
+
+        function highlightPreset(hex) {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.color.toLowerCase() === hex.toLowerCase());
+            });
+        }
+
+        // Открыть/закрыть настройки
+        window.toggleSettings = function() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('active');
+            if (modal.classList.contains('active')) {
+                // синхронизируем UI с текущим цветом
+                const currentHex = localStorage.getItem('novo_accent_color') || '#aaaaaa';
+                updateSlidersFromHex(currentHex);
+                document.getElementById('hexInput').value = currentHex.toUpperCase();
+                highlightPreset(currentHex);
+            }
+        };
+
+        // Закрыть по клику вне окна
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('settingsModal');
+            if (modal.classList.contains('active')) {
+                const panel = modal.querySelector('.settings-panel');
+                if (!panel.contains(e.target) && e.target.id !== 'settingsToggle') {
+                    modal.classList.remove('active');
+                }
+            }
+        });
+
         // ===== ВАЛИДАЦИЯ =====
         function isValidUsername(username) {
             return /^[a-zA-Z0-9_]{2,20}$/.test(username);
@@ -442,6 +818,7 @@
 
         // ===== АВТО-ВХОД =====
         window.addEventListener('DOMContentLoaded', () => {
+            loadColor();
             const savedUser = localStorage.getItem('novo_username');
             const savedPass = localStorage.getItem('novo_password');
             if (savedUser && savedPass) {
@@ -483,7 +860,8 @@
 
             const btnLogin = document.getElementById('bLogin');
             const btnReg = document.getElementById('bReg');
-            btnLogin.disabled = true; btnReg.disabled = true;
+            btnLogin.disabled = true;
+            btnReg.disabled = true;
 
             try {
                 const userDocId = username.toLowerCase();
@@ -565,7 +943,7 @@
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     if (!data.createdAt) return;
-                    const time = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+                    const time = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "";
                     const isMe = data.author.toLowerCase() === currentUser.username.toLowerCase();
 
                     let msgClass = "msg";
@@ -583,12 +961,12 @@
                     const msgDiv = document.createElement('div');
                     msgDiv.className = msgClass;
                     msgDiv.innerHTML = `
-                        <div class="msg-meta">
-                            <span class="msg-author">${prefix}${escapeHTML(data.author)}</span>
-                            <span>${time}</span>
-                        </div>
-                        <div class="msg-text">${escapeHTML(data.text)}</div>
-                    `;
+                            <div class="msg-meta">
+                                <span class="msg-author">${prefix}${escapeHTML(data.author)}</span>
+                                <span>${time}</span>
+                            </div>
+                            <div class="msg-text">${escapeHTML(data.text)}</div>
+                        `;
                     chatBox.appendChild(msgDiv);
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
@@ -613,7 +991,7 @@
             input.value = "";
             try {
                 await addDoc(collection(db, "chat"), msgData);
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
             }
         };
@@ -629,71 +1007,116 @@
 </head>
 <body>
 
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <h2>NOVO <span>Malinograd RP</span></h2>
-        <div class="login-subtitle">Вход в игровой аккаунт</div>
-        <input type="text" id="loginUser" class="login-input" placeholder="Ник (только латиница, цифры, _)">
-        <span class="login-hint">Допустимы A–Z, 0–9 и _ (2–20 символов)</span>
-        <input type="password" id="loginPass" class="login-input" placeholder="Пароль (минимум 8 символов, сложный)">
-        <span class="login-hint">Заглавная, строчная, цифра, спецсимвол (!@#$%^&*()_+-=)</span>
-
-        <div class="btn-group">
-            <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
-            <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать</button>
+    <!-- ===== ОКНО ВХОДА ===== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2>NOVO <span>Malinograd RP</span></h2>
+            <div class="login-subtitle">Вход в игровой аккаунт</div>
+            <input type="text" id="loginUser" class="login-input" placeholder="Ник (только латиница, цифры, _)" />
+            <span class="login-hint">Допустимы A–Z, 0–9 и _ (2–20 символов)</span>
+            <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 8 символов, сложный)" />
+            <span class="login-hint">Заглавная, строчная, цифра, спецсимвол (!@#$%^&*()_+-=)</span>
+            <div class="btn-group">
+                <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
+                <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="main-content" id="mainSiteContent">
-    <div class="container">
+    <!-- ===== КНОПКА НАСТРОЕК (ШЕСТЕРЁНКА) ===== -->
+    <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()" title="Настройки цвета">⚙</button>
 
-        <div class="stat-card">
-            <div class="status-bar">● АВТОРИЗОВАН</div>
-            <div class="profile-box">
-                <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар">
-                <div class="profile-info">
-                    <h4 id="playerName">-</h4>
-                    <div class="profile-data">
-                        <div class="data-item">Статус: <span style="color: #8f8;">В сети</span></div>
-                        <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
-                        <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
-                        <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+    <!-- ===== МОДАЛЬНОЕ ОКНО НАСТРОЕК ===== -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-panel">
+            <button class="settings-close" onclick="toggleSettings()">✕</button>
+            <h3>🎨 Настройка цвета</h3>
+
+            <div class="color-row">
+                <label>R</label>
+                <input type="range" id="redSlider" min="0" max="255" value="170" oninput="onSliderChange()" />
+                <span class="value-display" id="redVal">170</span>
+            </div>
+            <div class="color-row">
+                <label>G</label>
+                <input type="range" id="greenSlider" min="0" max="255" value="170" oninput="onSliderChange()" />
+                <span class="value-display" id="greenVal">170</span>
+            </div>
+            <div class="color-row">
+                <label>B</label>
+                <input type="range" id="blueSlider" min="0" max="255" value="170" oninput="onSliderChange()" />
+                <span class="value-display" id="blueVal">170</span>
+            </div>
+
+            <div class="hex-input">
+                <label>HEX</label>
+                <input type="text" id="hexInput" value="#AAAAAA" maxlength="7" oninput="onHexChange()" />
+            </div>
+
+            <div class="preset-colors">
+                <button class="preset-btn" style="background:#aaaaaa;" data-color="#aaaaaa" onclick="applyPreset('#aaaaaa')" title="Серый"></button>
+                <button class="preset-btn" style="background:#4488ff;" data-color="#4488ff" onclick="applyPreset('#4488ff')" title="Синий"></button>
+                <button class="preset-btn" style="background:#ff4455;" data-color="#ff4455" onclick="applyPreset('#ff4455')" title="Красный"></button>
+                <button class="preset-btn" style="background:#44ff88;" data-color="#44ff88" onclick="applyPreset('#44ff88')" title="Зелёный"></button>
+                <button class="preset-btn" style="background:#aa66ff;" data-color="#aa66ff" onclick="applyPreset('#aa66ff')" title="Фиолетовый"></button>
+            </div>
+
+            <div class="settings-actions">
+                <button onclick="toggleSettings()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <div class="main-content" id="mainSiteContent">
+        <div class="container">
+
+            <div class="stat-card">
+                <div class="status-bar">● АВТОРИЗОВАН</div>
+                <div class="profile-box">
+                    <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар" />
+                    <div class="profile-info">
+                        <h4 id="playerName">-</h4>
+                        <div class="profile-data">
+                            <div class="data-item">Статус: <span style="color: #8f8;">В сети</span></div>
+                            <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
+                            <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
+                            <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+                        </div>
                     </div>
+                    <button class="action-btn logout-btn" onclick="pressLogout()">Выйти</button>
                 </div>
-                <button class="action-btn logout-btn" onclick="pressLogout()">Выйти</button>
             </div>
-        </div>
 
-        <div class="stat-card">
-            <h3>💬 Игровой чат</h3>
-            <div class="pm-header">
-                <input type="text" id="pmTarget" placeholder="Кому (ник для ЛС) или оставьте пустым">
+            <div class="stat-card">
+                <h3>💬 Игровой чат</h3>
+                <div class="pm-header">
+                    <input type="text" id="pmTarget" placeholder="Кому (ник для ЛС) или оставьте пустым" />
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages"></div>
+                </div>
+                <div class="chat-input-block">
+                    <input type="text" id="chatInput" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
+                    <button class="action-btn send-btn" onclick="sendMessage()">→</button>
+                </div>
             </div>
-            <div class="chat-container">
-                <div class="chat-messages" id="chatMessages"></div>
+
+            <div class="stat-card full-width">
+                <h3>📢 Мы в Discord</h3>
+                <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
-            <div class="chat-input-block">
-                <input type="text" id="chatInput" placeholder="Сообщение..." onkeydown="checkEnter(event)">
-                <button class="action-btn send-btn" onclick="sendMessage()">→</button>
+
+            <div class="stat-card full-width">
+                <h3>🛠️ Сообщить о баге / идея</h3>
+                <form action="https://formspree.io/f/xbdvdjjy" method="POST">
+                    <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг..."></textarea>
+                    <button type="submit" class="action-btn">Отправить</button>
+                </form>
             </div>
-        </div>
 
-        <div class="stat-card full-width">
-            <h3>📢 Мы в Discord</h3>
-            <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
         </div>
-
-        <div class="stat-card full-width">
-            <h3>🛠️ Сообщить о баге / идея</h3>
-            <form action="https://formspree.io/f/xbdvdjjy" method="POST">
-                <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг..."></textarea>
-                <button type="submit" class="action-btn">Отправить</button>
-            </form>
-        </div>
-
     </div>
-</div>
 
 </body>
 </html>

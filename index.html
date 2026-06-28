@@ -233,6 +233,10 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             box-shadow: 0 0 15px rgba(150, 150, 150, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .action-btn:hover {
             background: #3a3a3a;
@@ -262,6 +266,17 @@
             font-weight: 400;
             letter-spacing: 1px;
             text-shadow: 0 0 20px rgba(200, 200, 200, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h3 svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent-color);
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
         }
         p {
             line-height: 1.6;
@@ -398,6 +413,14 @@
             width: auto;
             padding: 0 25px;
             border-radius: 50px;
+            flex-shrink: 0;
+        }
+        .chat-input-block .send-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
         }
 
         .pm-header {
@@ -427,10 +450,9 @@
             top: 25px;
             right: 25px;
             z-index: 999;
-            background: #1a1a1a;
+            background: rgba(20, 20, 20, 0.8);
             border: 1px solid var(--accent-border);
             color: var(--accent-color);
-            font-size: 28px;
             width: 55px;
             height: 55px;
             border-radius: 50%;
@@ -441,12 +463,18 @@
             justify-content: center;
             box-shadow: 0 0 20px var(--accent-glow);
             backdrop-filter: blur(4px);
-            background: rgba(20, 20, 20, 0.8);
         }
         .settings-toggle:hover {
             border-color: var(--accent-color);
             box-shadow: 0 0 40px var(--accent-glow-strong);
             transform: rotate(60deg) scale(1.05);
+        }
+        .settings-toggle svg {
+            width: 30px;
+            height: 30px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
         }
 
         /* ===== МОДАЛЬНОЕ ОКНО НАСТРОЕК ===== */
@@ -495,6 +523,7 @@
             border-bottom: 1px solid var(--accent-border);
             padding-bottom: 15px;
             color: #fff;
+            justify-content: center;
         }
         .settings-close {
             position: absolute;
@@ -503,13 +532,23 @@
             background: none;
             border: none;
             color: #aaa;
-            font-size: 28px;
             cursor: pointer;
             transition: 0.2s;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .settings-close:hover {
             color: #fff;
             transform: rotate(90deg);
+        }
+        .settings-close svg {
+            width: 26px;
+            height: 26px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
         }
 
         .color-row {
@@ -658,9 +697,12 @@
             .settings-toggle {
                 width: 45px;
                 height: 45px;
-                font-size: 22px;
                 top: 15px;
                 right: 15px;
+            }
+            .settings-toggle svg {
+                width: 24px;
+                height: 24px;
             }
         }
     </style>
@@ -685,7 +727,6 @@
 
         // ===== УПРАВЛЕНИЕ ЦВЕТОМ =====
         function applyColor(hex) {
-            // Принимает hex строку вида #aabbcc
             const r = parseInt(hex.slice(1, 3), 16);
             const g = parseInt(hex.slice(3, 5), 16);
             const b = parseInt(hex.slice(5, 7), 16);
@@ -701,7 +742,6 @@
             document.documentElement.style.setProperty('--accent-glow-strong', glowStrong);
             document.documentElement.style.setProperty('--accent-text', text);
 
-            // Сохраняем в localStorage
             localStorage.setItem('novo_accent_color', hex);
         }
 
@@ -709,12 +749,10 @@
             const saved = localStorage.getItem('novo_accent_color');
             if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
                 applyColor(saved);
-                // обновим ползунки и поле HEX, если модалка открыта
                 const hexInput = document.getElementById('hexInput');
                 if (hexInput) hexInput.value = saved.toUpperCase();
                 updateSlidersFromHex(saved);
             } else {
-                // дефолтный серый #aaaaaa
                 applyColor('#aaaaaa');
                 const hexInput = document.getElementById('hexInput');
                 if (hexInput) hexInput.value = '#AAAAAA';
@@ -742,27 +780,21 @@
             return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
         }
 
-        // События слайдеров
         window.onSliderChange = function() {
             const hex = hexFromSliders();
             document.getElementById('hexInput').value = hex.toUpperCase();
             applyColor(hex);
-            // подсветим активную пресет-кнопку, если совпадает
             highlightPreset(hex);
         };
 
         window.onHexChange = function() {
             let val = document.getElementById('hexInput').value.trim();
-            if (!/^#[0-9a-f]{6}$/i.test(val)) {
-                // если невалидный, не применяем
-                return;
-            }
+            if (!/^#[0-9a-f]{6}$/i.test(val)) return;
             applyColor(val.toLowerCase());
             updateSlidersFromHex(val);
             highlightPreset(val);
         };
 
-        // Пресеты
         const presets = {
             'Серый': '#aaaaaa',
             'Синий': '#4488ff',
@@ -784,12 +816,10 @@
             });
         }
 
-        // Открыть/закрыть настройки
         window.toggleSettings = function() {
             const modal = document.getElementById('settingsModal');
             modal.classList.toggle('active');
             if (modal.classList.contains('active')) {
-                // синхронизируем UI с текущим цветом
                 const currentHex = localStorage.getItem('novo_accent_color') || '#aaaaaa';
                 updateSlidersFromHex(currentHex);
                 document.getElementById('hexInput').value = currentHex.toUpperCase();
@@ -797,7 +827,6 @@
             }
         };
 
-        // Закрыть по клику вне окна
         document.addEventListener('click', function(e) {
             const modal = document.getElementById('settingsModal');
             if (modal.classList.contains('active')) {
@@ -1024,13 +1053,23 @@
     </div>
 
     <!-- ===== КНОПКА НАСТРОЕК (ШЕСТЕРЁНКА) ===== -->
-    <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()" title="Настройки цвета">⚙</button>
+    <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()" title="Настройки цвета">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+        </svg>
+    </button>
 
     <!-- ===== МОДАЛЬНОЕ ОКНО НАСТРОЕК ===== -->
     <div class="settings-modal" id="settingsModal">
         <div class="settings-panel">
-            <button class="settings-close" onclick="toggleSettings()">✕</button>
-            <h3>🎨 Настройка цвета</h3>
+            <button class="settings-close" onclick="toggleSettings()">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+            <h3>Настройка цвета</h3>
 
             <div class="color-row">
                 <label>R</label>
@@ -1089,7 +1128,12 @@
             </div>
 
             <div class="stat-card">
-                <h3>💬 Игровой чат</h3>
+                <h3>
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Игровой чат
+                </h3>
                 <div class="pm-header">
                     <input type="text" id="pmTarget" placeholder="Кому (ник для ЛС) или оставьте пустым" />
                 </div>
@@ -1098,17 +1142,35 @@
                 </div>
                 <div class="chat-input-block">
                     <input type="text" id="chatInput" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
-                    <button class="action-btn send-btn" onclick="sendMessage()">→</button>
+                    <button class="action-btn send-btn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
             <div class="stat-card full-width">
-                <h3>📢 Мы в Discord</h3>
+                <h3>
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                        <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+                        <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                    </svg>
+                    Мы в Discord
+                </h3>
                 <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" class="discord-widget-container" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
 
             <div class="stat-card full-width">
-                <h3>🛠️ Сообщить о баге / идея</h3>
+                <h3>
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                        <line x1="8.5" y1="15.5" x2="15.5" y2="8.5" />
+                    </svg>
+                    Сообщить о баге / идея
+                </h3>
                 <form action="https://formspree.io/f/xbdvdjjy" method="POST">
                     <textarea name="message" rows="4" required placeholder="Опишите ваше предложение или баг..."></textarea>
                     <button type="submit" class="action-btn">Отправить</button>

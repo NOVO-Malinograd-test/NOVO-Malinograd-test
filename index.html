@@ -816,9 +816,9 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let currentUser = null;          // данные из Firestore
-        let currentUserRef = null;       // ссылка на документ пользователя
-        let currentUserRole = "игрок";   // роль
+        let currentUser = null;
+        let currentUserRef = null;
+        let currentUserRole = "игрок";
         let chatUnsubscribe = null;
         let clickerEarned = 0;
 
@@ -839,7 +839,6 @@
             }
             if (pageId === 'forum') {
                 loadTopics();
-                // Скрываем просмотр темы, показываем список
                 document.getElementById('forumTopicView').classList.remove('active');
                 document.getElementById('forumTopicList').style.display = 'block';
             }
@@ -1080,11 +1079,10 @@
         window.checkEnter = function(e) { if (e.key === 'Enter') window.sendMessage(); };
 
         // ===== ФОРУМ =====
-        let currentTopicId = null; // ID просматриваемой темы
+        let currentTopicId = null;
         let topicsUnsubscribe = null;
         let repliesUnsubscribe = null;
 
-        // Загрузка списка тем
         function loadTopics() {
             if (topicsUnsubscribe) topicsUnsubscribe();
             const container = document.getElementById('topicsContainer');
@@ -1122,7 +1120,6 @@
                     `;
                 });
                 container.innerHTML = html;
-                // Добавляем обработчики клика на темы
                 document.querySelectorAll('.forum-topic-item').forEach(el => {
                     el.addEventListener('click', () => {
                         const id = el.dataset.id;
@@ -1135,7 +1132,6 @@
             });
         }
 
-        // Открыть тему
         function openTopic(topicId) {
             currentTopicId = topicId;
             document.getElementById('forumTopicList').style.display = 'none';
@@ -1144,11 +1140,9 @@
             loadTopicContent(topicId);
         }
 
-        // Загрузить содержимое темы и ответы
         function loadTopicContent(topicId) {
             const container = document.getElementById('topicContent');
             container.innerHTML = '<p style="color:#888;">Загрузка...</p>';
-            // Получаем тему
             const topicRef = doc(db, "forum_topics", topicId);
             getDoc(topicRef).then((docSnap) => {
                 if (!docSnap.exists()) {
@@ -1180,18 +1174,26 @@
                 `;
                 container.innerHTML = html;
 
-                // Подписываемся на ответы
+                // Подписываемся на ответы (без orderBy, чтобы не требовать индекс)
                 if (repliesUnsubscribe) repliesUnsubscribe();
-                const q = query(collection(db, "forum_replies"), where("topicId", "==", topicId), orderBy("createdAt", "asc"));
+                const q = query(collection(db, "forum_replies"), where("topicId", "==", topicId));
                 repliesUnsubscribe = onSnapshot(q, (snapshot) => {
                     const repliesList = document.getElementById('repliesList');
                     if (snapshot.empty) {
                         repliesList.innerHTML = '<p style="color:#888;">Нет ответов. Будьте первым!</p>';
                         return;
                     }
-                    let rHtml = '';
-                    snapshot.forEach((doc) => {
+                    // Сортируем на клиенте
+                    let replies = [];
+                    snapshot.forEach(doc => {
                         const r = doc.data();
+                        r.id = doc.id;
+                        replies.push(r);
+                    });
+                    replies.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+
+                    let rHtml = '';
+                    replies.forEach(r => {
                         const rAuthor = r.authorName || 'Неизвестный';
                         const rRole = r.authorRole || 'игрок';
                         const rContent = r.content || '';
@@ -1219,7 +1221,6 @@
             });
         }
 
-        // Вернуться к списку
         document.getElementById('forumBackBtn').addEventListener('click', () => {
             document.getElementById('forumTopicView').classList.remove('active');
             document.getElementById('forumTopicList').style.display = 'block';
@@ -1227,7 +1228,6 @@
             currentTopicId = null;
         });
 
-        // Отправить ответ
         document.getElementById('replyBtn').addEventListener('click', async () => {
             if (!currentUser) { alert('Войдите в аккаунт!'); return; }
             if (!currentTopicId) return;
@@ -1243,7 +1243,6 @@
                     authorRole: currentUserRole,
                     createdAt: serverTimestamp()
                 });
-                // Увеличиваем счётчик ответов у темы
                 const topicRef = doc(db, "forum_topics", currentTopicId);
                 await updateDoc(topicRef, {
                     repliesCount: increment(1),
@@ -1257,7 +1256,6 @@
             }
         });
 
-        // Создать новую тему
         document.getElementById('newTopicBtn').addEventListener('click', () => {
             if (!currentUser) { alert('Войдите в аккаунт!'); return; }
             document.getElementById('newTopicModal').classList.add('active');
@@ -1288,7 +1286,6 @@
                 });
                 alert('Тема создана!');
                 closeNewTopic();
-                // Перезагружаем список тем, если мы на странице форума
                 if (document.getElementById('page-forum').classList.contains('active')) {
                     loadTopics();
                 }
@@ -1298,13 +1295,11 @@
             }
         });
 
-        // Закрытие модалки по клику вне
         document.getElementById('newTopicModal').addEventListener('click', function(e) {
             if (e.target === this) closeNewTopic();
         });
 
         // ===== ГЕНЕРАТОР ПРАВИЛ =====
-        // Данные для Правил проекта
         const gameRulesData = [
             { id: "1.0", title: "НонРП (НРП)", punishment: "15-25m jail / 1d-7d ban", desc: "Не относящееся к ролевой игре поведение, к примеру игнорировать любые отыгровки, или же игнорировать РП процесс." },
             { id: "1.0.1", title: "Помеха РП", punishment: "kick / 15-20m jail/ 1d-3d ban", desc: "Намеренно мешать игровому рп процессу игрока/игроков." },

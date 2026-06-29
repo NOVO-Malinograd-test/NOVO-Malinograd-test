@@ -273,7 +273,7 @@
         .discord-widget-container { width: 100%; height: 420px; border: none; border-radius: 30px; box-shadow: 0 0 30px var(--accent-glow); }
 
         /* ===== МОДАЛЬНЫЕ ОКНА ===== */
-        .settings-modal, .clicker-modal {
+        .settings-modal, .clicker-modal, .forum-modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
@@ -284,7 +284,7 @@
             justify-content: center;
             align-items: center;
         }
-        .settings-modal.active, .clicker-modal.active { display: flex; }
+        .settings-modal.active, .clicker-modal.active, .forum-modal.active { display: flex; }
         .modal-panel, .clicker-panel {
             background: #181818;
             padding: 35px 40px;
@@ -357,149 +357,81 @@
         }
         @keyframes floatUp { 0% { opacity:1; transform:translateY(0) scale(1); } 100% { opacity:0; transform:translateY(-120px) scale(1.5); } }
 
-        /* ===== ПРАВИЛА (аккордеон) ===== */
-        .rules-block {
-            margin-bottom: 30px;
-        }
-        .rules-block h4 {
-            font-size: 1.3em;
-            color: #fff;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 3px solid var(--accent-color);
-            padding-left: 15px;
-        }
-        .rules-block h4 i { color: var(--accent-color); width: 1.5em; }
-        .rules-accordion {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .rule-category {
+        /* ===== ФОРУМ ===== */
+        .forum-topic-list { display: flex; flex-direction: column; gap: 12px; }
+        .forum-topic-item {
             background: #1a1a1a;
-            border-radius: 16px;
-            border: 1px solid var(--accent-border);
-            transition: 0.3s;
-            overflow: hidden;
-        }
-        .rule-category:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .rule-category summary {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 20px;
-            cursor: pointer;
-            list-style: none;
-            font-weight: 600;
-            color: #ddd;
-            transition: 0.2s;
-        }
-        .rule-category summary::-webkit-details-marker { display: none; }
-        .rule-category summary::before {
-            content: '▶';
-            margin-right: 6px;
-            font-size: 0.8em;
-            color: var(--accent-color);
-            transition: transform 0.2s;
-        }
-        .rule-category[open] summary::before {
-            transform: rotate(90deg);
-        }
-        .rule-category > summary .cat-title {
-            flex: 1;
-        }
-        .rule-category > summary .cat-count {
-            font-size: 0.8em;
-            color: #888;
-            background: #222;
-            padding: 2px 10px;
-            border-radius: 30px;
-        }
-        .rule-items {
-            padding: 0 20px 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .rule-item {
-            background: #111;
-            border-radius: 12px;
-            border: 1px solid #2a2a2a;
-            transition: 0.2s;
-        }
-        .rule-item:hover {
-            border-color: var(--accent-border);
-        }
-        .rule-item summary {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 6px 12px;
-            padding: 10px 16px;
-            cursor: pointer;
-            list-style: none;
-            font-weight: 500;
-            color: #ccc;
-        }
-        .rule-item summary::-webkit-details-marker { display: none; }
-        .rule-item summary::before {
-            content: '▸';
-            color: var(--accent-color);
-            font-size: 1.1em;
-            transition: transform 0.2s;
-        }
-        .rule-item[open] summary::before {
-            transform: rotate(90deg);
-        }
-        .rule-item .rule-id {
-            color: var(--accent-color);
-            font-weight: 700;
-            min-width: 40px;
-        }
-        .rule-item .rule-title {
-            flex: 1;
-            font-weight: 600;
-            color: #eee;
-        }
-        .rule-item .rule-punishment {
-            font-size: 0.8em;
-            color: #ff8;
-            background: rgba(255,255,0,0.1);
-            padding: 2px 12px;
-            border-radius: 30px;
-            border: 1px solid #ff8;
-            white-space: nowrap;
-        }
-        .rule-item .rule-desc {
-            padding: 8px 16px 14px 16px;
-            color: #bbb;
-            line-height: 1.6;
-            border-top: 1px solid #2a2a2a;
-            font-size: 0.95em;
-        }
-        .rule-item .rule-desc strong {
-            color: #ddd;
-        }
-
-        /* ===== МАГАЗИН ===== */
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .shop-item {
-            background: #1a1a1a;
-            padding: 20px;
+            padding: 16px 20px;
             border-radius: 20px;
-            border: 1px solid #333;
-            text-align: center;
-            transition: 0.3s;
+            border: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .shop-item:hover { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
-        .shop-item .icon { font-size: 2.5em; margin-bottom: 5px; color: var(--accent-color); }
-        .shop-item .name { font-weight: 600; color: #fff; }
-        .shop-item .price { color: var(--accent-color); font-weight: 600; }
+        .forum-topic-item:hover { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
+        .forum-topic-item .topic-info { flex: 1; }
+        .forum-topic-item .topic-title { font-weight: 600; color: #fff; font-size: 1.1em; }
+        .forum-topic-item .topic-meta {
+            font-size: 0.85em; color: #aaa; margin-top: 4px; display: flex; gap: 15px; flex-wrap: wrap;
+        }
+        .forum-topic-item .topic-meta .author { color: var(--accent-text); }
+        .forum-topic-item .topic-meta .role-badge {
+            display: inline-block; padding: 2px 10px; border-radius: 30px; font-size: 0.75em; font-weight: 600;
+        }
+        .forum-topic-item .topic-stats {
+            font-size: 0.85em; color: #888; text-align: right;
+        }
+        .forum-topic-item .topic-stats i { margin-right: 4px; }
+
+        /* Бейджи ролей */
+        .role-badge.создатель { background: #ffd700; color: #111; }
+        .role-badge.администрация { background: #ff4444; color: #fff; }
+        .role-badge.ст-модератор { background: #44aaff; color: #111; }
+        .role-badge.мл-модератор { background: #66cc88; color: #111; }
+        .role-badge.га-администратор { background: #ff8800; color: #111; }
+        .role-badge.игрок { background: #444; color: #ddd; }
+
+        /* Просмотр темы */
+        .forum-topic-view { display: none; }
+        .forum-topic-view.active { display: block; }
+        .forum-back-btn {
+            background: none; border: none; color: var(--accent-color); cursor: pointer;
+            font-size: 0.9em; padding: 8px 0; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .forum-back-btn:hover { color: #fff; }
+        .forum-topic-header { margin-bottom: 20px; }
+        .forum-topic-header h2 { color: #fff; font-weight: 400; margin-bottom: 8px; }
+        .forum-topic-header .topic-meta { color: #aaa; font-size: 0.9em; }
+        .forum-topic-header .topic-meta .role-badge { margin-left: 6px; }
+        .forum-reply {
+            background: #1a1a1a;
+            padding: 14px 20px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent-border);
+        }
+        .forum-reply .reply-meta { font-size: 0.8em; color: #aaa; display: flex; gap: 12px; align-items: center; margin-bottom: 5px; }
+        .forum-reply .reply-content { color: #ddd; line-height: 1.5; }
+        .forum-reply-form { margin-top: 20px; }
+        .forum-reply-form textarea {
+            width: 100%; background: #1a1a1a; border: 1px solid var(--accent-border); color: #eee;
+            border-radius: 20px; padding: 14px 18px; font-family: inherit; resize: vertical; min-height: 80px;
+            outline: none; transition: 0.3s;
+        }
+        .forum-reply-form textarea:focus { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); background: #222; }
+        .forum-reply-form button { margin-top: 10px; }
+
+        /* Кнопка "Новая тема" */
+        .new-topic-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #2a2a2a; border: 1px solid var(--accent-border); color: #eee;
+            padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: 600;
+            transition: 0.25s; margin-bottom: 18px;
+        }
+        .new-topic-btn:hover { background: #3a3a3a; border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
 
         /* ===== НАСТРОЙКИ ЦВЕТА ===== */
         .color-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
@@ -604,17 +536,6 @@
         .settings-toggle:hover { border-color: var(--accent-color); box-shadow: 0 0 40px var(--accent-glow-strong); transform: rotate(60deg) scale(1.05); }
         .settings-toggle i { font-size: 1.8em; }
 
-        /* ===== ФОРУМ ===== */
-        .forum-post {
-            background: #1a1a1a;
-            padding: 15px 20px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            border-left: 3px solid var(--accent-color);
-        }
-        .forum-post h4 { margin: 0 0 5px; color: #fff; }
-        .forum-post p { margin: 0; color: #aaa; font-size: 0.95em; }
-
         /* ===== АДАПТИВ ===== */
         @media (max-width:600px) {
             .login-box { padding:30px 20px; }
@@ -624,8 +545,8 @@
             .settings-toggle { width:45px; height:45px; top:15px; right:15px; }
             .clicker-btn { width:150px; height:150px; font-size:2em; }
             .shop-grid { grid-template-columns:1fr; }
-            .rule-item summary { flex-wrap: wrap; }
-            .rule-item .rule-punishment { white-space: normal; }
+            .forum-topic-item { flex-direction: column; align-items: stretch; }
+            .forum-topic-item .topic-stats { text-align: left; margin-top: 6px; }
         }
     </style>
 </head>
@@ -668,6 +589,7 @@
                                 <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
                                 <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
                                 <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
+                                <div class="data-item">Роль: <span id="playerRole">-</span></div>
                             </div>
                         </div>
                         <button class="action-btn logout-btn" onclick="window.pressLogout()">Выйти</button>
@@ -705,14 +627,29 @@
             </div>
         </section>
 
-        <!-- ФОРУМ -->
+        <!-- ===== ФОРУМ ===== -->
         <section class="page" id="page-forum">
-            <div class="stat-card" style="max-width:800px; margin:0 auto;">
+            <div class="stat-card" style="max-width:900px; margin:0 auto;">
                 <h3><i class="fas fa-comments"></i> Форум проекта</h3>
-                <div class="forum-post"><h4>Обсуждение обновления 2.0</h4><p>Администратор: Приветствуем всех! Новый кликер уже доступен.</p></div>
-                <div class="forum-post"><h4>Предложения по фракциям</h4><p>Игрок: Хотелось бы добавить новую фракцию "Киберпанк".</p></div>
-                <div class="forum-post"><h4>Баг-репорт</h4><p>Игрок: Заметил, что баланс иногда не обновляется сразу.</p></div>
-                <p style="color:#888; margin-top:15px;">Полноценный форум в разработке.</p>
+
+                <!-- Список тем -->
+                <div id="forumTopicList">
+                    <button class="new-topic-btn" id="newTopicBtn"><i class="fas fa-plus"></i> Новая тема</button>
+                    <div id="topicsContainer" class="forum-topic-list">
+                        <p style="color:#888;">Загрузка тем...</p>
+                    </div>
+                </div>
+
+                <!-- Просмотр темы -->
+                <div id="forumTopicView" class="forum-topic-view">
+                    <button class="forum-back-btn" id="forumBackBtn"><i class="fas fa-arrow-left"></i> Назад к списку</button>
+                    <div id="topicContent"></div>
+                    <div class="forum-reply-form">
+                        <h4 style="color:#ddd; margin:15px 0 8px;">Ответить</h4>
+                        <textarea id="replyInput" placeholder="Ваш ответ..."></textarea>
+                        <button class="action-btn" id="replyBtn" style="width:auto; padding:10px 30px;">Отправить</button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -727,25 +664,19 @@
             </div>
         </section>
 
-        <!-- ===== СТРАНИЦА "ПРАВИЛА" (три блока) ===== -->
+        <!-- ПРАВИЛА -->
         <section class="page" id="page-rules">
             <div class="stat-card" style="max-width:900px; margin:0 auto;">
                 <h3><i class="fas fa-gavel"></i> Правила проекта</h3>
                 <p style="color:#aaa; margin-bottom:20px;">Ознакомьтесь с правилами перед началом игры на нашем проекте</p>
-
-                <!-- БЛОК 1: Правила проекта (игровые) -->
                 <div class="rules-block">
                     <h4><i class="fas fa-shield-alt"></i> Правила проекта</h4>
                     <div id="rulesGame" class="rules-accordion"></div>
                 </div>
-
-                <!-- БЛОК 2: Правила форума -->
                 <div class="rules-block">
                     <h4><i class="fas fa-list-ul"></i> Правила форума</h4>
                     <div id="rulesForum" class="rules-accordion"></div>
                 </div>
-
-                <!-- БЛОК 3: РП-Термины -->
                 <div class="rules-block">
                     <h4><i class="fas fa-book"></i> РП-Термины</h4>
                     <div id="rulesTerms" class="rules-accordion"></div>
@@ -766,7 +697,10 @@
             </div>
         </section>
 
-        <!-- КЛИКЕР (открывается модалкой) -->
+        <!-- КЛИКЕР -->
+        <section class="page" id="page-clicker">
+            <!-- страница-заглушка, т.к. кликер открывается модалкой -->
+        </section>
     </div>
 
     <!-- ===== МОДАЛКА НАСТРОЕК ===== -->
@@ -822,6 +756,19 @@
         </div>
     </div>
 
+    <!-- ===== МОДАЛКА НОВОЙ ТЕМЫ ===== -->
+    <div class="forum-modal" id="newTopicModal">
+        <div class="modal-panel">
+            <button class="modal-close" onclick="closeNewTopic()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3><i class="fas fa-plus-circle"></i> Создать тему</h3>
+            <input type="text" id="topicTitleInput" placeholder="Заголовок темы" style="width:100%; background:#1a1a1a; border:1px solid var(--accent-border); color:#eee; border-radius:50px; padding:14px 18px; margin-bottom:12px; outline:none;" />
+            <textarea id="topicContentInput" placeholder="Текст темы..." style="width:100%; background:#1a1a1a; border:1px solid var(--accent-border); color:#eee; border-radius:20px; padding:14px 18px; min-height:120px; resize:vertical; font-family:inherit; outline:none;"></textarea>
+            <button class="action-btn" id="createTopicBtn" style="margin-top:12px;">Создать</button>
+        </div>
+    </div>
+
     <!-- ===== ОКНО ВХОДА ===== -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
@@ -852,7 +799,7 @@
     <script type="module">
         // ========== ИМПОРТ FIREBASE ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -869,8 +816,9 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let currentUser = null;
-        let currentUserRef = null;
+        let currentUser = null;          // данные из Firestore
+        let currentUserRef = null;       // ссылка на документ пользователя
+        let currentUserRole = "игрок";   // роль
         let chatUnsubscribe = null;
         let clickerEarned = 0;
 
@@ -888,6 +836,12 @@
             document.getElementById('sidebar').classList.remove('open');
             if (pageId === 'clicker') {
                 window.openClicker();
+            }
+            if (pageId === 'forum') {
+                loadTopics();
+                // Скрываем просмотр темы, показываем список
+                document.getElementById('forumTopicView').classList.remove('active');
+                document.getElementById('forumTopicList').style.display = 'block';
             }
         }
 
@@ -922,11 +876,23 @@
             const userSnap = await getDoc(userRef);
             currentUserRef = userRef;
             if (!userSnap.exists()) {
-                const newUser = { username, email, avatar, level:1, balance:5000, fraction:"Гражданский", provider:'google.com', createdAt:serverTimestamp() };
+                const newUser = {
+                    username,
+                    email,
+                    avatar,
+                    level: 1,
+                    balance: 5000,
+                    fraction: "Гражданский",
+                    role: "игрок",
+                    provider: 'google.com',
+                    createdAt: serverTimestamp()
+                };
                 await setDoc(userRef, newUser);
                 currentUser = newUser;
+                currentUserRole = "игрок";
             } else {
                 currentUser = userSnap.data();
+                currentUserRole = currentUser.role || "игрок";
                 if (avatar && currentUser.avatar !== avatar) {
                     await setDoc(userRef, { avatar, username }, { merge: true });
                     currentUser.avatar = avatar;
@@ -942,6 +908,7 @@
             document.getElementById('playerLevel').innerText = user.level + " LVL";
             document.getElementById('playerBalance').innerText = user.balance.toLocaleString() + " рублей";
             document.getElementById('playerFraction').innerText = user.fraction || "Гражданский";
+            document.getElementById('playerRole').innerText = user.role || "игрок";
             document.getElementById('playerAvatar').src = avatarUrl || `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(user.username)}&width=150&height=150&format=png`;
             const cb = document.getElementById('clickerBalance');
             if (cb) cb.innerText = user.balance.toLocaleString();
@@ -963,6 +930,7 @@
                 currentUserRef = userRef;
                 if (userSnap.exists()) {
                     currentUser = userSnap.data();
+                    currentUserRole = currentUser.role || "игрок";
                     renderUserInterface(currentUser, authUser.photoURL);
                     showMainContent();
                 } else {
@@ -973,6 +941,7 @@
                 document.getElementById('loginOverlay').style.opacity = '1';
                 if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
                 currentUserRef = null; currentUser = null;
+                currentUserRole = "игрок";
             }
         });
 
@@ -1049,9 +1018,10 @@
                     const dbData = userSnap.data();
                     if (dbData.password !== pass) { alert("Неверный пароль!"); resetAuthButtons(); if(isAuto) window.pressLogout(); return; }
                     currentUser = dbData;
+                    currentUserRole = currentUser.role || "игрок";
                 } else {
                     if (userSnap.exists()) { alert("Никнейм уже занят!"); resetAuthButtons(); return; }
-                    currentUser = { username, password:pass, level:1, balance:5000, fraction:"Гражданский" };
+                    currentUser = { username, password:pass, level:1, balance:5000, fraction:"Гражданский", role:"игрок" };
                     await setDoc(userRef, currentUser);
                     alert("Регистрация успешна!");
                 }
@@ -1109,6 +1079,230 @@
         function escapeHTML(str) { return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
         window.checkEnter = function(e) { if (e.key === 'Enter') window.sendMessage(); };
 
+        // ===== ФОРУМ =====
+        let currentTopicId = null; // ID просматриваемой темы
+        let topicsUnsubscribe = null;
+        let repliesUnsubscribe = null;
+
+        // Загрузка списка тем
+        function loadTopics() {
+            if (topicsUnsubscribe) topicsUnsubscribe();
+            const container = document.getElementById('topicsContainer');
+            container.innerHTML = '<p style="color:#888;">Загрузка тем...</p>';
+            const q = query(collection(db, "forum_topics"), orderBy("createdAt", "desc"), limit(30));
+            topicsUnsubscribe = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="color:#888;">Пока нет тем. Создайте первую!</p>';
+                    return;
+                }
+                let html = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    const title = data.title || 'Без названия';
+                    const author = data.authorName || 'Неизвестный';
+                    const role = data.authorRole || 'игрок';
+                    const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : '';
+                    const replies = data.repliesCount || 0;
+                    const roleClass = role.replace(/ /g, '-').toLowerCase();
+                    html += `
+                        <div class="forum-topic-item" data-id="${id}">
+                            <div class="topic-info">
+                                <div class="topic-title">${escapeHTML(title)}</div>
+                                <div class="topic-meta">
+                                    <span class="author">${escapeHTML(author)}</span>
+                                    <span class="role-badge ${roleClass}">${escapeHTML(role)}</span>
+                                    <span>${createdAt}</span>
+                                </div>
+                            </div>
+                            <div class="topic-stats">
+                                <i class="fas fa-comment"></i> ${replies}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                // Добавляем обработчики клика на темы
+                document.querySelectorAll('.forum-topic-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const id = el.dataset.id;
+                        if (id) openTopic(id);
+                    });
+                });
+            }, (error) => {
+                console.error('Ошибка загрузки тем:', error);
+                container.innerHTML = '<p style="color:#f88;">Ошибка загрузки тем. Попробуйте обновить.</p>';
+            });
+        }
+
+        // Открыть тему
+        function openTopic(topicId) {
+            currentTopicId = topicId;
+            document.getElementById('forumTopicList').style.display = 'none';
+            const view = document.getElementById('forumTopicView');
+            view.classList.add('active');
+            loadTopicContent(topicId);
+        }
+
+        // Загрузить содержимое темы и ответы
+        function loadTopicContent(topicId) {
+            const container = document.getElementById('topicContent');
+            container.innerHTML = '<p style="color:#888;">Загрузка...</p>';
+            // Получаем тему
+            const topicRef = doc(db, "forum_topics", topicId);
+            getDoc(topicRef).then((docSnap) => {
+                if (!docSnap.exists()) {
+                    container.innerHTML = '<p style="color:#f88;">Тема не найдена.</p>';
+                    return;
+                }
+                const data = docSnap.data();
+                const title = data.title || 'Без названия';
+                const author = data.authorName || 'Неизвестный';
+                const role = data.authorRole || 'игрок';
+                const content = data.content || '';
+                const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : '';
+                const roleClass = role.replace(/ /g, '-').toLowerCase();
+
+                let html = `
+                    <div class="forum-topic-header">
+                        <h2>${escapeHTML(title)}</h2>
+                        <div class="topic-meta">
+                            <span>Автор: ${escapeHTML(author)}</span>
+                            <span class="role-badge ${roleClass}">${escapeHTML(role)}</span>
+                            <span>${createdAt}</span>
+                        </div>
+                        <div style="margin-top:12px; padding:12px 0; border-top:1px solid #2a2a2a; color:#ddd;">${escapeHTML(content)}</div>
+                    </div>
+                    <div id="repliesContainer" style="margin-top:20px;">
+                        <h4 style="color:#aaa; font-weight:400; border-bottom:1px solid #2a2a2a; padding-bottom:8px;">Ответы</h4>
+                        <div id="repliesList"></div>
+                    </div>
+                `;
+                container.innerHTML = html;
+
+                // Подписываемся на ответы
+                if (repliesUnsubscribe) repliesUnsubscribe();
+                const q = query(collection(db, "forum_replies"), where("topicId", "==", topicId), orderBy("createdAt", "asc"));
+                repliesUnsubscribe = onSnapshot(q, (snapshot) => {
+                    const repliesList = document.getElementById('repliesList');
+                    if (snapshot.empty) {
+                        repliesList.innerHTML = '<p style="color:#888;">Нет ответов. Будьте первым!</p>';
+                        return;
+                    }
+                    let rHtml = '';
+                    snapshot.forEach((doc) => {
+                        const r = doc.data();
+                        const rAuthor = r.authorName || 'Неизвестный';
+                        const rRole = r.authorRole || 'игрок';
+                        const rContent = r.content || '';
+                        const rTime = r.createdAt ? new Date(r.createdAt.seconds * 1000).toLocaleString() : '';
+                        const rRoleClass = rRole.replace(/ /g, '-').toLowerCase();
+                        rHtml += `
+                            <div class="forum-reply">
+                                <div class="reply-meta">
+                                    <span>${escapeHTML(rAuthor)}</span>
+                                    <span class="role-badge ${rRoleClass}">${escapeHTML(rRole)}</span>
+                                    <span>${rTime}</span>
+                                </div>
+                                <div class="reply-content">${escapeHTML(rContent)}</div>
+                            </div>
+                        `;
+                    });
+                    repliesList.innerHTML = rHtml;
+                }, (error) => {
+                    console.error('Ошибка загрузки ответов:', error);
+                    document.getElementById('repliesList').innerHTML = '<p style="color:#f88;">Ошибка загрузки ответов.</p>';
+                });
+            }).catch((e) => {
+                console.error('Ошибка загрузки темы:', e);
+                container.innerHTML = '<p style="color:#f88;">Ошибка загрузки темы.</p>';
+            });
+        }
+
+        // Вернуться к списку
+        document.getElementById('forumBackBtn').addEventListener('click', () => {
+            document.getElementById('forumTopicView').classList.remove('active');
+            document.getElementById('forumTopicList').style.display = 'block';
+            if (repliesUnsubscribe) { repliesUnsubscribe(); repliesUnsubscribe = null; }
+            currentTopicId = null;
+        });
+
+        // Отправить ответ
+        document.getElementById('replyBtn').addEventListener('click', async () => {
+            if (!currentUser) { alert('Войдите в аккаунт!'); return; }
+            if (!currentTopicId) return;
+            const input = document.getElementById('replyInput');
+            const text = input.value.trim();
+            if (!text) { alert('Введите текст ответа.'); return; }
+            try {
+                await addDoc(collection(db, "forum_replies"), {
+                    topicId: currentTopicId,
+                    content: text,
+                    authorId: currentUser.username,
+                    authorName: currentUser.username,
+                    authorRole: currentUserRole,
+                    createdAt: serverTimestamp()
+                });
+                // Увеличиваем счётчик ответов у темы
+                const topicRef = doc(db, "forum_topics", currentTopicId);
+                await updateDoc(topicRef, {
+                    repliesCount: increment(1),
+                    lastReplyAt: serverTimestamp()
+                });
+                input.value = '';
+                alert('Ответ отправлен!');
+            } catch (e) {
+                console.error('Ошибка отправки ответа:', e);
+                alert('Ошибка отправки. Попробуйте позже.');
+            }
+        });
+
+        // Создать новую тему
+        document.getElementById('newTopicBtn').addEventListener('click', () => {
+            if (!currentUser) { alert('Войдите в аккаунт!'); return; }
+            document.getElementById('newTopicModal').classList.add('active');
+        });
+
+        window.closeNewTopic = function() {
+            document.getElementById('newTopicModal').classList.remove('active');
+            document.getElementById('topicTitleInput').value = '';
+            document.getElementById('topicContentInput').value = '';
+        };
+
+        document.getElementById('createTopicBtn').addEventListener('click', async () => {
+            if (!currentUser) { alert('Войдите в аккаунт!'); return; }
+            const title = document.getElementById('topicTitleInput').value.trim();
+            const content = document.getElementById('topicContentInput').value.trim();
+            if (!title) { alert('Введите заголовок.'); return; }
+            if (!content) { alert('Введите текст темы.'); return; }
+            try {
+                await addDoc(collection(db, "forum_topics"), {
+                    title: title,
+                    content: content,
+                    authorId: currentUser.username,
+                    authorName: currentUser.username,
+                    authorRole: currentUserRole,
+                    repliesCount: 0,
+                    createdAt: serverTimestamp(),
+                    lastReplyAt: serverTimestamp()
+                });
+                alert('Тема создана!');
+                closeNewTopic();
+                // Перезагружаем список тем, если мы на странице форума
+                if (document.getElementById('page-forum').classList.contains('active')) {
+                    loadTopics();
+                }
+            } catch (e) {
+                console.error('Ошибка создания темы:', e);
+                alert('Ошибка создания темы.');
+            }
+        });
+
+        // Закрытие модалки по клику вне
+        document.getElementById('newTopicModal').addEventListener('click', function(e) {
+            if (e.target === this) closeNewTopic();
+        });
+
         // ===== ГЕНЕРАТОР ПРАВИЛ =====
         // Данные для Правил проекта
         const gameRulesData = [
@@ -1145,7 +1339,6 @@
             { id: "7.1", title: "Оскорбление религий", punishment: "1d, 3d, 7d, 14d ban", desc: "" }
         ];
 
-        // Данные для Правил форума
         const forumRulesData = [
             { category: "Общие положения", rules: [
                 "Администрация форума оставляет за собой право изменять, дополнять или удалять любые правила без предварительного уведомления.",
@@ -1179,7 +1372,6 @@
             ]}
         ];
 
-        // Данные для РП-Терминов
         const termsData = [
             { term: "РП (Roleplay)", desc: "Отыгровка своей роли - полицейский, гражданский и т.д. (Отыгрываешь действие, которое мог бы выполнить в реальности) /me Открыл дверь - /me Показал удостоверение - /me Проверил документы" },
             { term: "ДМ (Death Match)", desc: "Убийство игрока без причины. (Пример: Полицейский застрелил мирного игрока, без весомой на то причины)" },

@@ -35,7 +35,7 @@
         .login-box h2 span { color: var(--accent-color); text-shadow: 0 0 30px var(--accent-glow); }
         .login-subtitle { color: #999; font-size: 0.9em; margin-bottom: 25px; letter-spacing: 0.5px; }
 
-        /* КНОПКА GOOGLE */
+        /* КНОПКА GOOGLE (исправленная иконка) */
         .oauth-buttons {
             display: flex;
             flex-direction: column;
@@ -233,14 +233,14 @@
             <h2>NOVO <span>Malinograd RP</span></h2>
             <div class="login-subtitle">Вход в игровой аккаунт</div>
 
-            <!-- ТОЛЬКО GOOGLE -->
+            <!-- КНОПКА GOOGLE (ИСПРАВЛЕННАЯ ИКОНКА) -->
             <div class="oauth-buttons">
                 <button class="oauth-btn" id="googleBtn">
-                    <svg viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582l3.406-3.406A11.94 11.94 0 0 0 12 0C7.289 0 3.163 2.638 1.313 6.464l3.953 3.301z"/>
-                        <path fill="#34A853" d="M16.995 18.354A7.077 7.077 0 0 1 12 19.091c-2.924 0-5.448-1.777-6.637-4.336l-3.956 3.299A11.94 11.94 0 0 0 12 24c3.327 0 6.34-1.355 8.527-3.54l-3.532-2.106z"/>
-                        <path fill="#4A90E2" d="M21.457 11.292c.167-.83.167-1.652 0-2.482H12v4.69h5.274c-.38 2.104-1.78 3.927-3.676 5.02l3.547 2.106c2.174-2.166 3.514-5.468 3.514-9.334z"/>
-                        <path fill="#FBBC05" d="M5.266 9.765l-3.953-3.301A11.94 11.94 0 0 0 0 12c0 2.623.836 5.126 2.313 7.135l3.956-3.299C5.612 15.266 5.266 13.842 5.266 12c0-1.109.195-2.17.548-3.16z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/>
                     </svg>
                     Войти через Google
                 </button>
@@ -248,7 +248,7 @@
 
             <div class="divider">или по паролю</div>
 
-            <!-- СТАРАЯ ФОРМА (опционально) -->
+            <!-- ФОРМА ВХОДА ПО ПАРОЛЮ -->
             <input type="text" id="loginUser" class="login-input" placeholder="Ник (только латиница, цифры, _)" />
             <span class="login-hint">Допустимы A–Z, 0–9 и _ (2–20 символов)</span>
             <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 8 символов, сложный)" />
@@ -402,7 +402,7 @@
         const auth = getAuth(app);
 
         // ========== СОСТОЯНИЕ ==========
-        let currentUser = null;        // данные из Firestore
+        let currentUser = null;
         let chatUnsubscribe = null;
 
         // ========== ПРОВАЙДЕР GOOGLE ==========
@@ -509,7 +509,7 @@
             }
         };
 
-        // ========== СТАРАЯ СИСТЕМА ВХОДА ПО ПАРОЛЮ (опционально) ==========
+        // ========== СТАРАЯ СИСТЕМА ВХОДА ПО ПАРОЛЮ ==========
         function isValidUsername(username) {
             return /^[a-zA-Z0-9_]{2,20}$/.test(username);
         }

@@ -150,7 +150,7 @@
         .logout-btn { background: #1a1a1a; border-color: #3a3a3a; margin-top: 15px; padding: 10px; font-size: 0.85em; }
         .logout-btn:hover { background: #2a1a1a; border-color: #a55; box-shadow: 0 0 30px rgba(200,80,80,0.2); }
 
-        /* ===== ФОРМА (ОБРАТНАЯ СВЯЗЬ) ===== */
+        /* ===== ФОРМА ОБРАТНОЙ СВЯЗИ ===== */
         .stat-card form textarea,
         .stat-card form input[type="text"],
         .stat-card form input[type="email"] {
@@ -354,20 +354,145 @@
         }
         @keyframes floatUp { 0% { opacity:1; transform:translateY(0) scale(1); } 100% { opacity:0; transform:translateY(-120px) scale(1.5); } }
 
-        /* ===== ПРАВИЛА ===== */
-        .rules-grid { display: grid; gap: 20px; }
-        .rules-card {
-            background: #1a1a1a;
-            padding: 20px 25px;
-            border-radius: 25px;
-            border-left: 4px solid var(--accent-color);
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            transition: 0.3s;
+        /* ===== ПРАВИЛА (аккордеон) ===== */
+        .rules-block {
+            margin-bottom: 30px;
         }
-        .rules-card:hover { border-color: var(--accent-color); box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-2px); }
-        .rules-card h4 { font-size: 1.2em; margin: 0 0 10px; color: #fff; display: flex; align-items: center; gap: 10px; }
-        .rules-card p { margin: 0; color: #bbb; line-height: 1.6; }
-        .rules-card ul { margin: 8px 0 0 20px; color: #bbb; line-height: 1.6; }
+        .rules-block h4 {
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 15px;
+        }
+        .rules-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .rule-category {
+            background: #1a1a1a;
+            border-radius: 16px;
+            border: 1px solid var(--accent-border);
+            transition: 0.3s;
+            overflow: hidden;
+        }
+        .rule-category:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .rule-category summary {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            cursor: pointer;
+            list-style: none;
+            font-weight: 600;
+            color: #ddd;
+            transition: 0.2s;
+        }
+        .rule-category summary::-webkit-details-marker { display: none; }
+        .rule-category summary::before {
+            content: '▶';
+            margin-right: 6px;
+            font-size: 0.8em;
+            color: var(--accent-color);
+            transition: transform 0.2s;
+        }
+        .rule-category[open] summary::before {
+            transform: rotate(90deg);
+        }
+        .rule-category > summary .cat-title {
+            flex: 1;
+        }
+        .rule-category > summary .cat-count {
+            font-size: 0.8em;
+            color: #888;
+            background: #222;
+            padding: 2px 10px;
+            border-radius: 30px;
+        }
+        .rule-items {
+            padding: 0 20px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .rule-item {
+            background: #111;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+            transition: 0.2s;
+        }
+        .rule-item:hover {
+            border-color: var(--accent-border);
+        }
+        .rule-item summary {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            list-style: none;
+            font-weight: 500;
+            color: #ccc;
+        }
+        .rule-item summary::-webkit-details-marker { display: none; }
+        .rule-item summary::before {
+            content: '▸';
+            color: var(--accent-color);
+            font-size: 1.1em;
+            transition: transform 0.2s;
+        }
+        .rule-item[open] summary::before {
+            transform: rotate(90deg);
+        }
+        .rule-item .rule-id {
+            color: var(--accent-color);
+            font-weight: 700;
+            min-width: 40px;
+        }
+        .rule-item .rule-title {
+            flex: 1;
+            font-weight: 600;
+            color: #eee;
+        }
+        .rule-item .rule-punishment {
+            font-size: 0.8em;
+            color: #ff8;
+            background: rgba(255,255,0,0.1);
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid #ff8;
+            white-space: nowrap;
+        }
+        .rule-item .rule-desc {
+            padding: 8px 16px 14px 16px;
+            color: #bbb;
+            line-height: 1.6;
+            border-top: 1px solid #2a2a2a;
+            font-size: 0.95em;
+        }
+        .rule-item .rule-desc strong {
+            color: #ddd;
+        }
+        .rule-item .rule-example {
+            padding: 8px 16px 14px 16px;
+            color: #888;
+            font-style: italic;
+            border-top: 1px solid #2a2a2a;
+            font-size: 0.9em;
+        }
+        .rule-item .rule-example::before {
+            content: 'Пример: ';
+            color: #666;
+            font-weight: 600;
+        }
 
         /* ===== МАГАЗИН ===== */
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
@@ -487,7 +612,7 @@
         .settings-toggle:hover { border-color: var(--accent-color); box-shadow: 0 0 40px var(--accent-glow-strong); transform: rotate(60deg) scale(1.05); }
         .settings-toggle svg { width: 30px; height: 30px; stroke: currentColor; stroke-width: 2; fill: none; }
 
-        /* ===== ФОРУМ (заглушка) ===== */
+        /* ===== ФОРУМ ===== */
         .forum-post {
             background: #1a1a1a;
             padding: 15px 20px;
@@ -508,6 +633,8 @@
             .settings-toggle svg { width:24px; height:24px; }
             .clicker-btn { width:150px; height:150px; font-size:2em; }
             .shop-grid { grid-template-columns:1fr; }
+            .rule-item summary { flex-wrap: wrap; }
+            .rule-item .rule-punishment { white-space: normal; }
         }
     </style>
 </head>
@@ -598,7 +725,7 @@
             </div>
         </section>
 
-        <!-- СТАТУС -->
+        <!-- СТАТУС СЕРВЕРА -->
         <section class="page" id="page-status">
             <div class="stat-card" style="max-width:600px; margin:0 auto; text-align:center;">
                 <h3>📊 Статус сервера</h3>
@@ -609,29 +736,28 @@
             </div>
         </section>
 
-        <!-- ПРАВИЛА -->
+        <!-- ===== СТРАНИЦА "ПРАВИЛА" (три блока) ===== -->
         <section class="page" id="page-rules">
-            <div class="stat-card" style="max-width:800px; margin:0 auto;">
+            <div class="stat-card" style="max-width:900px; margin:0 auto;">
                 <h3>📜 Правила проекта</h3>
                 <p style="color:#aaa; margin-bottom:20px;">Ознакомьтесь с правилами перед началом игры на нашем проекте</p>
-                <div class="rules-grid">
-                    <div class="rules-card">
-                        <h4>📋 Правила форума</h4>
-                        <p>Основные правила, регулирующие жизнедеятельность форума. Обязательны к ознакомлению для всех пользователей.</p>
-                    </div>
-                    <div class="rules-card">
-                        <h4>⚖️ Правила Проекта</h4>
-                        <p>Администрация проекта имеет право наказывать игроков даже за неописанные правила.</p>
-                    </div>
-                    <div class="rules-card">
-                        <h4>🎭 РП-Термины</h4>
-                        <ul>
-                            <li><strong>РП (Role-Play)</strong> — ролевая игра, отыгрыш персонажа.</li>
-                            <li><strong>Метгейминг</strong> — использование знаний из реального мира в игре (запрещено).</li>
-                            <li><strong>Паургейминг</strong> — совершение действий, невозможных в реальности (запрещено).</li>
-                            <li><strong>ДМ (Deathmatch)</strong> — бессмысленное убийство других игроков (запрещено).</li>
-                        </ul>
-                    </div>
+
+                <!-- БЛОК 1: Правила проекта (игровые) -->
+                <div class="rules-block">
+                    <h4>🎮 Правила проекта</h4>
+                    <div id="rulesGame" class="rules-accordion"></div>
+                </div>
+
+                <!-- БЛОК 2: Правила форума -->
+                <div class="rules-block">
+                    <h4>📋 Правила форума</h4>
+                    <div id="rulesForum" class="rules-accordion"></div>
+                </div>
+
+                <!-- БЛОК 3: РП-Термины -->
+                <div class="rules-block">
+                    <h4>🎭 РП-Термины</h4>
+                    <div id="rulesTerms" class="rules-accordion"></div>
                 </div>
             </div>
         </section>
@@ -649,7 +775,7 @@
             </div>
         </section>
 
-        <!-- КЛИКЕР (открывается модалкой, но пункт меню уже есть) -->
+        <!-- КЛИКЕР (открывается модалкой) -->
     </div>
 
     <!-- ===== МОДАЛКА НАСТРОЕК ===== -->
@@ -997,6 +1123,169 @@
         };
         function escapeHTML(str) { return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
         window.checkEnter = function(e) { if (e.key === 'Enter') window.sendMessage(); };
+
+        // ===== ГЕНЕРАТОР ПРАВИЛ =====
+        // Данные для Правил проекта
+        const gameRulesData = [
+            { id: "1.0", title: "НонРП (НРП)", punishment: "15-25m jail / 1d-7d ban", desc: "Не относящееся к ролевой игре поведение, к примеру игнорировать любые отыгровки, или же игнорировать РП процесс." },
+            { id: "1.0.1", title: "Помеха РП", punishment: "kick / 15-20m jail/ 1d-3d ban", desc: "Намеренно мешать игровому рп процессу игрока/игроков." },
+            { id: "1.1", title: "НонРП Драйв (НРД)", punishment: "5-10m jail / 1d ban", desc: "Езда не по дороге, по тротуарам/рельсам; либо при намеренном создании ДТП на встречке, с последующим уходом от РП." },
+            { id: "1.2", title: "НонРП форма", punishment: "15-20m jail / 1d ban", desc: "1. Запрещены любые неэстетичные и нереалистичные аксессуары, в особенности те, которые никак не подходят под вид униформы и не соответствуют нормам Roleplay, Разрешаются только те дополнения, которые напрямую не влияют на общий вид униформы (например, очки или маски) Разрешено ношение кастомной униформы организации (Из маркетплейса) если она не противоречит требованиям госс структур. Игрок может взять максимум погоны до Ст. Лейтенанта. 2. НРП форма для гражданских лиц - нечеловеческие конечности / нереалистичные человеческие лица / костюмы аппаратной техники, т/c - в том случае, если вы хотите отыграть автомобиль, имея костюм авто." },
+            { id: "2.0", title: "ДМ (DeathMatch)", punishment: "20-40m jail/1d-3d ban", desc: "Убийство игрока без особой на то причины." },
+            { id: "2.1", title: "SK (SpawnKill)", punishment: "20-25m jail / 1d-3d ban", desc: "Убийство игрока на его спавне." },
+            { id: "2.2", title: "TK (TeamKill)", punishment: "20-25m jail ban / 1d-3d ban", desc: "Убийство своего союзника - Урон по коллегам из вашей команды не проходит, но союзники, это те которые относятся к вашему типу команду. К примеру убийство обычного ФСБшника будучи УФСБ, либо за неофиц ОПГ убить человека из Новокузнецкого ОПГ." },
+            { id: "2.3", title: "Массовый ДМ", punishment: "3d-7d-14d ban", desc: "убийство более 2х игроков." },
+            { id: "2.4", title: "RVK (RK / RevengeKill)", punishment: "20-30m jail/ 1d-7d ban", desc: "Убийство игрока с целью мести." },
+            { id: "3.0", title: "PG (PowerGaming)", punishment: "20-25m jail ban / 1d-7d ban", desc: "Игрок выполняет действия, которые не смог бы выполнить в реальной жизни (физически). Например один в рукопашку против 3х вооруженных людей." },
+            { id: "3.1", title: "Багоюз (BugAbuse)", punishment: "1 - 30 дней | Незначительные баги - 3d-7d-14d ban / Значительные баги - 14d-30d-60d-Perm ban", desc: "Использование недоработок игры, которые могут давать преимущество игроку." },
+            { id: "3.2", title: "Обход бана (BanEvade)", punishment: "60d ban (на оба аккаунта) / Perm ban", desc: "Обход блокировки аккаунта/чата." },
+            { id: "4.0", title: "Флуд в чате (Flood)", punishment: "Server kick / Ban 1h", desc: "Спам более 3 однотипных сообщений." },
+            { id: "4.1", title: "Упоминание/Оскорбление родных", punishment: "3d, 7d, 14d, 30d, 60d ban", desc: "" },
+            { id: "4.2", title: "Оскорбление игроков", punishment: "3h, 6h, 12h, 1d, 3d ban", desc: "" },
+            { id: "4.3", title: "Оскорбление Администрации", punishment: "3d, 7d, 14d, 30d, Perm ban", desc: "" },
+            { id: "4.4", title: "Оскорбление проекта", punishment: "3d, 7d, 14d, 30d, Perm ban", desc: "Речь про прямые высказывая, а не про конструктивную критику." },
+            { id: "4.5", title: "MG (MetaGaming)", punishment: "10-15m jail/1-3h ban", desc: "Информация из реальной жизни." },
+            { id: "5.0", title: "Упоминание наркотических средств в общем чате", punishment: "10-15m jail", desc: "" },
+            { id: "5.1", title: "Прямое упоминание терроризма в общем чате", punishment: "1-3d ban", desc: "" },
+            { id: "5.2", title: "Реклама других проектов", punishment: "Perm ban", desc: "" },
+            { id: "5.3", title: "Реклама неофиц организаций", punishment: "14d - 30d - Perm Ban", desc: "" },
+            { id: "6.0", title: "ERP (EroticRP)", punishment: "3d 7d 30d, 60d ban/Perm ban.", desc: "Запрещается проявление 18+ действий. Движения вперед/назад, или же отыгровки в чате." },
+            { id: "6.1", title: "Уход от РП (RP)", punishment: "20-25m jail/1d-7d ban", desc: "Выход из игры, перезаход на роль, попытка избежать РП, игнорирование РП." },
+            { id: "6.2", title: "Отыгровки в свою сторону", punishment: "20-30m jail/1d ban", desc: "/try Нашёл у гражданина в багажнике запрещёнку и т.п." },
+            { id: "6.3", title: "Выдача себя за администрацию/разработчиков", punishment: "3d 7d 14d ban", desc: "Выдача себя за администратора или же разработчика игры." },
+            { id: "6.4", title: "Обман администрации", punishment: "3d 7d 14d 30d ban, Perm ban", desc: "" },
+            { id: "6.5", title: "Наручники / Дубинка в ПВП", punishment: "20-25m jail/ 1d ban", desc: "Бежать на вооруженного игрока с дубинкой или с наручниками, разрешается только со спины и с заготовленной отыгровкой." },
+            { id: "6.6", title: "NLR (NewLifeRule)", punishment: "15-25m jail / 1-3d ban", desc: "Память после смерти (например, тебя убили, и ты подъезжаешь и говоришь: (За что ты меня убил на КПП?) забываются события, произошедшие в последние 5 минут либо с определенной группой лиц.)" },
+            { id: "7.0", title: "Любое упоминание политики", punishment: "1d-3d, ban", desc: "" },
+            { id: "7.1", title: "Оскорбление религий", punishment: "1d, 3d, 7d, 14d ban", desc: "" }
+        ];
+
+        // Данные для Правил форума
+        const forumRulesData = [
+            { category: "Общие положения", rules: [
+                "Администрация форума оставляет за собой право изменять, дополнять или удалять любые правила без предварительного уведомления.",
+                "Незнание правил не освобождает от ответственности за их нарушение.",
+                "Регистрируясь на форуме, вы автоматически соглашаетесь с данными правилами.",
+                "Администрация имеет право применять любые санкции к нарушителям по своему усмотрению, вплоть до блокировки аккаунта."
+            ]},
+            { category: "Общение на форуме", rules: [
+                "Запрещены оскорбления, унижения, хамство в адрес других пользователей или администрации.",
+                "Запрещен флуд (бессмысленные сообщения) в тематических разделах.",
+                "Запрещен флейм (переход на личности, выяснение отношений) в публичных разделах.",
+                "Запрещена реклама сторонних ресурсов без согласования с администрацией.",
+                "Запрещен спам (многократное повторение одинаковых сообщений)."
+            ]},
+            { category: "Жалобы и апелляции", rules: [
+                "Для подачи жалобы на игрока используйте соответствующий раздел.",
+                "Для подачи жалобы на администратора используйте соответствующий раздел.",
+                "Для подачи апелляции на блокировку используйте соответствующий раздел.",
+                "Жалобы должны быть оформлены по установленной форме."
+            ]},
+            { category: "Баги и ошибки", rules: [
+                "Сообщения о багах в игре публикуются в разделе \"Баг в игре\".",
+                "Сообщения об ошибках на форуме публикуются в разделе \"Ошибка на форуме\".",
+                "При описании бага указывайте подробности и способ воспроизведения.",
+                "Запрещено использовать баги в личных целях до их исправления."
+            ]},
+            { category: "Конфиденциальность", rules: [
+                "Запрещено публиковать личные данные других пользователей без их согласия.",
+                "Запрещено публиковать переписку с администрацией без их согласия.",
+                "Администрация обязуется не разглашать личные данные пользователей третьим лицам."
+            ]}
+        ];
+
+        // Данные для РП-Терминов
+        const termsData = [
+            { term: "РП (Roleplay)", desc: "Отыгровка своей роли - полицейский, гражданский и т.д. (Отыгрываешь действие, которое мог бы выполнить в реальности) /me Открыл дверь - /me Показал удостоверение - /me Проверил документы" },
+            { term: "ДМ (Death Match)", desc: "Убийство игрока без причины. (Пример: Полицейский застрелил мирного игрока, без весомой на то причины)" },
+            { term: "МДМ", desc: "Массовый дм. (Пример: Убийство более 3х игроков без причины)" },
+            { term: "РК (Repeat Kill)", desc: "Намеренное многократное убийство одного и того же игрока раз за разом (Пример: Каждый раз ищешь человека, с целью убить его)" },
+            { term: "ДБ (DriveBy)", desc: "Намеренный таран другой машины (За исключением РП ситуаций). Намеренно таранить игроков/машины игроков." },
+            { term: "НРП", desc: "Неестественное поведение персонажа в игре / Неправильная отыгровка своей роли в игре (Пример: После погони от полиции, ваша машина сломалась, но из ниоткуда вы заспавнили новую)" },
+            { term: "НРП форма", desc: "Ношение скина, который не вписывается в игровой процесс (Чрезмерное количество аксессуаров, непристойные аватары, нечеловеческие конечности и т.п)" },
+            { term: "ПГ (PowerGaming)", desc: "Преувеличение возможностей персонажа в рп процессе. (Пример: /me Вырубил ногой трёх человек с оружием)" },
+            { term: "СК (SpawnKill)", desc: "Спавн килл (Объяснение: Убийство игрока на его точке спавна)" },
+            { term: "НРД (NRP Drive)", desc: "Нон рп драйв. (Пример: Беспрепятственно кататься по полям, или же не по дороге.)" },
+            { term: "РК (Revenge Kill)", desc: "Убийство игрока с целью мести (Пример: Игрок убил вас и вы решили отомстить ему)" },
+            { term: "НЛР (New Life Rule)", desc: "Память после смерти, забываются события, произошедшие в последние 5–10 минут либо с определенной группой лиц. (Пример: Тебя убили, и ты подъезжаешь и говоришь в рп чат: Зачем ты меня убил?)" },
+            { term: "МГ (MetaGaming)", desc: "Использование информации полученной не в ходе игры (Пример: Разыскиваемые бандиты, в чате между собой упоминают место куда они собираются ехать, а вы пользуетесь этим) P.s они должны оставить следы, а не сообщение в чате." },
+            { term: "Багоюз", desc: "Использование багов или недоработок игры. Незначительный багоюз - Багоюз который не дает игроку особого преимущества • Значительный багоюз - Багоюз который дает преимущество над другими игроками, либо то, что может навредить игровому процессу/проекту." }
+        ];
+
+        function renderGameRules() {
+            const container = document.getElementById('rulesGame');
+            if (!container) return;
+            // Группируем по первой цифре (категория)
+            const categories = {};
+            gameRulesData.forEach(rule => {
+                const cat = rule.id.split('.')[0] + '.x';
+                if (!categories[cat]) categories[cat] = [];
+                categories[cat].push(rule);
+            });
+            let html = '';
+            for (const [cat, rules] of Object.entries(categories)) {
+                html += `<details class="rule-category"><summary><span class="cat-title">Категория ${cat}</span><span class="cat-count">${rules.length}</span></summary><div class="rule-items">`;
+                rules.forEach(rule => {
+                    const descHtml = rule.desc ? `<div class="rule-desc">${rule.desc}</div>` : '';
+                    html += `
+                        <details class="rule-item">
+                            <summary>
+                                <span class="rule-id">${rule.id}</span>
+                                <span class="rule-title">${rule.title}</span>
+                                <span class="rule-punishment">${rule.punishment}</span>
+                            </summary>
+                            ${descHtml}
+                        </details>
+                    `;
+                });
+                html += `</div></details>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderForumRules() {
+            const container = document.getElementById('rulesForum');
+            if (!container) return;
+            let html = '';
+            forumRulesData.forEach(cat => {
+                html += `<details class="rule-category"><summary><span class="cat-title">${cat.category}</span><span class="cat-count">${cat.rules.length}</span></summary><div class="rule-items">`;
+                cat.rules.forEach(rule => {
+                    html += `
+                        <details class="rule-item">
+                            <summary>
+                                <span class="rule-title">${rule}</span>
+                            </summary>
+                        </details>
+                    `;
+                });
+                html += `</div></details>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderTerms() {
+            const container = document.getElementById('rulesTerms');
+            if (!container) return;
+            let html = '';
+            termsData.forEach(term => {
+                html += `
+                    <details class="rule-item">
+                        <summary>
+                            <span class="rule-title">${term.term}</span>
+                        </summary>
+                        <div class="rule-desc">${term.desc}</div>
+                    </details>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Запускаем рендеринг после загрузки DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGameRules();
+            renderForumRules();
+            renderTerms();
+        });
 
         // ===== НАСТРОЙКА ЦВЕТА =====
         function applyColor(hex) {

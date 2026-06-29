@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NOVO Malinograd RP | Неоновый кабинет</title>
+    <title>NOVO Malinograd RP</title>
     <link rel="shortcut icon" type="image/png" href="./favicon.png?v=1" />
     <style>
         /* ===== ПЕРЕМЕННЫЕ ===== */
@@ -34,6 +34,56 @@
         .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 2em; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.15); }
         .login-box h2 span { color: var(--accent-color); text-shadow: 0 0 30px var(--accent-glow); }
         .login-subtitle { color: #999; font-size: 0.9em; margin-bottom: 25px; letter-spacing: 0.5px; }
+
+        /* КНОПКА GOOGLE */
+        .oauth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 50px;
+            border: 1px solid var(--accent-border);
+            background: #1e1e1e;
+            color: #eee;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1em;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+        .oauth-btn:hover {
+            background: #2a2a2a;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .oauth-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            color: #666;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #333;
+            margin: 0 10px;
+        }
+
         .login-input { background: #1e1e1e; border: 1px solid var(--accent-border); color: #f0f0f0; padding: 16px 20px; width: 100%; border-radius: 50px; margin-bottom: 12px; box-sizing: border-box; font-size: 1.1em; transition: 0.3s; outline: none; }
         .login-input:focus { border-color: var(--accent-color); box-shadow: 0 0 20px var(--accent-glow), inset 0 0 10px var(--accent-glow); background: #222; }
         .login-hint { font-size: 0.75em; color: #777; margin-top: -6px; margin-bottom: 14px; text-align: left; display: block; padding-left: 10px; }
@@ -70,7 +120,7 @@
         .data-item { background: #1a1a1a; padding: 12px 16px; border-radius: 20px; border-left: 4px solid var(--accent-color); box-shadow: inset 0 0 20px rgba(0,0,0,0.3); }
         .data-item span { color: var(--accent-text); font-weight: 600; float: right; text-shadow: 0 0 15px var(--accent-glow); }
 
-        /* ===== ЧАТ С ФОНОМ ===== */
+        /* ===== ЧАТ ===== */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -128,7 +178,7 @@
         .pm-header { display: flex; gap: 10px; margin-bottom: 10px; }
         .pm-header input { margin-bottom: 0; font-size: 0.9em; padding: 10px 18px; border-radius: 50px; }
 
-        /* ===== DISCORD ===== */
+        /* ===== DISCORD WIDGET ===== */
         .discord-widget-container { width: 100%; height: 420px; border: none; border-radius: 30px; box-shadow: 0 0 30px var(--accent-glow); }
 
         /* ===== КНОПКА НАСТРОЕК ===== */
@@ -165,7 +215,6 @@
         .settings-actions button { flex:1; padding:12px; border-radius:50px; border:1px solid var(--accent-border); background:#2a2a2a; color:#eee; font-weight:600; cursor:pointer; transition:0.25s; text-transform:uppercase; letter-spacing:1px; }
         .settings-actions button:hover { background:#3a3a3a; border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width:600px) {
             .login-box { padding:30px 20px; }
             .btn-group { flex-direction:column; }
@@ -183,6 +232,23 @@
         <div class="login-box">
             <h2>NOVO <span>Malinograd RP</span></h2>
             <div class="login-subtitle">Вход в игровой аккаунт</div>
+
+            <!-- ТОЛЬКО GOOGLE -->
+            <div class="oauth-buttons">
+                <button class="oauth-btn" id="googleBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582l3.406-3.406A11.94 11.94 0 0 0 12 0C7.289 0 3.163 2.638 1.313 6.464l3.953 3.301z"/>
+                        <path fill="#34A853" d="M16.995 18.354A7.077 7.077 0 0 1 12 19.091c-2.924 0-5.448-1.777-6.637-4.336l-3.956 3.299A11.94 11.94 0 0 0 12 24c3.327 0 6.34-1.355 8.527-3.54l-3.532-2.106z"/>
+                        <path fill="#4A90E2" d="M21.457 11.292c.167-.83.167-1.652 0-2.482H12v4.69h5.274c-.38 2.104-1.78 3.927-3.676 5.02l3.547 2.106c2.174-2.166 3.514-5.468 3.514-9.334z"/>
+                        <path fill="#FBBC05" d="M5.266 9.765l-3.953-3.301A11.94 11.94 0 0 0 0 12c0 2.623.836 5.126 2.313 7.135l3.956-3.299C5.612 15.266 5.266 13.842 5.266 12c0-1.109.195-2.17.548-3.16z"/>
+                    </svg>
+                    Войти через Google
+                </button>
+            </div>
+
+            <div class="divider">или по паролю</div>
+
+            <!-- СТАРАЯ ФОРМА (опционально) -->
             <input type="text" id="loginUser" class="login-input" placeholder="Ник (только латиница, цифры, _)" />
             <span class="login-hint">Допустимы A–Z, 0–9 и _ (2–20 символов)</span>
             <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 8 символов, сложный)" />
@@ -320,6 +386,7 @@
         // ========== ИМПОРТ FIREBASE ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCj-GoD1eBbTWjNHeKNN-p2ymvC-zL2B0",
@@ -332,122 +399,117 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        let currentUser = null;
+        // ========== СОСТОЯНИЕ ==========
+        let currentUser = null;        // данные из Firestore
         let chatUnsubscribe = null;
 
-        // ========== УПРАВЛЕНИЕ ЦВЕТОМ ==========
-        function applyColor(hex) {
-            console.log("applyColor:", hex);
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            const accent = `#${hex.slice(1)}`;
-            const glow = `rgba(${r},${g},${b},0.3)`;
-            const glowStrong = `rgba(${r},${g},${b},0.5)`;
-            const border = `#${Math.floor(r*0.6).toString(16).padStart(2,'0')}${Math.floor(g*0.6).toString(16).padStart(2,'0')}${Math.floor(b*0.6).toString(16).padStart(2,'0')}`;
-            const text = `#${Math.min(r+80,255).toString(16).padStart(2,'0')}${Math.min(g+80,255).toString(16).padStart(2,'0')}${Math.min(b+80,255).toString(16).padStart(2,'0')}`;
+        // ========== ПРОВАЙДЕР GOOGLE ==========
+        const googleProvider = new GoogleAuthProvider();
 
-            document.documentElement.style.setProperty('--accent-color', accent);
-            document.documentElement.style.setProperty('--accent-border', border);
-            document.documentElement.style.setProperty('--accent-glow', glow);
-            document.documentElement.style.setProperty('--accent-glow-strong', glowStrong);
-            document.documentElement.style.setProperty('--accent-text', text);
+        // ========== ОБРАБОТЧИК КНОПКИ GOOGLE ==========
+        document.getElementById('googleBtn').addEventListener('click', () => {
+            signInWithPopup(auth, googleProvider)
+                .then(result => {
+                    const user = result.user;
+                    console.log('Google успех:', user);
+                    handleOAuthUser(user);
+                })
+                .catch(error => {
+                    console.error('Ошибка Google:', error);
+                    alert('Не удалось войти через Google. Проверьте консоль.');
+                });
+        });
 
-            localStorage.setItem('novo_accent_color', hex);
-        }
+        // ========== ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ GOOGLE ==========
+        async function handleOAuthUser(authUser) {
+            const uid = authUser.uid;
+            const username = authUser.displayName || authUser.email?.split('@')[0] || 'Player';
+            const email = authUser.email || '';
+            const avatar = authUser.photoURL || '';
 
-        function loadColor() {
-            const saved = localStorage.getItem('novo_accent_color');
-            if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
-                applyColor(saved);
-                const hexInput = document.getElementById('hexInput');
-                if (hexInput) hexInput.value = saved.toUpperCase();
-                updateSlidersFromHex(saved);
+            const userRef = doc(db, "users_oauth", uid);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                const newUser = {
+                    username: username,
+                    email: email,
+                    avatar: avatar,
+                    level: 1,
+                    balance: 5000,
+                    fraction: "Гражданский",
+                    provider: 'google.com',
+                    createdAt: serverTimestamp()
+                };
+                await setDoc(userRef, newUser);
+                currentUser = newUser;
             } else {
-                applyColor('#aaaaaa');
-                const hexInput = document.getElementById('hexInput');
-                if (hexInput) hexInput.value = '#AAAAAA';
-                updateSlidersFromHex('#aaaaaa');
+                currentUser = userSnap.data();
+                if (avatar && currentUser.avatar !== avatar) {
+                    await setDoc(userRef, { avatar: avatar, username: username }, { merge: true });
+                    currentUser.avatar = avatar;
+                }
             }
+            localStorage.setItem('novo_username', currentUser.username);
+            renderUserInterface(currentUser, avatar);
+            showMainContent();
         }
 
-        function updateSlidersFromHex(hex) {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            document.getElementById('redSlider').value = r;
-            document.getElementById('greenSlider').value = g;
-            document.getElementById('blueSlider').value = b;
-            document.getElementById('redVal').textContent = r;
-            document.getElementById('greenVal').textContent = g;
-            document.getElementById('blueVal').textContent = b;
-            document.getElementById('hexInput').value = hex.toUpperCase();
+        // ========== ОТРИСОВКА ПРОФИЛЯ ==========
+        function renderUserInterface(user, avatarUrl) {
+            document.getElementById('playerName').innerText = user.username;
+            document.getElementById('playerLevel').innerText = user.level + " LVL";
+            document.getElementById('playerBalance').innerText = user.balance.toLocaleString() + " рублей";
+            document.getElementById('playerFraction').innerText = user.fraction || "Гражданский";
+            document.getElementById('playerAvatar').src = avatarUrl || `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(user.username)}&width=150&height=150&format=png`;
         }
 
-        function hexFromSliders() {
-            const r = parseInt(document.getElementById('redSlider').value);
-            const g = parseInt(document.getElementById('greenSlider').value);
-            const b = parseInt(document.getElementById('blueSlider').value);
-            return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+        function showMainContent() {
+            document.getElementById('loginOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainSiteContent').style.display = 'block';
+                if (!chatUnsubscribe) initGlobalChat();
+            }, 600);
         }
 
-        // ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ (через window) ==========
-        window.toggleSettings = function() {
-            console.log("toggleSettings called");
-            const modal = document.getElementById('settingsModal');
-            modal.classList.toggle('active');
-            if (modal.classList.contains('active')) {
-                const currentHex = localStorage.getItem('novo_accent_color') || '#aaaaaa';
-                updateSlidersFromHex(currentHex);
-                document.getElementById('hexInput').value = currentHex.toUpperCase();
-                highlightPreset(currentHex);
-            }
-        };
-
-        window.onSliderChange = function() {
-            console.log("onSliderChange");
-            const hex = hexFromSliders();
-            document.getElementById('hexInput').value = hex.toUpperCase();
-            applyColor(hex);
-            highlightPreset(hex);
-        };
-
-        window.onHexChange = function() {
-            console.log("onHexChange");
-            let val = document.getElementById('hexInput').value.trim();
-            if (!/^#[0-9a-f]{6}$/i.test(val)) return;
-            applyColor(val.toLowerCase());
-            updateSlidersFromHex(val);
-            highlightPreset(val);
-        };
-
-        window.applyPreset = function(color) {
-            console.log("applyPreset:", color);
-            applyColor(color);
-            updateSlidersFromHex(color);
-            document.getElementById('hexInput').value = color.toUpperCase();
-            highlightPreset(color);
-        };
-
-        function highlightPreset(hex) {
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.color.toLowerCase() === hex.toLowerCase());
-            });
-        }
-
-        // Обработчик клика вне модалки
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('settingsModal');
-            if (modal.classList.contains('active')) {
-                const panel = modal.querySelector('.settings-panel');
-                if (!panel.contains(e.target) && e.target.id !== 'settingsToggle') {
-                    modal.classList.remove('active');
+        // ========== СЛУШАТЕЛЬ АВТОРИЗАЦИИ (восстановление сессии) ==========
+        onAuthStateChanged(auth, async (authUser) => {
+            if (authUser) {
+                const uid = authUser.uid;
+                const userRef = doc(db, "users_oauth", uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    currentUser = userSnap.data();
+                    renderUserInterface(currentUser, authUser.photoURL);
+                    showMainContent();
+                } else {
+                    await handleOAuthUser(authUser);
+                }
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                document.getElementById('mainSiteContent').style.display = 'none';
+                if (chatUnsubscribe) {
+                    chatUnsubscribe();
+                    chatUnsubscribe = null;
                 }
             }
         });
 
-        // ========== ВАЛИДАЦИЯ ==========
+        // ========== ВЫХОД ==========
+        window.pressLogout = async function() {
+            try {
+                await signOut(auth);
+                localStorage.clear();
+                location.reload();
+            } catch (e) {
+                console.error('Ошибка выхода:', e);
+            }
+        };
+
+        // ========== СТАРАЯ СИСТЕМА ВХОДА ПО ПАРОЛЮ (опционально) ==========
         function isValidUsername(username) {
             return /^[a-zA-Z0-9_]{2,20}$/.test(username);
         }
@@ -455,19 +517,6 @@
             return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~]{8,}$/.test(password);
         }
 
-        // ========== АВТО-ВХОД ==========
-        window.addEventListener('DOMContentLoaded', () => {
-            loadColor();
-            const savedUser = localStorage.getItem('novo_username');
-            const savedPass = localStorage.getItem('novo_password');
-            if (savedUser && savedPass) {
-                document.getElementById('loginUser').value = savedUser;
-                document.getElementById('loginPass').value = savedPass;
-                handleAuth(savedUser, savedPass, 'login', true);
-            }
-        });
-
-        // ========== КНОПКИ ==========
         window.pressLogin = function() {
             const username = document.getElementById('loginUser').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
@@ -479,13 +528,11 @@
             handleAuth(username, pass, 'register', false);
         };
 
-        // ========== ОБЩАЯ АВТОРИЗАЦИЯ ==========
         async function handleAuth(username, pass, type, isAuto) {
             if (username === "" || pass === "") {
                 if (!isAuto) alert("Введите никнейм и пароль!");
                 return;
             }
-
             if (type === 'register') {
                 if (!isValidUsername(username)) {
                     alert("Никнейм должен содержать только латиницу, цифры или _ (2–20 символов)!");
@@ -496,7 +543,6 @@
                     return;
                 }
             }
-
             const btnLogin = document.getElementById('bLogin');
             const btnReg = document.getElementById('bReg');
             btnLogin.disabled = true;
@@ -540,21 +586,8 @@
 
                 localStorage.setItem('novo_username', currentUser.username);
                 localStorage.setItem('novo_password', currentUser.password);
-
-                document.getElementById('playerName').innerText = currentUser.username;
-                document.getElementById('playerLevel').innerText = currentUser.level + " LVL";
-                document.getElementById('playerBalance').innerText = currentUser.balance.toLocaleString() + " рублей";
-                document.getElementById('playerFraction').innerText = currentUser.fraction;
-                document.getElementById('playerAvatar').src =
-                    `https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(currentUser.username)}&width=150&height=150&format=png`;
-
-                document.getElementById('loginOverlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loginOverlay').style.display = 'none';
-                    document.getElementById('mainSiteContent').style.display = 'block';
-                    initGlobalChat();
-                }, 600);
-
+                renderUserInterface(currentUser, '');
+                showMainContent();
             } catch (e) {
                 console.error(e);
                 alert("Ошибка соединения с БД!");
@@ -566,15 +599,6 @@
             document.getElementById('bLogin').disabled = false;
             document.getElementById('bReg').disabled = false;
         }
-
-        window.pressLogout = function() {
-            localStorage.clear();
-            if (chatUnsubscribe) {
-                chatUnsubscribe();
-                chatUnsubscribe = null;
-            }
-            location.reload();
-        };
 
         // ========== ЧАТ ==========
         function initGlobalChat() {
@@ -647,6 +671,112 @@
         window.checkEnter = function(e) {
             if (e.key === 'Enter') window.sendMessage();
         };
+
+        // ========== НАСТРОЙКА ЦВЕТА ==========
+        function applyColor(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            const accent = `#${hex.slice(1)}`;
+            const glow = `rgba(${r},${g},${b},0.3)`;
+            const glowStrong = `rgba(${r},${g},${b},0.5)`;
+            const border = `#${Math.floor(r*0.6).toString(16).padStart(2,'0')}${Math.floor(g*0.6).toString(16).padStart(2,'0')}${Math.floor(b*0.6).toString(16).padStart(2,'0')}`;
+            const text = `#${Math.min(r+80,255).toString(16).padStart(2,'0')}${Math.min(g+80,255).toString(16).padStart(2,'0')}${Math.min(b+80,255).toString(16).padStart(2,'0')}`;
+
+            document.documentElement.style.setProperty('--accent-color', accent);
+            document.documentElement.style.setProperty('--accent-border', border);
+            document.documentElement.style.setProperty('--accent-glow', glow);
+            document.documentElement.style.setProperty('--accent-glow-strong', glowStrong);
+            document.documentElement.style.setProperty('--accent-text', text);
+
+            localStorage.setItem('novo_accent_color', hex);
+        }
+
+        function loadColor() {
+            const saved = localStorage.getItem('novo_accent_color');
+            if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
+                applyColor(saved);
+                const hexInput = document.getElementById('hexInput');
+                if (hexInput) hexInput.value = saved.toUpperCase();
+                updateSlidersFromHex(saved);
+            } else {
+                applyColor('#aaaaaa');
+                const hexInput = document.getElementById('hexInput');
+                if (hexInput) hexInput.value = '#AAAAAA';
+                updateSlidersFromHex('#aaaaaa');
+            }
+        }
+
+        function updateSlidersFromHex(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            document.getElementById('redSlider').value = r;
+            document.getElementById('greenSlider').value = g;
+            document.getElementById('blueSlider').value = b;
+            document.getElementById('redVal').textContent = r;
+            document.getElementById('greenVal').textContent = g;
+            document.getElementById('blueVal').textContent = b;
+            document.getElementById('hexInput').value = hex.toUpperCase();
+        }
+
+        function hexFromSliders() {
+            const r = parseInt(document.getElementById('redSlider').value);
+            const g = parseInt(document.getElementById('greenSlider').value);
+            const b = parseInt(document.getElementById('blueSlider').value);
+            return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+        }
+
+        window.toggleSettings = function() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('active');
+            if (modal.classList.contains('active')) {
+                const currentHex = localStorage.getItem('novo_accent_color') || '#aaaaaa';
+                updateSlidersFromHex(currentHex);
+                document.getElementById('hexInput').value = currentHex.toUpperCase();
+                highlightPreset(currentHex);
+            }
+        };
+
+        window.onSliderChange = function() {
+            const hex = hexFromSliders();
+            document.getElementById('hexInput').value = hex.toUpperCase();
+            applyColor(hex);
+            highlightPreset(hex);
+        };
+
+        window.onHexChange = function() {
+            let val = document.getElementById('hexInput').value.trim();
+            if (!/^#[0-9a-f]{6}$/i.test(val)) return;
+            applyColor(val.toLowerCase());
+            updateSlidersFromHex(val);
+            highlightPreset(val);
+        };
+
+        window.applyPreset = function(color) {
+            applyColor(color);
+            updateSlidersFromHex(color);
+            document.getElementById('hexInput').value = color.toUpperCase();
+            highlightPreset(color);
+        };
+
+        function highlightPreset(hex) {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.color.toLowerCase() === hex.toLowerCase());
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('settingsModal');
+            if (modal.classList.contains('active')) {
+                const panel = modal.querySelector('.settings-panel');
+                if (!panel.contains(e.target) && e.target.id !== 'settingsToggle') {
+                    modal.classList.remove('active');
+                }
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', loadColor);
     </script>
 </body>
 </html>

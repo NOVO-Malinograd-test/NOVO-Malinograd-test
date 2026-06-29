@@ -632,7 +632,6 @@
             <div class="stat-card" style="max-width:900px; margin:0 auto;">
                 <h3><i class="fas fa-comments"></i> Форум проекта</h3>
 
-                <!-- Список тем -->
                 <div id="forumTopicList">
                     <button class="new-topic-btn" id="newTopicBtn"><i class="fas fa-plus"></i> Новая тема</button>
                     <div id="topicsContainer" class="forum-topic-list">
@@ -640,7 +639,6 @@
                     </div>
                 </div>
 
-                <!-- Просмотр темы -->
                 <div id="forumTopicView" class="forum-topic-view">
                     <button class="forum-back-btn" id="forumBackBtn"><i class="fas fa-arrow-left"></i> Назад к списку</button>
                     <div id="topicContent"></div>
@@ -697,10 +695,8 @@
             </div>
         </section>
 
-        <!-- КЛИКЕР -->
-        <section class="page" id="page-clicker">
-            <!-- страница-заглушка, т.к. кликер открывается модалкой -->
-        </section>
+        <!-- КЛИКЕР (заглушка) -->
+        <section class="page" id="page-clicker"></section>
     </div>
 
     <!-- ===== МОДАЛКА НАСТРОЕК ===== -->
@@ -799,7 +795,7 @@
     <script type="module">
         // ========== ИМПОРТ FIREBASE ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -816,11 +812,32 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
+        // ===== АВТО-НАЗНАЧЕНИЕ РОЛИ ПО НИКНЕЙМУ =====
+        function getAutoRole(username) {
+            // ⬇️ ЗАМЕНИТЕ НА СВОИ НИКНЕЙМЫ ⬇️
+            const creators = ['gcdgkd'];           // ник создателя
+            const adminNames = ['kostya632127', '']; // администраторы
+            const seniorMods = ['senior_mod'];        // ст. модераторы
+            const moderators = [''];      // мл. модераторы
+            const gaAdmins = ['ga_admin'];            // ГА Администратор
+
+            if (!username) return 'игрок';
+            if (creators.includes(username)) return 'создатель';
+            if (adminNames.includes(username)) return 'администрация';
+            if (gaAdmins.includes(username)) return 'ГА Администратор';
+            if (seniorMods.includes(username)) return 'ст. модератор';
+            if (moderators.includes(username)) return 'мл.модератор';
+            return 'игрок';
+        }
+
         let currentUser = null;
         let currentUserRef = null;
         let currentUserRole = "игрок";
         let chatUnsubscribe = null;
         let clickerEarned = 0;
+        let topicsUnsubscribe = null;
+        let repliesUnsubscribe = null;
+        let currentTopicId = null;
 
         // ===== НАВИГАЦИЯ =====
         const pages = document.querySelectorAll('.page');
@@ -834,9 +851,7 @@
                 link.classList.toggle('active', link.dataset.page === pageId);
             });
             document.getElementById('sidebar').classList.remove('open');
-            if (pageId === 'clicker') {
-                window.openClicker();
-            }
+            if (pageId === 'clicker') window.openClicker();
             if (pageId === 'forum') {
                 loadTopics();
                 document.getElementById('forumTopicView').classList.remove('active');
@@ -875,6 +890,7 @@
             const userSnap = await getDoc(userRef);
             currentUserRef = userRef;
             if (!userSnap.exists()) {
+                const autoRole = getAutoRole(username);
                 const newUser = {
                     username,
                     email,
@@ -882,16 +898,23 @@
                     level: 1,
                     balance: 5000,
                     fraction: "Гражданский",
-                    role: "игрок",
+                    role: autoRole,
                     provider: 'google.com',
                     createdAt: serverTimestamp()
                 };
                 await setDoc(userRef, newUser);
                 currentUser = newUser;
-                currentUserRole = "игрок";
+                currentUserRole = autoRole;
             } else {
                 currentUser = userSnap.data();
                 currentUserRole = currentUser.role || "игрок";
+                // Если роль не задана – назначаем автоматически
+                if (!currentUser.role) {
+                    const autoRole = getAutoRole(username);
+                    await setDoc(userRef, { role: autoRole }, { merge: true });
+                    currentUser.role = autoRole;
+                    currentUserRole = autoRole;
+                }
                 if (avatar && currentUser.avatar !== avatar) {
                     await setDoc(userRef, { avatar, username }, { merge: true });
                     currentUser.avatar = avatar;
@@ -1020,7 +1043,8 @@
                     currentUserRole = currentUser.role || "игрок";
                 } else {
                     if (userSnap.exists()) { alert("Никнейм уже занят!"); resetAuthButtons(); return; }
-                    currentUser = { username, password:pass, level:1, balance:5000, fraction:"Гражданский", role:"игрок" };
+                    const autoRole = getAutoRole(username);
+                    currentUser = { username, password:pass, level:1, balance:5000, fraction:"Гражданский", role:autoRole };
                     await setDoc(userRef, currentUser);
                     alert("Регистрация успешна!");
                 }
@@ -1079,10 +1103,6 @@
         window.checkEnter = function(e) { if (e.key === 'Enter') window.sendMessage(); };
 
         // ===== ФОРУМ =====
-        let currentTopicId = null;
-        let topicsUnsubscribe = null;
-        let repliesUnsubscribe = null;
-
         function loadTopics() {
             if (topicsUnsubscribe) topicsUnsubscribe();
             const container = document.getElementById('topicsContainer');
@@ -1174,7 +1194,6 @@
                 `;
                 container.innerHTML = html;
 
-                // Подписываемся на ответы (без orderBy, чтобы не требовать индекс)
                 if (repliesUnsubscribe) repliesUnsubscribe();
                 const q = query(collection(db, "forum_replies"), where("topicId", "==", topicId));
                 repliesUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -1183,7 +1202,6 @@
                         repliesList.innerHTML = '<p style="color:#888;">Нет ответов. Будьте первым!</p>';
                         return;
                     }
-                    // Сортируем на клиенте
                     let replies = [];
                     snapshot.forEach(doc => {
                         const r = doc.data();
@@ -1191,7 +1209,6 @@
                         replies.push(r);
                     });
                     replies.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
-
                     let rHtml = '';
                     replies.forEach(r => {
                         const rAuthor = r.authorName || 'Неизвестный';
@@ -1299,7 +1316,7 @@
             if (e.target === this) closeNewTopic();
         });
 
-        // ===== ГЕНЕРАТОР ПРАВИЛ =====
+        // ===== ПРАВИЛА (генератор) =====
         const gameRulesData = [
             { id: "1.0", title: "НонРП (НРП)", punishment: "15-25m jail / 1d-7d ban", desc: "Не относящееся к ролевой игре поведение, к примеру игнорировать любые отыгровки, или же игнорировать РП процесс." },
             { id: "1.0.1", title: "Помеха РП", punishment: "kick / 15-20m jail/ 1d-3d ban", desc: "Намеренно мешать игровому рп процессу игрока/игроков." },

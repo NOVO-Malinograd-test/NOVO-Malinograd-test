@@ -1,841 +1,125 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NOVO Malinograd RP</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <style>
-        :root {
-            --accent-color: #aaaaaa;
-            --accent-border: #555555;
-            --accent-glow: rgba(180,180,180,0.3);
-            --accent-glow-strong: rgba(200,200,200,0.5);
-            --accent-text: #dddddd;
-            --sidebar-width: 220px;
-        }
-        * { box-sizing: border-box; margin:0; padding:0; }
-        body { background:#0a0a0a; color:#e0e0e0; font-family:'Segoe UI',sans-serif; display:flex; min-height:100vh; }
-
-        /* ===== САЙДБАР ===== */
-        .sidebar {
-            position:fixed; top:0; left:0; width:var(--sidebar-width); height:100vh;
-            background:#111; border-right:1px solid var(--accent-border);
-            padding:30px 0; display:flex; flex-direction:column; z-index:1000;
-            transition:transform 0.3s; overflow-y:auto; box-shadow:2px 0 20px rgba(0,0,0,0.5);
-        }
-        .sidebar-header { padding:0 20px 20px; border-bottom:1px solid #222; margin-bottom:20px; }
-        .sidebar-header h2 { font-size:1.4em; font-weight:700; color:#fff; letter-spacing:2px; }
-        .sidebar-header h2 span { color:var(--accent-color); }
-        .sidebar-menu { list-style:none; padding:0 10px; flex:1; }
-        .sidebar-menu li { margin-bottom:6px; }
-        .sidebar-menu a {
-            display:flex; align-items:center; gap:12px; padding:12px 16px;
-            border-radius:16px; color:#aaa; text-decoration:none; font-weight:500;
-            transition:0.25s; cursor:pointer; border:1px solid transparent;
-        }
-        .sidebar-menu a:hover { background:#1e1e1e; color:#fff; border-color:var(--accent-border); }
-        .sidebar-menu a.active {
-            background:#1a1a1a; color:var(--accent-color); border-color:var(--accent-color);
-            box-shadow:0 0 20px var(--accent-glow);
-        }
-        .sidebar-menu a i { width:22px; font-size:1.1em; text-align:center; }
-        .sidebar-footer { padding:20px; border-top:1px solid #222; font-size:0.75em; color:#555; text-align:center; }
-
-        .burger-btn {
-            display:none; position:fixed; top:15px; left:15px; z-index:1100;
-            background:rgba(20,20,20,0.9); border:1px solid var(--accent-border);
-            color:var(--accent-color); padding:10px 12px; border-radius:12px;
-            cursor:pointer; backdrop-filter:blur(4px); transition:0.3s;
-        }
-        .burger-btn:hover { border-color:var(--accent-color); box-shadow:0 0 20px var(--accent-glow); }
-        .burger-btn i { font-size:1.8em; }
-
-        .main-wrapper { margin-left:var(--sidebar-width); flex:1; padding:20px 30px; transition:margin-left 0.3s; }
-        @media (max-width:768px) {
-            .sidebar { transform:translateX(-100%); }
-            .sidebar.open { transform:translateX(0); }
-            .burger-btn { display:block; }
-            .main-wrapper { margin-left:0; padding:20px 15px; padding-top:70px; }
-        }
-
-        .page { display:none; animation:fadeIn 0.3s; }
-        .page.active { display:block; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-        .container { max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr; gap:25px; }
-        @media (min-width:768px) { .container { grid-template-columns:340px 1fr; } .full-width { grid-column:1/-1; } }
-
-        .stat-card {
-            background:#121212; padding:30px; border-radius:30px;
-            border:1px solid var(--accent-border);
-            box-shadow:0 0 30px rgba(160,160,160,0.06);
-            transition:0.3s; height:fit-content; backdrop-filter:blur(2px);
-        }
-        .stat-card:hover { box-shadow:0 0 50px var(--accent-glow); border-color:var(--accent-color); }
-        .stat-card h3 {
-            margin:0; color:#ddd; border-bottom:1px solid var(--accent-border);
-            padding-bottom:12px; margin-bottom:18px; font-weight:400; letter-spacing:1px;
-            display:flex; align-items:center; gap:10px;
-        }
-        .stat-card h3 i { font-size:1.4em; width:1.2em; color:var(--accent-color); }
-        .status-bar { color:#8f8; font-weight:600; margin-bottom:18px; font-size:0.8em; text-transform:uppercase; letter-spacing:2px; }
-
-        .profile-box { text-align:center; }
-        .profile-avatar { width:120px; height:120px; border-radius:60px; background:#1a1a1a; border:2px solid var(--accent-color); object-fit:cover; margin-bottom:18px; box-shadow:0 0 40px var(--accent-glow); }
-        .profile-info h4 { margin:0 0 18px; color:#fff; font-size:1.6em; font-weight:300; letter-spacing:1px; }
-        .profile-data { display:flex; flex-direction:column; gap:10px; text-align:left; font-size:0.95em; }
-        .data-item { background:#1a1a1a; padding:12px 16px; border-radius:20px; border-left:4px solid var(--accent-color); }
-        .data-item span { color:var(--accent-text); font-weight:600; float:right; }
-
-        .action-btn {
-            padding:14px 25px; background:#2a2a2a; border:1px solid var(--accent-border);
-            color:#eee; border-radius:50px; cursor:pointer; font-weight:600; width:100%;
-            transition:0.25s; text-transform:uppercase; letter-spacing:0.8px;
-            display:flex; align-items:center; justify-content:center; gap:8px;
-        }
-        .action-btn:hover { background:#3a3a3a; border-color:var(--accent-color); box-shadow:0 0 30px var(--accent-glow); transform:translateY(-2px); }
-        .logout-btn { background:#1a1a1a; border-color:#3a3a3a; margin-top:15px; padding:10px; font-size:0.85em; }
-        .logout-btn:hover { background:#2a1a1a; border-color:#a55; }
-
-        /* ===== ЧАТ ===== */
-        .chat-container {
-            display:flex; flex-direction:column; height:420px;
-            border:1px solid var(--accent-border); border-radius:30px;
-            margin-bottom:12px; overflow:hidden; position:relative;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 200'%3E%3Cdefs%3E%3Cfilter id='g'%3E%3CfeGaussianBlur stdDeviation='5'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='800' height='200' fill='%230d0d0d'/%3E%3Ctext x='400' y='100' font-family='Segoe UI' font-size='64' fill='%23aaaaaa' text-anchor='middle' filter='url(%23g)' letter-spacing='6'%3ENOVO%3C/text%3E%3Ctext x='400' y='148' font-family='Segoe UI' font-size='28' fill='%23999' text-anchor='middle' filter='url(%23g)'%3EMalinograd RP%3C/text%3E%3C/svg%3E");
-            background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#0d0d0d;
-        }
-        .chat-container::before { content:''; position:absolute; inset:0; background:rgba(13,13,13,0.75); z-index:0; pointer-events:none; }
-        .chat-messages { flex:1; padding:18px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; position:relative; z-index:1; }
-        .chat-messages::-webkit-scrollbar { width:6px; }
-        .chat-messages::-webkit-scrollbar-track { background:#1a1a1a; }
-        .chat-messages::-webkit-scrollbar-thumb { background:var(--accent-color); border-radius:10px; }
-        .msg { background:#1c1c1c; padding:12px 18px; border-radius:25px; max-width:85%; width:fit-content; border:1px solid var(--accent-border); box-shadow:0 0 20px var(--accent-glow); }
-        .msg-meta { font-size:0.7em; color:#888; margin-bottom:5px; display:flex; gap:10px; align-items:center; }
-        .msg-author { color:var(--accent-text); font-weight:600; }
-        .msg.my-msg { background:#252525; align-self:flex-end; border-right:3px solid var(--accent-color); }
-        .msg.my-msg .msg-author { color:var(--accent-color); }
-        .msg.pm-msg { background:#1a1a2a; border-left:3px solid var(--accent-color); }
-        .msg.pm-msg .msg-author { color:#b0b0d0; }
-        .chat-input-block { display:flex; gap:10px; }
-        .chat-input-block input { margin-bottom:0; flex:1; border-radius:50px; background:#1a1a1a; border:1px solid var(--accent-border); color:#eee; padding:14px 18px; outline:none; }
-        .chat-input-block input:focus { border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); background:#222; }
-        .chat-input-block .send-btn { width:auto; padding:0 25px; border-radius:50px; flex-shrink:0; }
-        .pm-header { display:flex; gap:10px; margin-bottom:10px; }
-        .pm-header input { margin-bottom:0; font-size:0.9em; padding:10px 18px; border-radius:50px; background:#1a1a1a; border:1px solid var(--accent-border); color:#eee; outline:none; width:100%; }
-        .pm-header input:focus { border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); background:#222; }
-
-        /* ===== МОДАЛКИ ===== */
-        .settings-modal, .clicker-modal {
-            display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
-            backdrop-filter:blur(6px); z-index:10000; justify-content:center; align-items:center;
-        }
-        .settings-modal.active, .clicker-modal.active { display:flex; }
-        .modal-panel, .clicker-panel {
-            background:#181818; padding:35px 40px; border-radius:40px;
-            max-width:500px; width:90%; border:1px solid var(--accent-border);
-            box-shadow:0 0 60px var(--accent-glow-strong); position:relative;
-            animation:fadeIn 0.3s; max-height:90vh; overflow-y:auto;
-        }
-        .modal-panel h3, .clicker-panel h3 { text-align:center; font-weight:300; letter-spacing:2px; border-bottom:1px solid var(--accent-border); padding-bottom:15px; color:#fff; }
-        .modal-close, .clicker-close {
-            position:absolute; top:15px; right:20px; background:none; border:none;
-            color:#aaa; cursor:pointer; transition:0.2s; padding:5px;
-        }
-        .modal-close:hover, .clicker-close:hover { color:#fff; transform:rotate(90deg); }
-        .modal-close i, .clicker-close i { font-size:1.8em; }
-        .clicker-panel { max-width:400px; text-align:center; }
-        .clicker-balance { font-size:2.2em; font-weight:700; color:var(--accent-color); text-shadow:0 0 30px var(--accent-glow); margin:10px 0; }
-        .clicker-counter { font-size:1em; color:#aaa; margin-bottom:20px; }
-        .clicker-btn {
-            width:200px; height:200px; border-radius:50%; background:radial-gradient(circle at 30% 30%,#3a3a3a,#1a1a1a);
-            border:3px solid var(--accent-color); color:#fff; font-size:2.5em; font-weight:700;
-            cursor:pointer; transition:0.15s; box-shadow:0 0 60px var(--accent-glow);
-            margin:20px auto; display:flex; align-items:center; justify-content:center; user-select:none;
-        }
-        .clicker-btn:hover { transform:scale(1.05); box-shadow:0 0 80px var(--accent-glow-strong); }
-        .clicker-btn:active { transform:scale(0.95); }
-        .float-text {
-            position:fixed; pointer-events:none; font-size:2.5em; font-weight:700;
-            color:var(--accent-color); text-shadow:0 0 30px var(--accent-glow);
-            animation:floatUp 0.8s forwards; z-index:10002;
-        }
-        @keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-120px) scale(1.5)} }
-
-        /* ===== ОТЗЫВЫ ===== */
-        .review-item { background:#1a1a1a; padding:16px 20px; border-radius:16px; margin-bottom:12px; border-left:3px solid var(--accent-color); }
-        .review-item .review-meta { font-size:0.8em; color:#aaa; margin-bottom:5px; }
-        .review-item .review-content { color:#ddd; line-height:1.5; }
-        .review-role { display:inline-block; padding:2px 10px; border-radius:30px; font-size:0.7em; font-weight:600; background:#444; color:#ddd; }
-
-        /* ===== АДМИН ===== */
-        .admin-user-item { background:#1a1a1a; padding:12px 16px; border-radius:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-        .admin-user-item .user-info { flex:1; }
-        .admin-user-item .user-actions { display:flex; gap:8px; flex-wrap:wrap; }
-        .admin-user-item .user-actions input { background:#111; border:1px solid var(--accent-border); color:#eee; padding:6px 12px; border-radius:30px; width:100px; outline:none; }
-        .admin-user-item .user-actions input:focus { border-color:var(--accent-color); }
-        .admin-user-item .user-actions button { background:#2a2a2a; border:1px solid var(--accent-border); color:#eee; padding:6px 14px; border-radius:30px; cursor:pointer; transition:0.2s; }
-        .admin-user-item .user-actions button:hover { background:#3a3a3a; border-color:var(--accent-color); }
-
-        /* ===== НАСТРОЙКИ ЦВЕТА ===== */
-        .color-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-        .color-row label { min-width:20px; font-weight:600; color:#ccc; }
-        .color-row input[type="range"] { flex:1; -webkit-appearance:none; background:transparent; }
-        .color-row input[type="range"]::-webkit-slider-runnable-track { height:6px; background:#333; border-radius:10px; }
-        .color-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--accent-color); cursor:pointer; margin-top:-6px; box-shadow:0 0 15px var(--accent-glow); border:1px solid var(--accent-border); }
-        .color-row .value-display { min-width:40px; text-align:center; color:#ddd; font-weight:600; }
-        .hex-input { display:flex; align-items:center; gap:10px; margin:15px 0; }
-        .hex-input label { color:#ccc; font-weight:600; }
-        .hex-input input { flex:1; background:#222; border:1px solid var(--accent-border); color:#eee; padding:10px 15px; border-radius:50px; font-family:monospace; letter-spacing:1px; text-transform:uppercase; outline:none; transition:0.3s; }
-        .hex-input input:focus { border-color:var(--accent-color); box-shadow:0 0 20px var(--accent-glow); }
-        .preset-colors { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:15px 0 10px; }
-        .preset-btn { width:40px; height:40px; border-radius:50%; border:2px solid #444; cursor:pointer; transition:0.3s; }
-        .preset-btn:hover { transform:scale(1.15); border-color:#fff; }
-        .preset-btn.active { border-color:#fff; box-shadow:0 0 25px var(--accent-glow-strong); }
-        .settings-actions { display:flex; gap:10px; margin-top:20px; }
-        .settings-actions button { flex:1; padding:12px; border-radius:50px; border:1px solid var(--accent-border); background:#2a2a2a; color:#eee; font-weight:600; cursor:pointer; transition:0.25s; text-transform:uppercase; letter-spacing:1px; }
-        .settings-actions button:hover { background:#3a3a3a; border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); }
-
-        /* ===== ВХОД ===== */
-        .login-overlay {
-            position:fixed; inset:0; background:#0a0a0a; display:flex; justify-content:center; align-items:center; z-index:9999; transition:opacity 0.6s;
-        }
-        .login-box {
-            background:#141414; padding:45px 40px; border-radius:30px; max-width:420px; width:100%;
-            border:1px solid var(--accent-border); text-align:center; backdrop-filter:blur(4px);
-            box-shadow:0 0 30px var(--accent-glow);
-        }
-        .login-box:hover { box-shadow:0 0 40px var(--accent-glow-strong); }
-        .login-box h2 { font-size:2em; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:2px; }
-        .login-box h2 span { color:var(--accent-color); }
-        .login-subtitle { color:#999; font-size:0.9em; margin-bottom:25px; }
-        .oauth-buttons { display:flex; flex-direction:column; gap:10px; margin:15px 0; }
-        .oauth-btn {
-            display:flex; align-items:center; justify-content:center; gap:10px; padding:12px;
-            border-radius:50px; border:1px solid var(--accent-border); background:#1e1e1e;
-            color:#eee; font-weight:600; cursor:pointer; transition:0.3s;
-        }
-        .oauth-btn:hover { background:#2a2a2a; border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); transform:translateY(-2px); }
-        .oauth-btn i { font-size:1.4em; }
-        .divider { display:flex; align-items:center; margin:15px 0; color:#666; font-size:0.8em; text-transform:uppercase; letter-spacing:2px; }
-        .divider::before, .divider::after { content:''; flex:1; border-bottom:1px solid #333; margin:0 10px; }
-        .login-input {
-            background:#1e1e1e; border:1px solid var(--accent-border); color:#f0f0f0;
-            padding:16px 20px; width:100%; border-radius:50px; margin-bottom:12px;
-            font-size:1.1em; transition:0.3s; outline:none;
-        }
-        .login-input:focus { border-color:var(--accent-color); box-shadow:0 0 20px var(--accent-glow); background:#222; }
-        .login-hint { font-size:0.75em; color:#777; margin-top:-6px; margin-bottom:14px; text-align:left; display:block; padding-left:10px; }
-        .btn-group { display:flex; gap:12px; margin-top:8px; }
-        .login-btn {
-            padding:16px; background:#2a2a2a; border:1px solid var(--accent-border);
-            color:#eee; border-radius:50px; cursor:pointer; font-weight:600; flex:1;
-            font-size:1em; transition:0.25s; text-transform:uppercase; letter-spacing:1px;
-        }
-        .login-btn:hover { background:#3a3a3a; border-color:var(--accent-color); box-shadow:0 0 25px var(--accent-glow); transform:translateY(-2px); }
-        .login-btn.secondary { background:#1a1a1a; border-color:#444; }
-        .login-btn.secondary:hover { background:#2a2a2a; border-color:var(--accent-color); }
-        .login-btn:disabled { opacity:0.5; cursor:not-allowed; }
-
-        /* ===== ВЕРХНИЕ КНОПКИ ===== */
-        .top-buttons {
-            position:fixed; top:25px; right:25px; z-index:999; display:flex; gap:12px; align-items:center;
-        }
-        .top-buttons .play-btn {
-            background:rgba(20,20,20,0.8); border:1px solid var(--accent-border);
-            color:var(--accent-color); padding:12px 20px; border-radius:50px;
-            cursor:pointer; font-weight:600; transition:0.3s; backdrop-filter:blur(4px);
-            display:flex; align-items:center; gap:8px; text-decoration:none; font-size:0.9em;
-        }
-        .top-buttons .play-btn:hover { border-color:var(--accent-color); box-shadow:0 0 30px var(--accent-glow); transform:scale(1.05); }
-        .settings-toggle {
-            background:rgba(20,20,20,0.8); border:1px solid var(--accent-border);
-            color:var(--accent-color); width:55px; height:55px; border-radius:50%;
-            cursor:pointer; transition:0.3s; display:flex; align-items:center; justify-content:center;
-            box-shadow:0 0 20px var(--accent-glow); backdrop-filter:blur(4px);
-        }
-        .settings-toggle:hover { border-color:var(--accent-color); box-shadow:0 0 40px var(--accent-glow-strong); transform:rotate(60deg) scale(1.05); }
-        .settings-toggle i { font-size:1.8em; }
-
-        @media (max-width:600px) {
-            .login-box { padding:30px 20px; }
-            .btn-group { flex-direction:column; }
-            .stat-card { padding:20px; }
-            .modal-panel, .clicker-panel { padding:25px 20px; }
-            .top-buttons { top:15px; right:15px; flex-direction:column; gap:8px; }
-            .top-buttons .play-btn { padding:8px 14px; font-size:0.8em; }
-            .settings-toggle { width:45px; height:45px; }
-            .settings-toggle i { font-size:1.4em; }
-            .clicker-btn { width:150px; height:150px; font-size:2em; }
-            .admin-user-item { flex-direction:column; align-items:stretch; }
-            .admin-user-item .user-actions input { width:100%; }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== БУРГЕР ===== -->
-    <button class="burger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav" id="nav">
+            <a href="/">Главная</a>
+            <a href="/players.html">Игроки</a>
+            <a href="/profile.html">Профиль</a>
+            <a href="/admin.html" id="adminLink" style="display:none;">Админ</a>
+            <a href="#" onclick="logout()">Выйти</a>
+        </nav>
+    </header>
 
-    <!-- ===== САЙДБАР ===== -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header"><h2>NOVO <span>RP</span></h2></div>
-        <ul class="sidebar-menu">
-            <li><a class="active" data-page="home"><i class="fas fa-home"></i> Главная</a></li>
-            <li><a data-page="tutorial"><i class="fas fa-graduation-cap"></i> Обучение</a></li>
-            <li><a data-page="about"><i class="fas fa-info-circle"></i> О сайте</a></li>
-            <li><a data-page="reviews"><i class="fas fa-star"></i> Отзывы</a></li>
-            <li><a data-page="admin" id="adminMenuLink" style="display:none;"><i class="fas fa-shield-alt"></i> Админ</a></li>
-            <li><a data-page="status"><i class="fas fa-server"></i> Статус</a></li>
-            <li><a data-page="rules"><i class="fas fa-gavel"></i> Правила</a></li>
-            <li><a data-page="shop"><i class="fas fa-store"></i> Магазин</a></li>
-            <li><a data-page="clicker"><i class="fas fa-coins"></i> Кликер</a></li>
-        </ul>
-        <div class="sidebar-footer">NOVO Malinograd RP v2.0</div>
-    </nav>
-
-    <!-- ===== ВЕРХНИЕ КНОПКИ ===== -->
-    <div class="top-buttons">
-        <a href="https://www.roblox.com/games/14140271855/Malinograd-RP" target="_blank" class="play-btn"><i class="fas fa-gamepad"></i> Как играть</a>
-        <button class="settings-toggle" onclick="toggleSettings()"><i class="fas fa-cog"></i></button>
-    </div>
-
-    <!-- ===== КОНТЕНТ ===== -->
-    <div class="main-wrapper" id="mainWrapper">
-
-        <!-- ГЛАВНАЯ -->
-        <section class="page active" id="page-home">
-            <div class="container">
-                <div class="stat-card">
-                    <div class="status-bar">● ИГРОК АВТОРИЗОВАН</div>
-                    <div class="profile-box">
-                        <img class="profile-avatar" id="playerAvatar" src="" alt="Аватар" />
-                        <div class="profile-info">
-                            <h4 id="playerName">-</h4>
-                            <div class="profile-data">
-                                <div class="data-item">Статус: <span style="color:#8f8;">В сети</span></div>
-                                <div class="data-item">Уровень: <span id="playerLevel">-</span></div>
-                                <div class="data-item">Баланс: <span id="playerBalance">-</span></div>
-                                <div class="data-item">Фракция: <span id="playerFraction">-</span></div>
-                                <div class="data-item">Роль: <span id="playerRole">-</span></div>
-                            </div>
-                        </div>
-                        <button class="action-btn logout-btn" onclick="pressLogout()">Выйти</button>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <h3><i class="fas fa-comment-dots"></i> Игровой чат</h3>
-                    <div class="pm-header">
-                        <input type="text" id="pmTarget" placeholder="Кому (ник для ЛС) или оставьте пустым" />
-                    </div>
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chatMessages"></div>
-                    </div>
-                    <div class="chat-input-block">
-                        <input type="text" id="chatInput" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
-                        <button class="action-btn send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-
-                <div class="stat-card full-width">
-                    <h3><i class="fab fa-discord"></i> Мы в Discord</h3>
-                    <iframe src="https://discord.com/widget?id=1495843468592021584&theme=dark" style="width:100%;height:420px;border:none;border-radius:30px;"></iframe>
-                </div>
-            </div>
-        </section>
-
-        <!-- ОБУЧЕНИЕ -->
-        <section class="page" id="page-tutorial">
-            <div class="stat-card" style="max-width:800px;margin:0 auto;">
-                <h3><i class="fas fa-graduation-cap"></i> Обучение</h3>
-                <div style="display:flex;flex-direction:column;gap:20px;">
-                    <div style="background:#1a1a1a;padding:20px;border-radius:20px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;"><i class="fas fa-sign-in-alt"></i> 1. Как войти в игру</h4>
-                        <p style="color:#bbb;">Нажмите <strong>"Как играть"</strong> в правом верхнем углу – перенесёт в Roblox.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:20px;border-radius:20px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;"><i class="fas fa-user-plus"></i> 2. Регистрация</h4>
-                        <p style="color:#bbb;">Введите ник и пароль (мин. 8 символов) → <strong>"Создать"</strong>. Или через Google.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:20px;border-radius:20px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;"><i class="fas fa-comments"></i> 3. Чат</h4>
-                        <p style="color:#bbb;">Пишите в общий чат. Для ЛС укажите ник в поле <strong>"Кому"</strong>.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:20px;border-radius:20px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;"><i class="fas fa-coins"></i> 4. Кликер</h4>
-                        <p style="color:#bbb;">Зарабатывайте валюту – +100 за клик.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- О САЙТЕ -->
-        <section class="page" id="page-about">
-            <div class="stat-card" style="max-width:800px;margin:0 auto;">
-                <h3><i class="fas fa-info-circle"></i> О сайте</h3>
-                <div style="background:#1a1a1a;padding:20px;border-radius:20px;margin-bottom:15px;">
-                    <h4 style="color:#fff;">📅 Когда создано</h4>
-                    <p style="color:#bbb;">Проект <strong>NOVO Malinograd RP</strong> создан в <strong>2024 году</strong>.</p>
-                </div>
-                <div style="background:#1a1a1a;padding:20px;border-radius:20px;margin-bottom:15px;">
-                    <h4 style="color:#fff;">🎯 Для чего</h4>
-                    <p style="color:#bbb;">RP-пространство, где каждый выбирает роль – полицейский, гражданский, бандит.</p>
-                </div>
-                <div style="background:#1a1a1a;padding:20px;border-radius:20px;">
-                    <h4 style="color:#fff;">🛠️ Технологии</h4>
-                    <p style="color:#bbb;">HTML, CSS, JavaScript + Firebase (авторизация, БД).</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ОТЗЫВЫ -->
-        <section class="page" id="page-reviews">
-            <div class="stat-card" style="max-width:800px;margin:0 auto;">
-                <h3><i class="fas fa-star"></i> Отзывы</h3>
-                <p style="color:#aaa;margin-bottom:15px;">Оставьте отзыв (мат фильтруется)</p>
-                <div id="reviewsList" style="margin-bottom:15px;"><p style="color:#888;">Загрузка...</p></div>
-                <textarea id="reviewInput" placeholder="Ваш отзыв..." style="width:100%;background:#1a1a1a;border:1px solid var(--accent-border);color:#eee;border-radius:20px;padding:14px 18px;resize:vertical;min-height:80px;outline:none;font-family:inherit;"></textarea>
-                <button class="action-btn" id="sendReviewBtn" style="margin-top:10px;">Отправить</button>
-            </div>
-        </section>
-
-        <!-- АДМИН -->
-        <section class="page" id="page-admin">
-            <div class="stat-card" style="max-width:900px;margin:0 auto;">
-                <h3><i class="fas fa-shield-alt"></i> Админ-панель</h3>
-                <div id="adminUsersList"><p style="color:#888;">Загрузка...</p></div>
-            </div>
-        </section>
-
-        <!-- СТАТУС -->
-        <section class="page" id="page-status">
-            <div class="stat-card" style="max-width:600px;margin:0 auto;text-align:center;">
-                <h3><i class="fas fa-server"></i> Статус сервера</h3>
-                <div style="font-size:2em;margin:20px 0;"><span style="color:#8f8;">●</span> Онлайн</div>
-                <p style="font-size:1.2em;">Игроков онлайн: <strong id="onlineCount">12</strong></p>
-                <p style="color:#888;">Время работы: 24/7</p>
-                <button class="action-btn" style="margin-top:15px;" onclick="alert('Обновление...')">Обновить</button>
-            </div>
-        </section>
-
-        <!-- ПРАВИЛА -->
-        <section class="page" id="page-rules">
-            <div class="stat-card" style="max-width:900px;margin:0 auto;">
-                <h3><i class="fas fa-gavel"></i> Правила</h3>
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div style="background:#1a1a1a;padding:16px 20px;border-radius:16px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;">1. Уважение</h4>
-                        <p style="color:#bbb;">Запрещены оскорбления, флуд, спам.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:16px 20px;border-radius:16px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;">2. Читерство</h4>
-                        <p style="color:#bbb;">Баги и стороннее ПО запрещены.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:16px 20px;border-radius:16px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;">3. Ролевая игра</h4>
-                        <p style="color:#bbb;">Отыгрывайте свою роль.</p>
-                    </div>
-                    <div style="background:#1a1a1a;padding:16px 20px;border-radius:16px;border-left:4px solid var(--accent-color);">
-                        <h4 style="color:#fff;">4. Администрация</h4>
-                        <p style="color:#bbb;">Имеет право наказывать нарушителей.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- МАГАЗИН -->
-        <section class="page" id="page-shop">
-            <div class="stat-card" style="max-width:600px;margin:0 auto;text-align:center;">
-                <h3><i class="fas fa-store"></i> Магазин</h3>
-                <p style="font-size:1.2em;margin:20px 0;">В разработке 🚧</p>
-                <p style="color:#888;">Товары появятся позже.</p>
-            </div>
-        </section>
-
-        <!-- КЛИКЕР -->
-        <section class="page" id="page-clicker"></section>
-    </div>
-
-    <!-- ===== МОДАЛКИ ===== -->
-    <div class="settings-modal" id="settingsModal">
-        <div class="modal-panel">
-            <button class="modal-close" onclick="toggleSettings()"><i class="fas fa-times"></i></button>
-            <h3><i class="fas fa-palette"></i> Настройка цвета</h3>
-            <div class="color-row"><label>R</label><input type="range" id="redSlider" min="0" max="255" value="170" oninput="onSliderChange()" /><span class="value-display" id="redVal">170</span></div>
-            <div class="color-row"><label>G</label><input type="range" id="greenSlider" min="0" max="255" value="170" oninput="onSliderChange()" /><span class="value-display" id="greenVal">170</span></div>
-            <div class="color-row"><label>B</label><input type="range" id="blueSlider" min="0" max="255" value="170" oninput="onSliderChange()" /><span class="value-display" id="blueVal">170</span></div>
-            <div class="hex-input"><label>HEX</label><input type="text" id="hexInput" value="#AAAAAA" maxlength="7" oninput="onHexChange()" /></div>
-            <div class="preset-colors">
-                <button class="preset-btn" style="background:#aaaaaa;" data-color="#aaaaaa" onclick="applyPreset('#aaaaaa')" title="Серый"></button>
-                <button class="preset-btn" style="background:#4488ff;" data-color="#4488ff" onclick="applyPreset('#4488ff')" title="Синий"></button>
-                <button class="preset-btn" style="background:#ff4455;" data-color="#ff4455" onclick="applyPreset('#ff4455')" title="Красный"></button>
-                <button class="preset-btn" style="background:#44ff88;" data-color="#44ff88" onclick="applyPreset('#44ff88')" title="Зелёный"></button>
-                <button class="preset-btn" style="background:#aa66ff;" data-color="#aa66ff" onclick="applyPreset('#aa66ff')" title="Фиолетовый"></button>
-            </div>
-            <div class="settings-actions"><button onclick="toggleSettings()">Закрыть</button></div>
+    <main class="admin-panel">
+        <h2>🔧 Админ-панель Copia Elit</h2>
+        <div id="adminContent">
+            <p style="text-align:center; color:#888;">Загрузка...</p>
         </div>
-    </div>
+    </main>
 
-    <div class="clicker-modal" id="clickerModal">
-        <div class="clicker-panel">
-            <button class="clicker-close" onclick="closeClicker()"><i class="fas fa-times"></i></button>
-            <h3><i class="fas fa-coins"></i> Кликер</h3>
-            <div class="clicker-balance" id="clickerBalance">0</div>
-            <div style="font-size:0.9em;color:#888;margin-bottom:5px;">ваш баланс</div>
-            <button class="clicker-btn" id="clickerBtn">Клик!</button>
-            <div class="clicker-counter" id="clickerCounter">Заработано: 0</div>
-        </div>
-    </div>
-
-    <!-- ===== ВХОД ===== -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-box">
-            <h2>NOVO <span>Malinograd RP</span></h2>
-            <div class="login-subtitle">Вход в аккаунт</div>
-            <div class="oauth-buttons">
-                <button class="oauth-btn" id="googleBtn"><i class="fab fa-google"></i> Войти через Google</button>
-            </div>
-            <div class="divider">или по паролю</div>
-            <input type="text" id="loginUser" class="login-input" placeholder="Ник (латиница, _)" />
-            <span class="login-hint">A–Z, 0–9, _ (2–20 символов)</span>
-            <input type="password" id="loginPass" class="login-input" placeholder="Пароль (мин. 8 символов)" />
-            <span class="login-hint">Заглавная, строчная, цифра, спецсимвол</span>
-            <div class="btn-group">
-                <button class="login-btn" id="bLogin" onclick="pressLogin()">Войти</button>
-                <button class="login-btn secondary" id="bReg" onclick="pressRegister()">Создать</button>
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        // ========== FIREBASE ==========
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCj-GoD1eBbTWjnHeKNN-p2ymcVC-zL2B0",
-            authDomain: "test-novo-malinogrda-rrp.firebaseapp.com",
-            projectId: "test-novo-malinogrda-rrp",
-            storageBucket: "test-novo-malinogrda-rrp.firebasestorage.app",
-            messagingSenderId: "706091384352",
-            appId: "1:706091384352:web:8b42473392454a35388645"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // ===== АНТИМАТ =====
-        const BAD_WORDS = ['хуй','пизда','бля','ебать','ебаный','нах','сука','мудак','гандон','пидор','хуесос','еблан','залупа','шалава','шлюха','блядь'];
-        function filterProfanity(t){ let f=t; BAD_WORDS.forEach(w=>{ f=f.replace(new RegExp(w,'gi'),'***'); }); return f; }
-
-        // ===== АВТО-РОЛЬ =====
-        function getAutoRole(u){
-            if(u==='gcdgkd') return 'создатель';
-            if(u==='kostya632127') return 'мл.модератор';
-            return 'игрок';
-        }
-
-        let currentUser=null, currentUserRef=null, currentUserRole='игрок';
-        let chatUnsubscribe=null, clickerEarned=0, reviewsUnsubscribe=null;
-
-        // ===== НАВИГАЦИЯ =====
-        const pages=document.querySelectorAll('.page');
-        const menuLinks=document.querySelectorAll('.sidebar-menu a');
-        function navigateTo(p){
-            pages.forEach(x=>x.classList.remove('active'));
-            const t=document.getElementById('page-'+p);
-            if(t) t.classList.add('active');
-            menuLinks.forEach(l=>l.classList.toggle('active',l.dataset.page===p));
-            document.getElementById('sidebar').classList.remove('open');
-            if(p==='clicker') openClicker();
-            if(p==='admin') loadAdminPanel();
-            if(p==='reviews') loadReviews();
-        }
-        menuLinks.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();navigateTo(l.dataset.page);}));
-        window.toggleSidebar=()=>document.getElementById('sidebar').classList.toggle('open');
-
-        // ===== GOOGLE =====
-        const googleProvider=new GoogleAuthProvider();
-        document.getElementById('googleBtn').addEventListener('click',()=>{
-            signInWithPopup(auth,googleProvider).then(r=>handleOAuthUser(r.user)).catch(e=>{console.error(e);alert('Ошибка входа.');});
-        });
-
-        async function handleOAuthUser(authUser){
-            const uid=authUser.uid;
-            const username=authUser.displayName||authUser.email?.split('@')[0]||'Player';
-            const avatar=authUser.photoURL||'';
-            const userRef=doc(db,"users_oauth",uid);
-            const snap=await getDoc(userRef);
-            currentUserRef=userRef;
-            if(!snap.exists()){
-                const role=getAutoRole(username);
-                await setDoc(userRef,{username,avatar,level:1,balance:5000,fraction:"Гражданский",role,provider:'google.com',createdAt:serverTimestamp()});
-                currentUser={username,avatar,balance:5000,role};
-                currentUserRole=role;
-            }else{
-                currentUser=snap.data();
-                currentUserRole=currentUser.role||'игрок';
-                if(avatar&&currentUser.avatar!==avatar) await setDoc(userRef,{avatar,username},{merge:true});
-            }
-            renderUser(currentUser,avatar);
-            showMain();
-        }
-
-        function renderUser(u,av){
-            document.getElementById('playerName').textContent=u.username;
-            document.getElementById('playerLevel').textContent=u.level+' LVL';
-            document.getElementById('playerBalance').textContent=(u.balance||0).toLocaleString()+' рублей';
-            document.getElementById('playerFraction').textContent=u.fraction||'Гражданский';
-            document.getElementById('playerRole').textContent=u.role||'игрок';
-            document.getElementById('playerAvatar').src=av||`https://www.roblox.com/avatar-thumbnail/image?username=${encodeURIComponent(u.username)}&width=150&height=150&format=png`;
-            const cb=document.getElementById('clickerBalance'); if(cb) cb.textContent=(u.balance||0).toLocaleString();
-            const adminLink=document.getElementById('adminMenuLink');
-            adminLink.style.display=(u.role==='администрация'||u.role==='создатель'||u.role==='ГА Администратор')?'block':'none';
-        }
-
-        function showMain(){
-            document.getElementById('loginOverlay').style.opacity='0';
-            setTimeout(()=>{
-                document.getElementById('loginOverlay').style.display='none';
-                if(!chatUnsubscribe) initChat();
-            },600);
-        }
-
-        onAuthStateChanged(auth,async(u)=>{
-            if(u){
-                const snap=await getDoc(doc(db,"users_oauth",u.uid));
-                if(snap.exists()){
-                    currentUser=snap.data();
-                    currentUserRole=currentUser.role||'игрок';
-                    currentUserRef=doc(db,"users_oauth",u.uid);
-                    renderUser(currentUser,u.photoURL);
-                    showMain();
-                }else{ await handleOAuthUser(u); }
-            }else{
-                document.getElementById('loginOverlay').style.display='flex';
-                document.getElementById('loginOverlay').style.opacity='1';
-                if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null;}
-                currentUser=null;currentUserRef=null;currentUserRole='игрок';
-                document.getElementById('adminMenuLink').style.display='none';
-            }
-        });
-
-        window.pressLogout=async()=>{ await signOut(auth); localStorage.clear(); location.reload(); };
-
-        // ===== ПАРОЛЬ =====
-        function isValidUsername(u){return /^[a-zA-Z0-9_]{2,20}$/.test(u);}
-        function isValidPassword(p){return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~]{8,}$/.test(p);}
-        window.pressLogin=()=>{ const u=document.getElementById('loginUser').value.trim(); const p=document.getElementById('loginPass').value.trim(); handleAuth(u,p,'login',false); };
-        window.pressRegister=()=>{ const u=document.getElementById('loginUser').value.trim(); const p=document.getElementById('loginPass').value.trim(); handleAuth(u,p,'register',false); };
-        async function handleAuth(u,p,t,auto){
-            if(!u||!p){ if(!auto) alert('Введите ник и пароль!'); return; }
-            if(t==='register'){
-                if(!isValidUsername(u)){ alert('Ник: латиница, цифры, _ (2-20 символов)!'); return; }
-                if(!isValidPassword(p)){ alert('Пароль: 8+ символов, заглавная, строчная, цифра, спецсимвол!'); return; }
-            }
-            document.getElementById('bLogin').disabled=true; document.getElementById('bReg').disabled=true;
-            try{
-                const ref=doc(db,"users",u.toLowerCase());
-                const snap=await getDoc(ref);
-                currentUserRef=ref;
-                if(t==='login'){
-                    if(!snap.exists()){ alert('Аккаунт не найден!'); resetBtns(); return; }
-                    if(snap.data().password!==p){ alert('Неверный пароль!'); resetBtns(); return; }
-                    currentUser=snap.data();
-                    currentUserRole=currentUser.role||'игрок';
-                }else{
-                    if(snap.exists()){ alert('Ник занят!'); resetBtns(); return; }
-                    const role=getAutoRole(u);
-                    currentUser={username:u,password:p,level:1,balance:5000,fraction:"Гражданский",role};
-                    await setDoc(ref,currentUser);
-                    alert('Регистрация успешна!');
-                }
-                localStorage.setItem('novo_username',currentUser.username);
-                localStorage.setItem('novo_password',currentUser.password);
-                renderUser(currentUser,'');
-                showMain();
-            }catch(e){ console.error(e); alert('Ошибка БД!'); resetBtns(); }
-        }
-        function resetBtns(){ document.getElementById('bLogin').disabled=false; document.getElementById('bReg').disabled=false; }
-
-        // ===== ЧАТ =====
-        function initChat(){
-            if(chatUnsubscribe) chatUnsubscribe();
-            const box=document.getElementById('chatMessages');
-            const q=query(collection(db,"chat"),orderBy("createdAt","asc"),limit(50));
-            chatUnsubscribe=onSnapshot(q,snap=>{
-                box.innerHTML='';
-                snap.forEach(d=>{
-                    const data=d.data();
-                    if(!data.createdAt) return;
-                    const time=new Date(data.createdAt.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-                    const isMe=data.author.toLowerCase()===currentUser.username.toLowerCase();
-                    let cls='msg', prefix='';
-                    if(data.type==='pm'){
-                        const isTarget=data.target&&data.target.toLowerCase()===currentUser.username.toLowerCase();
-                        if(!isMe&&!isTarget) return;
-                        cls+=' pm-msg';
-                        prefix=isMe?`[ЛС для ${data.target}] `:`[ЛС от ${data.author}] `;
-                    }else{ if(isMe) cls+=' my-msg'; }
-                    const clean=filterProfanity(data.text);
-                    const div=document.createElement('div');
-                    div.className=cls;
-                    div.innerHTML=`<div class="msg-meta"><span class="msg-author">${prefix}${escapeHTML(data.author)}</span><span>${time}</span></div><div class="msg-text">${escapeHTML(clean)}</div>`;
-                    box.appendChild(div);
-                });
-                box.scrollTop=box.scrollHeight;
-            });
-        }
-        window.sendMessage=async()=>{
-            const input=document.getElementById('chatInput');
-            const target=document.getElementById('pmTarget');
-            const text=input.value.trim();
-            const t=target.value.trim();
-            if(!text) return;
-            const clean=filterProfanity(text);
-            await addDoc(collection(db,"chat"),{author:currentUser.username,text:clean,createdAt:serverTimestamp(),type:t?'pm':'global',target:t||null});
-            input.value='';
-        };
-        function escapeHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-        window.checkEnter=e=>{ if(e.key==='Enter') window.sendMessage(); };
-
-        // ===== КЛИКЕР =====
-        window.openClicker=()=>{
-            if(!currentUserRef||!currentUser){ alert('Войдите в аккаунт!'); return; }
-            clickerEarned=0;
-            document.getElementById('clickerBalance').textContent=(currentUser.balance||0).toLocaleString();
-            document.getElementById('clickerCounter').textContent='Заработано: 0';
-            document.getElementById('clickerModal').classList.add('active');
-        };
-        window.closeClicker=()=>document.getElementById('clickerModal').classList.remove('active');
-        document.getElementById('clickerBtn').addEventListener('click',async function(){
-            if(!currentUserRef||!currentUser) return;
-            const newBal=(currentUser.balance||0)+100;
-            try{
-                await setDoc(currentUserRef,{balance:newBal},{merge:true});
-                currentUser.balance=newBal;
-                renderUser(currentUser,currentUser.avatar);
-                document.getElementById('clickerBalance').textContent=newBal.toLocaleString();
-                clickerEarned+=100;
-                document.getElementById('clickerCounter').textContent='Заработано: '+clickerEarned;
-                const r=this.getBoundingClientRect();
-                const f=document.createElement('div');
-                f.className='float-text';
-                f.textContent='+100';
-                f.style.left=(r.left+r.width/2-50)+'px';
-                f.style.top=(r.top-20)+'px';
-                document.body.appendChild(f);
-                setTimeout(()=>f.remove(),800);
-            }catch(e){ console.error(e); alert('Ошибка!'); }
-        });
-        document.getElementById('clickerModal').addEventListener('click',e=>{ if(e.target===this) closeClicker(); });
-
-        // ===== ОТЗЫВЫ =====
-        function loadReviews(){
-            if(reviewsUnsubscribe) reviewsUnsubscribe();
-            const c=document.getElementById('reviewsList');
-            c.innerHTML='<p style="color:#888;">Загрузка...</p>';
-            const q=query(collection(db,"reviews"),orderBy("createdAt","desc"),limit(30));
-            reviewsUnsubscribe=onSnapshot(q,snap=>{
-                if(snap.empty){ c.innerHTML='<p style="color:#888;">Нет отзывов.</p>'; return; }
-                let html='';
-                snap.forEach(d=>{
-                    const data=d.data();
-                    const clean=filterProfanity(data.content||'');
-                    const role=data.role||'игрок';
-                    html+=`<div class="review-item"><div class="review-meta"><span>${escapeHTML(data.author||'Неизвестный')}</span><span class="review-role">${escapeHTML(role)}</span><span>${data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''}</span></div><div class="review-content">${escapeHTML(clean)}</div></div>`;
-                });
-                c.innerHTML=html;
-            });
-        }
-        document.getElementById('sendReviewBtn').addEventListener('click',async()=>{
-            if(!currentUser){ alert('Войдите в аккаунт!'); return; }
-            const input=document.getElementById('reviewInput');
-            const text=input.value.trim();
-            if(!text){ alert('Введите отзыв.'); return; }
-            const clean=filterProfanity(text);
-            await addDoc(collection(db,"reviews"),{author:currentUser.username,role:currentUserRole,content:clean,createdAt:serverTimestamp()});
-            input.value='';
-            alert('Отзыв отправлен!');
-            loadReviews();
-        });
-
-        // ===== АДМИН =====
-        async function loadAdminPanel(){
-            if(!currentUser||!['администрация','создатель','ГА Администратор'].includes(currentUserRole)){
-                document.getElementById('adminUsersList').innerHTML='<p style="color:#f88;">Доступ запрещён.</p>';
+    <script src="script.js"></script>
+    <script>
+        (async function() {
+            const user = getUser();
+            if (!user || user.role !== 'admin') {
+                alert('⛔ Доступ запрещён!');
+                window.location.href = '/';
                 return;
             }
-            const c=document.getElementById('adminUsersList');
-            c.innerHTML='<p style="color:#888;">Загрузка...</p>';
-            try{
-                const snap1=await getDocs(collection(db,"users_oauth"));
-                const snap2=await getDocs(collection(db,"users"));
-                let users=[];
-                snap1.forEach(d=>{ const data=d.data(); if(data.username) users.push({id:d.id,username:data.username,balance:data.balance||0,role:data.role||'игрок',source:'users_oauth'}); });
-                snap2.forEach(d=>{ const data=d.data(); if(data.username) users.push({id:d.id,username:data.username,balance:data.balance||0,role:data.role||'игрок',source:'users'}); });
-                if(!users.length){ c.innerHTML='<p style="color:#888;">Нет пользователей.</p>'; return; }
-                let html='';
-                users.forEach(u=>{
-                    html+=`<div class="admin-user-item" data-id="${u.id}" data-source="${u.source}"><div class="user-info"><strong style="color:#fff;">${escapeHTML(u.username)}</strong><span style="color:#aaa;margin-left:10px;">Баланс: ${u.balance}</span><span style="color:var(--accent-color);margin-left:10px;">Роль: ${escapeHTML(u.role)}</span></div><div class="user-actions"><input type="number" class="balance-input" placeholder="Баланс" value="${u.balance}" /><button class="save-balance-btn">💾</button><input type="text" class="role-input" placeholder="Роль" value="${u.role}" style="width:120px;" /><button class="save-role-btn">💾</button></div></div>`;
-                });
-                c.innerHTML=html;
-                c.querySelectorAll('.save-balance-btn').forEach(b=>b.addEventListener('click',async()=>{
-                    const item=b.closest('.admin-user-item');
-                    const val=parseInt(item.querySelector('.balance-input').value);
-                    if(isNaN(val)||val<0){ alert('Введите число.'); return; }
-                    await setDoc(doc(db,item.dataset.source,item.dataset.id),{balance:val},{merge:true});
-                    alert('Баланс обновлён!');
-                    loadAdminPanel();
-                }));
-                c.querySelectorAll('.save-role-btn').forEach(b=>b.addEventListener('click',async()=>{
-                    const item=b.closest('.admin-user-item');
-                    const val=item.querySelector('.role-input').value.trim();
-                    if(!val){ alert('Введите роль.'); return; }
-                    await setDoc(doc(db,item.dataset.source,item.dataset.id),{role:val},{merge:true});
-                    alert('Роль обновлена!');
-                    loadAdminPanel();
-                }));
-            }catch(e){ console.error(e); c.innerHTML='<p style="color:#f88;">Ошибка.</p>'; }
-        }
 
-        // ===== ЦВЕТ =====
-        function applyColor(h){
-            const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
-            document.documentElement.style.setProperty('--accent-color',`#${h.slice(1)}`);
-            document.documentElement.style.setProperty('--accent-border',`#${Math.floor(r*0.6).toString(16).padStart(2,'0')}${Math.floor(g*0.6).toString(16).padStart(2,'0')}${Math.floor(b*0.6).toString(16).padStart(2,'0')}`);
-            document.documentElement.style.setProperty('--accent-glow',`rgba(${r},${g},${b},0.3)`);
-            document.documentElement.style.setProperty('--accent-glow-strong',`rgba(${r},${g},${b},0.5)`);
-            localStorage.setItem('novo_accent_color',h);
-        }
-        function loadColor(){
-            const s=localStorage.getItem('novo_accent_color');
-            if(s&&/^#[0-9a-f]{6}$/i.test(s)){ applyColor(s); document.getElementById('hexInput').value=s.toUpperCase(); updateSliders(s); }
-            else{ applyColor('#aaaaaa'); document.getElementById('hexInput').value='#AAAAAA'; updateSliders('#aaaaaa'); }
-        }
-        function updateSliders(h){
-            const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
-            document.getElementById('redSlider').value=r; document.getElementById('greenSlider').value=g; document.getElementById('blueSlider').value=b;
-            document.getElementById('redVal').textContent=r; document.getElementById('greenVal').textContent=g; document.getElementById('blueVal').textContent=b;
-            document.getElementById('hexInput').value=h.toUpperCase();
-        }
-        function hexFromSliders(){ const r=document.getElementById('redSlider').value,g=document.getElementById('greenSlider').value,b=document.getElementById('blueSlider').value; return `#${parseInt(r).toString(16).padStart(2,'0')}${parseInt(g).toString(16).padStart(2,'0')}${parseInt(b).toString(16).padStart(2,'0')}`; }
-        window.toggleSettings=()=>{
-            const m=document.getElementById('settingsModal');
-            m.classList.toggle('active');
-            if(m.classList.contains('active')){ const h=localStorage.getItem('novo_accent_color')||'#aaaaaa'; updateSliders(h); document.getElementById('hexInput').value=h.toUpperCase(); highlightPreset(h); }
-        };
-        window.onSliderChange=()=>{ const h=hexFromSliders(); document.getElementById('hexInput').value=h.toUpperCase(); applyColor(h); highlightPreset(h); };
-        window.onHexChange=()=>{ let v=document.getElementById('hexInput').value.trim(); if(!/^#[0-9a-f]{6}$/i.test(v)) return; applyColor(v.toLowerCase()); updateSliders(v); highlightPreset(v); };
-        window.applyPreset=c=>{ applyColor(c); updateSliders(c); document.getElementById('hexInput').value=c.toUpperCase(); highlightPreset(c); };
-        function highlightPreset(h){ document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',b.dataset.color.toLowerCase()===h.toLowerCase())); }
-        document.addEventListener('click',e=>{ const m=document.getElementById('settingsModal'); if(m.classList.contains('active')&&!m.querySelector('.modal-panel').contains(e.target)&&e.target.id!=='settingsToggle') m.classList.remove('active'); });
-        window.addEventListener('DOMContentLoaded',loadColor);
+            try {
+                const response = await fetch(API_URL + '/users');
+                const users = await response.json();
+
+                const container = document.getElementById('adminContent');
+
+                let html = `
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Пользователь</th>
+                                <th>Персонаж</th>
+                                <th>Роль</th>
+                                <th>Баланс</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                users.forEach(u => {
+                    html += `
+                        <tr>
+                            <td><strong>${u.username}</strong></td>
+                            <td>${u.characterName || '—'}</td>
+                            <td>${u.role}</td>
+                            <td>
+                                <input type="number" value="${u.balance}" id="balance_${u.id}" style="width:60px;padding:4px;background:#1a1a2e;color:#fff;border:1px solid #333;border-radius:4px;">
+                            </td>
+                            <td class="actions">
+                                <button class="promote" onclick="promoteUser('${u.id}')">👑</button>
+                                <button class="delete" onclick="deleteUser('${u.id}')">🗑</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+
+                window.promoteUser = async function(userId) {
+                    const newRole = prompt('Введите роль (user/admin):');
+                    if (!newRole) return;
+                    if (newRole !== 'user' && newRole !== 'admin') {
+                        alert('Только user или admin');
+                        return;
+                    }
+                    await fetch('/api/admin/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, field: 'role', value: newRole })
+                    });
+                    location.reload();
+                };
+
+                window.deleteUser = async function(userId) {
+                    if (!confirm('Удалить пользователя?')) return;
+                    await fetch('/api/admin/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId })
+                    });
+                    location.reload();
+                };
+
+                // Сохранение баланса
+                document.querySelectorAll('[id^="balance_"]').forEach(input => {
+                    input.addEventListener('change', async function() {
+                        const userId = this.id.replace('balance_', '');
+                        const value = this.value;
+                        await fetch('/api/admin/update', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, field: 'balance', value })
+                        });
+                        alert('Баланс обновлён!');
+                    });
+                });
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('adminContent').innerHTML = '<p style="color:#ff2d55;">Ошибка загрузки</p>';
+            }
+        })();
     </script>
 </body>
 </html>

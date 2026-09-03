@@ -1,0 +1,654 @@
+/* ============================================================
+   COPIA ELIT RP
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0a0a 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.header {
+    background: rgba(20, 10, 10, 0.95);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff2d55;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ff2d55;
+    text-decoration: none;
+}
+
+.logo span {
+    color: #fff;
+}
+
+.nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav a {
+    color: #aaa;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.nav a:hover {
+    color: #ff2d55;
+}
+
+.discord-widget {
+    background: rgba(30, 20, 25, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 45, 85, 0.2);
+    max-width: 420px;
+    margin: 30px auto;
+}
+
+.discord-widget h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #ff2d55;
+}
+
+.discord-widget .online {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.discord-widget .online .count {
+    color: #57f287;
+}
+
+.discord-widget .member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+}
+
+.discord-widget .member .status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.discord-widget .member .status.online { background: #57f287; }
+.discord-widget .member .status.idle { background: #faa61a; }
+.discord-widget .member .status.dnd { background: #ed4245; }
+.discord-widget .member .status.offline { background: #747f8d; }
+
+.discord-widget .join-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #5865f2;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.discord-widget .join-btn:hover {
+    background: #4752c4;
+    transform: scale(1.02);
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 40px;
+}
+
+.hero h1 {
+    font-size: 64px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff2d55, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 20px;
+    color: #888;
+    margin-top: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 30px;
+    padding: 40px 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: rgba(30, 20, 25, 0.9);
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid rgba(255, 45, 85, 0.2);
+    transition: 0.3s;
+    text-align: center;
+}
+
+.card:hover {
+    border-color: #ff2d55;
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #888;
+    font-size: 14px;
+}
+
+.auth-form {
+    max-width: 420px;
+    margin: 60px auto;
+    background: rgba(30, 20, 25, 0.9);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 45, 85, 0.2);
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #ff2d55;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.auth-form input,
+.auth-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(20, 10, 10, 0.8);
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    transition: 0.3s;
+    margin-bottom: 18px;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+    border-color: #ff2d55;
+    outline: none;
+}
+
+.auth-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.auth-form .avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.auth-form .avatar-upload img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff2d55;
+}
+
+.auth-form .avatar-upload input[type="file"] {
+    padding: 8px;
+    background: transparent;
+    border: none;
+    margin: 0;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: #ff2d55;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #ff6b35;
+    transform: scale(1.02);
+}
+
+.auth-form .link {
+    text-align: center;
+    margin-top: 16px;
+    color: #888;
+}
+
+.auth-form .link a {
+    color: #ff2d55;
+    text-decoration: none;
+}
+
+.profile {
+    max-width: 800px;
+    margin: 40px auto;
+    background: rgba(30, 20, 25, 0.9);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 45, 85, 0.2);
+}
+
+.profile-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ff2d55;
+}
+
+.profile-info h2 {
+    font-size: 32px;
+}
+
+.profile-info p {
+    color: #888;
+    font-size: 16px;
+}
+
+.profile-info .role {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #ff2d55;
+    color: #fff;
+}
+
+.profile-info .vip-badge {
+    background: #ffd700;
+    color: #000;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.player-card {
+    background: rgba(20, 10, 10, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 45, 85, 0.1);
+    transition: 0.3s;
+}
+
+.player-card:hover {
+    border-color: #ff2d55;
+    transform: scale(1.02);
+}
+
+.player-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ff2d55;
+}
+
+.player-card h4 {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.player-card p {
+    color: #888;
+    font-size: 12px;
+}
+
+.chat-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.chat-container h2 {
+    color: #ff2d55;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.chat-messages {
+    background: rgba(20, 10, 10, 0.8);
+    border-radius: 12px;
+    padding: 15px;
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 45, 85, 0.1);
+    margin-bottom: 15px;
+}
+
+.chat-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.chat-message img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat-message .username {
+    font-weight: 700;
+}
+
+.chat-message .time {
+    color: #666;
+    font-size: 11px;
+    margin-left: auto;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(20, 10, 10, 0.8);
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.chat-input input:focus {
+    border-color: #ff2d55;
+    outline: none;
+}
+
+.chat-input button {
+    padding: 12px 24px;
+    background: #ff2d55;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.chat-input button:hover {
+    background: #ff6b35;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.shop-item {
+    background: rgba(20, 10, 10, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 45, 85, 0.1);
+    transition: 0.3s;
+}
+
+.shop-item:hover {
+    border-color: #ff2d55;
+}
+
+.shop-item h4 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.shop-item .price {
+    color: #ffd700;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.shop-item .desc {
+    color: #888;
+    font-size: 13px;
+    margin: 10px 0;
+}
+
+.shop-item .buy-btn {
+    padding: 10px 30px;
+    background: #ff2d55;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.shop-item .buy-btn:hover {
+    background: #ff6b35;
+    transform: scale(1.02);
+}
+
+.admin-panel {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+}
+
+.admin-panel h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    color: #ff2d55;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-tabs button {
+    padding: 10px 20px;
+    background: rgba(30, 20, 25, 0.8);
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.admin-tabs button:hover,
+.admin-tabs button.active {
+    border-color: #ff2d55;
+    background: rgba(255, 45, 85, 0.2);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(30, 20, 25, 0.9);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table th {
+    background: rgba(255, 45, 85, 0.3);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.admin-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-table .actions button {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.admin-table .actions .delete {
+    background: #ff2d55;
+    color: #fff;
+}
+
+.admin-table .actions .promote {
+    background: #ff6b35;
+    color: #fff;
+}
+
+.admin-form {
+    background: rgba(30, 20, 25, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.admin-form input,
+.admin-form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(20, 10, 10, 0.8);
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.admin-form button {
+    padding: 10px 24px;
+    background: #ff2d55;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.news-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.news-section h2 {
+    color: #ff2d55;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.news-item {
+    background: rgba(30, 20, 25, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid #ff2d55;
+    margin-bottom: 16px;
+}
+
+.news-item h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.news-item .meta {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.news-item p {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .hero h1 { font-size: 36px; }
+    .profile-header { flex-direction: column; text-align: center; }
+    .nav { gap: 10px; }
+    .nav a { font-size: 14px; }
+    .auth-form { padding: 20px; margin: 20px; }
+    .discord-widget { margin: 20px; }
+    .chat-input { flex-direction: column; }
+}

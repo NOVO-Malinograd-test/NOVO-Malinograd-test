@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav" id="nav">
+            <a href="/">Главная</a>
+            <a href="/players.html">Игроки</a>
+            <a href="/chat.html">Чат</a>
+            <a href="/shop.html">Магазин</a>
+            <a href="/news.html">Новости</a>
+            <a href="/profile.html">Профиль</a>
+            <a href="/admin.html" id="adminLink" style="display:none;">Админ</a>
+            <a href="#" onclick="logout()">Выйти</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile" id="profileContainer">
+            <div class="profile-header">
+                <img id="profileAvatar" class="profile-avatar" src="/uploads/default.png" alt="Аватар">
+                <div class="profile-info">
+                    <h2 id="profileUsername">Загрузка...</h2>
+                    <span class="role" id="profileRole">user</span>
+                    <span class="vip-badge" id="vipBadge" style="display:none;">👑 VIP</span>
+                    <p id="profileCharacterName">Имя персонажа</p>
+                    <p id="profileCharacterDesc">Описание</p>
+                    <p>💰 Баланс: <span id="profileBalance">0</span></p>
+                    <p>📅 Зарегистрирован: <span id="profileCreatedAt">-</span></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        (async function() {
+            const user = getUser();
+            if (!user) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL + '/profile/' + user.id);
+                const data = await response.json();
+
+                document.getElementById('profileUsername').textContent = data.username;
+                document.getElementById('profileRole').textContent = data.role === 'admin' ? '👑 Админ' : '🎭 Игрок';
+                document.getElementById('profileCharacterName').textContent = '🎭 ' + data.characterName;
+                document.getElementById('profileCharacterDesc').textContent = data.characterDesc || 'Нет описания';
+                document.getElementById('profileBalance').textContent = data.balance;
+                document.getElementById('profileCreatedAt').textContent = new Date(data.createdAt).toLocaleDateString();
+
+                if (data.vip) {
+                    document.getElementById('vipBadge').style.display = 'inline-block';
+                }
+
+                if (data.avatar) {
+                    document.getElementById('profileAvatar').src = data.avatar;
+                }
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('profileUsername').textContent = 'Ошибка загрузки';
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav" id="nav">
+            <a href="/">Главная</a>
+            <a href="/players.html">Игроки</a>
+            <a href="/chat.html">Чат</a>
+            <a href="/shop.html">Магазин</a>
+            <a href="/news.html">Новости</a>
+            <a href="/profile.html">Профиль</a>
+            <a href="/admin.html" id="adminLink" style="display:none;">Админ</a>
+            <a href="/login.html" id="authLink">Войти</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Добро пожаловать в Copia Elit</h1>
+            <p>Элитное RP-сообщество. Создавай персонажа, общайся и становись легендой.</p>
+        </section>
+
+        <div id="discordWidget" class="discord-widget">
+            <h3>💬 Discord</h3>
+            <div id="discordContent">Загрузка...</div>
+            <a href="https://discord.gg/ваша_ссылка" target="_blank" class="join-btn">Присоединиться</a>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>🎭 Персонаж</h3>
+                <p>Создай уникального персонажа с историей и внешностью.</p>
+            </div>
+            <div class="card">
+                <h3>📸 Фото</h3>
+                <p>Загружай свои снимки и делись ими с сообществом.</p>
+            </div>
+            <div class="card">
+                <h3>👥 Игроки</h3>
+                <p>Находи друзей и общайся с другими участниками.</p>
+            </div>
+            <div class="card">
+                <h3>💰 Экономика</h3>
+                <p>Зарабатывай валюту и трать её на развитие.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        (async function() {
+            try {
+                const res = await fetch('/api/discord');
+                const data = await res.json();
+
+                const container = document.getElementById('discordContent');
+
+                if (data.name) {
+                    container.innerHTML = `
+                        <div class="online">
+                            <span>🟢 В сети</span>
+                            <span class="count">${data.presence_count || 0}</span>
+                        </div>
+                        <div style="margin-top:10px; max-height:150px; overflow-y:auto;">
+                            ${data.members ? data.members.map(m => `
+                                <div class="member">
+                                    <span class="status ${m.status || 'offline'}"></span>
+                                    <span>${m.username}</span>
+                                    ${m.avatar ? `<img src="https://cdn.discordapp.com/avatars/${m.id}/${m.avatar}.png?size=32" style="width:24px;height:24px;border-radius:50%;margin-left:auto;">` : ''}
+                                </div>
+                            `).join('') : 'Нет данных'}
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = '<p style="color:#888;">Discord не доступен</p>';
+                }
+            } catch (e) {
+                document.getElementById('discordContent').innerHTML = '<p style="color:#888;">Ошибка загрузки Discord</p>';
+            }
+        })();
+    </script>
+</body>
+</html>

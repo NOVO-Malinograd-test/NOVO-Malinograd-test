@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/login.html">Войти</a>
+        </nav>
+    </header>
+
+    <main>
+        <form class="auth-form" id="registerForm" enctype="multipart/form-data">
+            <h2>📝 Регистрация</h2>
+
+            <div class="avatar-upload">
+                <img id="avatarPreview" src="/uploads/default.png" alt="Аватар">
+                <input type="file" name="avatar" id="avatarInput" accept="image/*">
+            </div>
+
+            <label>Логин</label>
+            <input type="text" name="username" placeholder="Введи логин" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Введи email" required>
+
+            <label>Пароль</label>
+            <input type="password" name="password" placeholder="Введи пароль" required>
+
+            <label>Имя персонажа</label>
+            <input type="text" name="characterName" placeholder="Имя твоего персонажа">
+
+            <label>Описание персонажа</label>
+            <textarea name="characterDesc" placeholder="Расскажи о своём персонаже..."></textarea>
+
+            <button type="submit" class="btn">Зарегистрироваться</button>
+
+            <div class="link">
+                Уже есть аккаунт? <a href="/login.html">Войти</a>
+            </div>
+        </form>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

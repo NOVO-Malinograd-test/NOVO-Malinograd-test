@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav" id="nav">
+            <a href="/">Главная</a>
+            <a href="/players.html">Игроки</a>
+            <a href="/chat.html">Чат</a>
+            <a href="/shop.html">Магазин</a>
+            <a href="/news.html">Новости</a>
+            <a href="/profile.html">Профиль</a>
+            <a href="/admin.html" id="adminLink" style="display:none;">Админ</a>
+            <a href="#" onclick="logout()">Выйти</a>
+        </nav>
+    </header>
+
+    <main class="admin-panel">
+        <h2>🔧 Админ-панель Copia Elit</h2>
+
+        <div class="admin-tabs">
+            <button class="active" onclick="showTab('users')">👥 Пользователи</button>
+            <button onclick="showTab('news')">📰 Новости</button>
+            <button onclick="showTab('shop')">🛒 Магазин</button>
+        </div>
+
+        <div id="adminContent">
+            <p style="text-align:center; color:#888;">Загрузка...</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        let currentTab = 'users';
+
+        async function showTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.admin-tabs button:nth-child(${tab === 'users' ? 1 : tab === 'news' ? 2 : 3})`).classList.add('active');
+            await loadAdminContent();
+        }
+
+        async function loadAdminContent() {
+            const container = document.getElementById('adminContent');
+
+            if (currentTab === 'users') {
+                await loadUsers(container);
+            } else if (currentTab === 'news') {
+                await loadNewsForm(container);
+            } else if (currentTab === 'shop') {
+                await loadShopForm(container);
+            }
+        }
+
+        async function loadUsers(container) {
+            try {
+                const res = await fetch(API_URL + '/users');
+                const users = await res.json();
+
+                let html = `
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Пользователь</th>
+                                <th>Персонаж</th>
+                                <th>Роль</th>
+                                <th>Баланс</th>
+                                <th>VIP</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                users.forEach(u => {
+                    html += `
+                        <tr>
+                            <td><strong>${u.username}</strong></td>
+                            <td>${u.characterName || '—'}</td>
+                            <td>${u.role}</td>
+                            <td>
+                                <input type="number" value="${u.balance}" id="balance_${u.id}" style="width:70px;padding:4px;background:#1a1a2e;color:#fff;border:1px solid #333;border-radius:4px;">
+                            </td>
+                            <td>${u.vip ? '👑' : '—'}</td>
+                            <td class="actions">
+                                <button class="promote" onclick="promoteUser('${u.id}')">👑</button>
+                                <button class="delete" onclick="deleteUser('${u.id}')">🗑</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+
+                window.promoteUser = async function(userId) {
+                    const newRole = prompt('Введите роль (user/admin):');
+                    if (!newRole) return;
+                    if (newRole !== 'user' && newRole !== 'admin') {
+                        alert('Только user или admin');
+                        return;
+                    }
+                    await fetch('/api/admin/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, field: 'role', value: newRole })
+                    });
+                    loadAdminContent();
+                };
+
+                window.deleteUser = async function(userId) {
+                    if (!confirm('Удалить пользователя?')) return;
+                    await fetch('/api/admin/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId })
+                    });
+                    loadAdminContent();
+                };
+
+                document.querySelectorAll('[id^="balance_"]').forEach(input => {
+                    input.addEventListener('change', async function() {
+                        const userId = this.id.replace('balance_', '');
+                        const value = this.value;
+                        await fetch('/api/admin/update', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, field: 'balance', value })
+                        });
+                        alert('Баланс обновлён!');
+                    });
+                });
+
+            } catch (error) {
+                container.innerHTML = '<p style="color:#ff2d55;">Ошибка загрузки</p>';
+            }
+        }
+
+        async function loadNewsForm(container) {
+            container.innerHTML = `
+                <div class="admin-form">
+                    <h3 style="margin-bottom:15px;">➕ Добавить новость</h3>
+                    <input type="text" id="newsTitle" placeholder="Заголовок">
+                    <textarea id="newsContent" placeholder="Текст новости" rows="4"></textarea>
+                    <input type="text" id="newsAuthor" placeholder="Автор (опционально)">
+                    <button onclick="addNews()">Опубликовать</button>
+                </div>
+                <div id="newsList" style="margin-top:20px;">
+                    <p style="color:#888;">Загрузка новостей...</p>
+                </div>
+            `;
+
+            await loadNewsList();
+
+            window.addNews = async function() {
+                const title = document.getElementById('newsTitle').value.trim();
+                const content = document.getElementById('newsContent').value.trim();
+                const author = document.getElementById('newsAuthor').value.trim() || 'Админ';
+
+                if (!title || !content) {
+                    alert('Заполните заголовок и текст!');
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/admin/news', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, content, author })
+                    });
+
+                    if (res.ok) {
+                        alert('✅ Новость добавлена!');
+                        document.getElementById('newsTitle').value = '';
+                        document.getElementById('newsContent').value = '';
+                        document.getElementById('newsAuthor').value = '';
+                        await loadNewsList();
+                    }
+                } catch (error) {
+                    alert('❌ Ошибка');
+                }
+            };
+        }
+
+        async function loadNewsList() {
+            try {
+                const res = await fetch(API_URL + '/news');
+                const news = await res.json();
+
+                const container = document.getElementById('newsList');
+                container.innerHTML = '';
+
+                if (news.length === 0) {
+                    container.innerHTML = '<p style="color:#888;">Новостей пока нет</p>';
+                    return;
+                }
+
+                news.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'news-item';
+                    div.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <div class="meta">📅 ${new Date(item.createdAt).toLocaleDateString()} ✍️ ${item.author || 'Админ'}</div>
+                        <p>${item.content}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function loadShopForm(container) {
+            container.innerHTML = `
+                <div class="admin-form">
+                    <h3 style="margin-bottom:15px;">➕ Добавить товар</h3>
+                    <input type="text" id="shopName" placeholder="Название">
+                    <input type="number" id="shopPrice" placeholder="Цена">
+                    <input type="text" id="shopDesc" placeholder="Описание">
+                    <button onclick="addShopItem()">Добавить</button>
+                </div>
+                <div id="shopList" style="margin-top:20px;">
+                    <p style="color:#888;">Загрузка товаров...</p>
+                </div>
+            `;
+
+            await loadShopList();
+
+            window.addShopItem = async function() {
+                const name = document.getElementById('shopName').value.trim();
+                const price = document.getElementById('shopPrice').value.trim();
+                const description = document.getElementById('shopDesc').value.trim();
+
+                if (!name || !price) {
+                    alert('Заполните название и цену!');
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/admin/shop', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, price, description })
+                    });
+
+                    if (res.ok) {
+                        alert('✅ Товар добавлен!');
+                        document.getElementById('shopName').value = '';
+                        document.getElementById('shopPrice').value = '';
+                        document.getElementById('shopDesc').value = '';
+                        await loadShopList();
+                    }
+                } catch (error) {
+                    alert('❌ Ошибка');
+                }
+            };
+        }
+
+        async function loadShopList() {
+            try {
+                const res = await fetch(API_URL + '/shop');
+                const items = await res.json();
+
+                const container = document.getElementById('shopList');
+                container.innerHTML = '';
+
+                if (items.length === 0) {
+                    container.innerHTML = '<p style="color:#888;">Товаров пока нет</p>';
+                    return;
+                }
+
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'shop-item';
+                    div.innerHTML = `
+                        <h4>${item.name}</h4>
+                        <div class="price">💰 ${item.price}</div>
+                        <div class="desc">${item.description}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Проверка админа
+        (async function() {
+            const user = getUser();
+            if (!user || user.role !== 'admin') {
+                alert('⛔ Доступ запрещён!');
+                window.location.href = '/';
+                return;
+            }
+
+            await loadAdminContent();
+        })();
+    </script>
+</body>
+</html>

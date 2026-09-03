@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav" id="nav">
+            <a href="/">Главная</a>
+            <a href="/players.html">Игроки</a>
+            <a href="/chat.html">Чат</a>
+            <a href="/shop.html">Магазин</a>
+            <a href="/news.html">Новости</a>
+            <a href="/profile.html">Профиль</a>
+            <a href="/admin.html" id="adminLink" style="display:none;">Админ</a>
+            <a href="#" onclick="logout()">Выйти</a>
+        </nav>
+    </header>
+
+    <main class="chat-container">
+        <h2>💬 Общий чат</h2>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Отправить</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(API_URL + '/chat');
+                const messages = await res.json();
+                chatMessages.innerHTML = '';
+                messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = 'chat-message';
+                    div.innerHTML = `
+                        <img src="${msg.avatar || '/uploads/default.png'}" alt="${msg.username}">
+                        <span class="username" style="color:${msg.color || '#ffffff'}">${msg.username}</span>
+                        <span>${msg.message}</span>
+                        <span class="time">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    `;
+                    chatMessages.appendChild(div);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function sendMessage() {
+            const user = getUser();
+            if (!user) {
+                alert('Войдите в аккаунт!');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            try {
+                const res = await fetch(API_URL + '/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: user.username,
+                        message: message,
+                        avatar: user.avatar,
+                        color: user.customColor || '#ffffff'
+                    })
+                });
+                await res.json();
+                chatInput.value = '';
+                loadMessages();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        loadMessages();
+        setInterval(loadMessages, 5000);
+    </script>
+</body>
+</html>

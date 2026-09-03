@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — Copia Elit RP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">Copia <span>Elit</span></a>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/register.html">Регистрация</a>
+        </nav>
+    </header>
+
+    <main>
+        <form class="auth-form" id="loginForm">
+            <h2>🔑 Вход</h2>
+
+            <label>Логин</label>
+            <input type="text" id="loginUsername" placeholder="Введи логин" required>
+
+            <label>Пароль</label>
+            <input type="password" id="loginPassword" placeholder="Введи пароль" required>
+
+            <button type="submit" class="btn">Войти</button>
+
+            <div class="link">
+                Нет аккаунта? <a href="/register.html">Зарегистрироваться</a>
+            </div>
+        </form>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
